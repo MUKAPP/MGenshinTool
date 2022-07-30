@@ -401,9 +401,9 @@ function onCreate()
                 layout_width="-1";
                 gravity="left|center";
                 id="item6";
-                onClick=function()
+                --[[onClick=function()
                   activity.newActivity("feedback")
-                end;
+                end;]]
                 {
                   ImageView;
                   ColorFilter=textc;
@@ -856,6 +856,10 @@ function onCreate()
 
   item3.onClick=function()
     activity.newActivity("web",{"https://note.mukapp.top/post/gtool_donate"})
+  end
+
+  item6.onClick=function()
+    activity.newActivity("web",{"https://git.mukapp.top/mukmiuikong/MGenshinTool_Public"})
   end
 
   item7.onClick=function()

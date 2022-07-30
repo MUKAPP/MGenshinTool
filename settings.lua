@@ -224,6 +224,8 @@ function onCreate()
   垫高导航栏=mukactivity.getData("Navigation_Bar_Height")
   实时便笺通知栏常驻=mukactivity.getData("Note_Notification")
   实时便笺通知不可清除=mukactivity.getData("Note_Notification_Ongoing")
+  自动签到=mukactivity.getData("Note_Auto_Sign")
+  进入软件时自动签到=mukactivity.getData("Note_Auto_Sign2")
 
   data={}
   adp=LuaMultiAdapter(activity,data,setting)
@@ -233,9 +235,10 @@ function onCreate()
 
   adp.add{__type=1,title="功能"}
   adp.add{__type=4,subtitle="实时便笺通知栏常驻",message="开启此项即开启 实时便笺 功能的通知栏常驻，同时也会开启树脂提醒功能。",status={Checked=Boolean.valueOf(实时便笺通知栏常驻)}}
-  adp.add{__type=2,subtitle="自动签到",message="实时便笺通知栏常驻 开启时本功能自动开启。自动签到时间：8:00~22:00，整点自动签到。"}
+  adp.add{__type=4,subtitle="进入软件时自动签到",message="“实时便笺通知栏常驻”启用时该项才会生效。进入软件时自动签到。",status={Checked=Boolean.valueOf(进入软件时自动签到)}}
+  adp.add{__type=4,subtitle="自动签到",message="“实时便笺通知栏常驻”启用时该项才会生效。自动签到时间：8:00~22:00，每到整点自动签到。",status={Checked=Boolean.valueOf(自动签到)}}
   adp.add{__type=2,subtitle="实时便笺刷新时间",message="每隔多少分钟刷新一次实时便笺"}
-  adp.add{__type=2,subtitle="关闭对该应用的电池优化",message="实时便笺 需要应用在后台运行，点击进入电池优化界面，选择无限制，并且在多任务界面锁定本软件。"}
+  adp.add{__type=2,subtitle="关闭对该应用的电池优化",message="“实时便笺”及“自动签到”需要应用在后台运行，点击进入电池优化界面，选择无限制，并且在多任务界面锁定本软件。"}
   adp.add{__type=1,title="界面"}
   adp.add{__type=4,subtitle="跟随系统夜间模式",message="若开启此项不跟随系统夜间模式，则您的系统不支持原生夜间模式API",status={Checked=Boolean.valueOf(跟随系统夜间模式)}}
   adp.add{__type=4,subtitle="夜间模式",message="“跟随系统夜间模式”启用时该项不生效",status={Checked=Boolean.valueOf(夜间模式) }}
@@ -396,9 +399,6 @@ function onCreate()
         an=dl.show()
         dl.setCanceledOnTouchOutside(true);
 
-        return true
-      end
-      if v.Tag.subtitle.Text=="自动签到" then
         return true
       end
       if v.Tag.subtitle.Text=="重置引导界面" then
@@ -625,6 +625,12 @@ function onCreate()
         if v.Tag.subtitle.Text=="实时便笺通知不可清除" then
           实时便笺通知不可清除=data[one].status["Checked"]
         end
+        if v.Tag.subtitle.Text=="自动签到" then
+          自动签到=data[one].status["Checked"]
+        end
+        if v.Tag.subtitle.Text=="进入软件时自动签到" then
+          进入软件时自动签到=data[one].status["Checked"]
+        end
       end
       adp.notifyDataSetChanged()
     end
@@ -645,6 +651,8 @@ function 退出()
     mukactivity.setData("Navigation_Bar_Height",tostring(垫高导航栏))
     mukactivity.setData("Note_Notification",tostring(实时便笺通知栏常驻))
     mukactivity.setData("Note_Notification_Ongoing",tostring(实时便笺通知不可清除))
+    mukactivity.setData("Note_Auto_Sign",tostring(自动签到))
+    mukactivity.setData("Note_Auto_Sign2",tostring(进入软件时自动签到))
     activity.result({})
    else
     关闭页面()

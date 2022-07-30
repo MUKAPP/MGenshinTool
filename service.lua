@@ -867,12 +867,16 @@ function openService()
   autoSign.onTick=function()
     if tointeger(os.date("%H"))>=8 and tointeger(os.date("%H"))<=22
       if tointeger(os.date("%M"))==00
-        mys_signIn()
+        if mukactivity.getData("Note_Auto_Sign")=="true"
+          mys_signIn()
+        end
       end
     end
   end
   autoSign.start()
-  mys_signIn()
+  if mukactivity.getData("Note_Auto_Sign2")=="true"
+    mys_signIn()
+  end
 end
 
 openService()

@@ -5805,6 +5805,8 @@ function onCreate()
 
     mukactivity.setDataR("Note_Notification", "true")
     mukactivity.setDataR("Note_Notification_Ongoing", "true")
+    mukactivity.setDataR("Note_Auto_Sign", "true")
+    mukactivity.setDataR("Note_Auto_Sign2", "true")
 
     mukactivity.setDataR("Note_Time", 1)
 
