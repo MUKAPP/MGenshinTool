@@ -1917,110 +1917,105 @@ function onCreate()
             orientation = "vertical",
             gravity = "bottom",
             {
-              RelativeLayout,
+              LinearLayout, --底栏
+              orientation = "vertical",
               layout_height = "-2",
               layout_width = "-1",
+              gravity = "center|left",
+              background = backgroundc,
+              elevation = "6dp",
+              id = "mBottomBar",
+              onClick = function()
+              end,
               {
                 LinearLayout, --底栏
-                orientation = "vertical",
-                layout_height = "-2",
+                orientation = "horizontal",
+                layout_height = "56dp",
                 layout_width = "-1",
                 gravity = "center|left",
-                background = backgroundc,
-                elevation = "6dp",
-                id = "mBottomBar",
-                onClick = function()
-                end,
+                layout_marginBottom = 导航栏高度,
+                paddingLeft = "8dp",
+                paddingRight = "8dp",
                 {
-                  LinearLayout, --底栏
-                  orientation = "horizontal",
-                  layout_height = "56dp",
+                  LinearLayout,
+                  orientation = "vertical",
+                  layout_height = "-1",
                   layout_width = "-1",
-                  gravity = "center|left",
-                  layout_marginBottom = 导航栏高度,
-                  paddingLeft = "8dp",
-                  paddingRight = "8dp",
+                  id = "page1",
+                  gravity = "center",
+                  layout_weight = "1",
+                  onClick = function()
+                    jc.showPage(0)
+                  end,
                   {
-                    LinearLayout,
-                    orientation = "vertical",
-                    layout_height = "-1",
-                    layout_width = "-1",
-                    id = "page1",
-                    gravity = "center",
-                    layout_weight = "1",
-                    onClick = function()
-                      jc.showPage(0)
-                    end,
-                    {
-                      ImageView,
-                      layout_height = "24dp",
-                      layout_width = "24dp",
-                      src = 图标("home"),
-                      ColorFilter = primaryc,
-                      PivotX = "12dp",
-                      PivotY = "24dp"
-                    },
-                    {
-                      TextView,
-                      textSize = "14sp",
-                      Text = "主页",
-                      layout_width = "wrap",
-                      textColor = primaryc
-                    }
+                    ImageView,
+                    layout_height = "24dp",
+                    layout_width = "24dp",
+                    src = 图标("home"),
+                    ColorFilter = primaryc,
+                    PivotX = "12dp",
+                    PivotY = "24dp"
                   },
                   {
-                    LinearLayout,
-                    orientation = "vertical",
-                    layout_height = "-1",
-                    layout_width = "-1",
-                    id = "page2",
-                    gravity = "center",
-                    layout_weight = "1",
-                    onClick = function()
-                      jc.showPage(1)
-                    end,
-                    {
-                      ImageView,
-                      layout_height = "24dp",
-                      layout_width = "24dp",
-                      src = 图标("inbox"),
-                      ColorFilter = stextc,
-                      PivotX = "12dp",
-                      PivotY = "24dp"
-                    },
-                    {
-                      TextView,
-                      textSize = "14sp",
-                      Text = "工具",
-                      textColor = stextc
-                    }
+                    TextView,
+                    textSize = "14sp",
+                    Text = "主页",
+                    layout_width = "wrap",
+                    textColor = primaryc
+                  }
+                },
+                {
+                  LinearLayout,
+                  orientation = "vertical",
+                  layout_height = "-1",
+                  layout_width = "-1",
+                  id = "page2",
+                  gravity = "center",
+                  layout_weight = "1",
+                  onClick = function()
+                    jc.showPage(1)
+                  end,
+                  {
+                    ImageView,
+                    layout_height = "24dp",
+                    layout_width = "24dp",
+                    src = 图标("inbox"),
+                    ColorFilter = stextc,
+                    PivotX = "12dp",
+                    PivotY = "24dp"
                   },
                   {
-                    LinearLayout,
-                    orientation = "vertical",
-                    layout_height = "-1",
-                    layout_width = "-1",
-                    id = "page3",
-                    gravity = "center",
-                    layout_weight = "1",
-                    onClick = function()
-                      jc.showPage(2)
-                    end,
-                    {
-                      ImageView,
-                      layout_height = "24dp",
-                      layout_width = "24dp",
-                      src = 图标("mode_comment"),
-                      ColorFilter = stextc,
-                      PivotX = "12dp",
-                      PivotY = "24dp"
-                    },
-                    {
-                      TextView,
-                      textSize = "14sp",
-                      Text = "绽雨台",
-                      textColor = stextc
-                    }
+                    TextView,
+                    textSize = "14sp",
+                    Text = "工具",
+                    textColor = stextc
+                  }
+                },
+                {
+                  LinearLayout,
+                  orientation = "vertical",
+                  layout_height = "-1",
+                  layout_width = "-1",
+                  id = "page3",
+                  gravity = "center",
+                  layout_weight = "1",
+                  onClick = function()
+                    jc.showPage(2)
+                  end,
+                  {
+                    ImageView,
+                    layout_height = "24dp",
+                    layout_width = "24dp",
+                    src = 图标("mode_comment"),
+                    ColorFilter = stextc,
+                    PivotX = "12dp",
+                    PivotY = "24dp"
+                  },
+                  {
+                    TextView,
+                    textSize = "14sp",
+                    Text = "绽雨台",
+                    textColor = stextc
                   }
                 }
               }
