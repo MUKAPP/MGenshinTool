@@ -1917,105 +1917,110 @@ function onCreate()
             orientation = "vertical",
             gravity = "bottom",
             {
-              LinearLayout, --底栏
-              orientation = "vertical",
+              RelativeLayout,
               layout_height = "-2",
               layout_width = "-1",
-              gravity = "center|left",
-              background = backgroundc,
-              elevation = "6dp",
-              id = "mBottomBar",
-              onClick = function()
-              end,
               {
                 LinearLayout, --底栏
-                orientation = "horizontal",
-                layout_height = "56dp",
+                orientation = "vertical",
+                layout_height = "-2",
                 layout_width = "-1",
                 gravity = "center|left",
-                layout_marginBottom = 导航栏高度,
-                paddingLeft = "8dp",
-                paddingRight = "8dp",
+                background = backgroundc,
+                elevation = "6dp",
+                id = "mBottomBar",
+                onClick = function()
+                end,
                 {
-                  LinearLayout,
-                  orientation = "vertical",
-                  layout_height = "-1",
+                  LinearLayout, --底栏
+                  orientation = "horizontal",
+                  layout_height = "56dp",
                   layout_width = "-1",
-                  id = "page1",
-                  gravity = "center",
-                  layout_weight = "1",
-                  onClick = function()
-                    jc.showPage(0)
-                  end,
+                  gravity = "center|left",
+                  layout_marginBottom = 导航栏高度,
+                  paddingLeft = "8dp",
+                  paddingRight = "8dp",
                   {
-                    ImageView,
-                    layout_height = "24dp",
-                    layout_width = "24dp",
-                    src = 图标("home"),
-                    ColorFilter = primaryc,
-                    PivotX = "12dp",
-                    PivotY = "24dp"
+                    LinearLayout,
+                    orientation = "vertical",
+                    layout_height = "-1",
+                    layout_width = "-1",
+                    id = "page1",
+                    gravity = "center",
+                    layout_weight = "1",
+                    onClick = function()
+                      jc.showPage(0)
+                    end,
+                    {
+                      ImageView,
+                      layout_height = "24dp",
+                      layout_width = "24dp",
+                      src = 图标("home"),
+                      ColorFilter = primaryc,
+                      PivotX = "12dp",
+                      PivotY = "24dp"
+                    },
+                    {
+                      TextView,
+                      textSize = "14sp",
+                      Text = "主页",
+                      layout_width = "wrap",
+                      textColor = primaryc
+                    }
                   },
                   {
-                    TextView,
-                    textSize = "14sp",
-                    Text = "主页",
-                    layout_width = "wrap",
-                    textColor = primaryc
-                  }
-                },
-                {
-                  LinearLayout,
-                  orientation = "vertical",
-                  layout_height = "-1",
-                  layout_width = "-1",
-                  id = "page2",
-                  gravity = "center",
-                  layout_weight = "1",
-                  onClick = function()
-                    jc.showPage(1)
-                  end,
-                  {
-                    ImageView,
-                    layout_height = "24dp",
-                    layout_width = "24dp",
-                    src = 图标("inbox"),
-                    ColorFilter = stextc,
-                    PivotX = "12dp",
-                    PivotY = "24dp"
+                    LinearLayout,
+                    orientation = "vertical",
+                    layout_height = "-1",
+                    layout_width = "-1",
+                    id = "page2",
+                    gravity = "center",
+                    layout_weight = "1",
+                    onClick = function()
+                      jc.showPage(1)
+                    end,
+                    {
+                      ImageView,
+                      layout_height = "24dp",
+                      layout_width = "24dp",
+                      src = 图标("inbox"),
+                      ColorFilter = stextc,
+                      PivotX = "12dp",
+                      PivotY = "24dp"
+                    },
+                    {
+                      TextView,
+                      textSize = "14sp",
+                      Text = "工具",
+                      textColor = stextc
+                    }
                   },
                   {
-                    TextView,
-                    textSize = "14sp",
-                    Text = "工具",
-                    textColor = stextc
-                  }
-                },
-                {
-                  LinearLayout,
-                  orientation = "vertical",
-                  layout_height = "-1",
-                  layout_width = "-1",
-                  id = "page3",
-                  gravity = "center",
-                  layout_weight = "1",
-                  onClick = function()
-                    jc.showPage(2)
-                  end,
-                  {
-                    ImageView,
-                    layout_height = "24dp",
-                    layout_width = "24dp",
-                    src = 图标("mode_comment"),
-                    ColorFilter = stextc,
-                    PivotX = "12dp",
-                    PivotY = "24dp"
-                  },
-                  {
-                    TextView,
-                    textSize = "14sp",
-                    Text = "绽雨台",
-                    textColor = stextc
+                    LinearLayout,
+                    orientation = "vertical",
+                    layout_height = "-1",
+                    layout_width = "-1",
+                    id = "page3",
+                    gravity = "center",
+                    layout_weight = "1",
+                    onClick = function()
+                      jc.showPage(2)
+                    end,
+                    {
+                      ImageView,
+                      layout_height = "24dp",
+                      layout_width = "24dp",
+                      src = 图标("mode_comment"),
+                      ColorFilter = stextc,
+                      PivotX = "12dp",
+                      PivotY = "24dp"
+                    },
+                    {
+                      TextView,
+                      textSize = "14sp",
+                      Text = "绽雨台",
+                      textColor = stextc
+                    }
                   }
                 }
               }
@@ -4283,6 +4288,9 @@ function onCreate()
 
           return true
         end
+        if n == "getabyssinfo" then
+          return true
+        end
         if n == "signin" then
           mys_signIn()
           return true
@@ -4457,7 +4465,7 @@ function onCreate()
       {"悬浮浏览器", "floatweb"},
       {"查询账号信息","getinfo"},
       --{"深渊数据库","abyss"},
-      --{"查询深渊信息","getabyssinfo"},
+      {"查询深渊信息","getabyssinfo"},
     }
 
     for i, v in ipairs(tooltab) do
@@ -4873,7 +4881,7 @@ function onCreate()
 
     _debug_clock("adddaily_start")
 
-    dailylayoutp = {
+    local dailylayoutp = {
       LinearLayout,
       layout_width = "-2",
       layout_height = "-2",
@@ -5005,7 +5013,7 @@ function onCreate()
         }
       }
     }
-    dailylayoutw = {
+    local dailylayoutw = {
       LinearLayout,
       layout_width = "-2",
       layout_height = "-2",
@@ -5137,7 +5145,7 @@ function onCreate()
         }
       }
     }
-    --[[local alllayout = {
+    local alllayout = {
       LinearLayout,
       layout_width = "-1",
       layout_height = "-2",
@@ -5179,89 +5187,12 @@ function onCreate()
           }
         }
       }
-    }]]
+    }
 
     _debug_clock("adddaily_layout_ok")
 
     talentdata={}
     weapondata={}
-
-    talentholder=function(parent,viewType)
-      local views={}
-      holder=LuaRecyclerHolder(loadlayout(dailylayoutp,views))
-      holder.view.setTag(views)
-      return holder
-    end
-
-    talentadp=LuaRecyclerViewAdapter(LuaAdapterCreator({
-      getItemCount=function()
-        return #talentdata
-      end,
-      getItemViewType=function(position)
-        return 0
-      end,
-      onCreateViewHolder=talentholder,
-      onBindViewHolder=function(holder,position)
-        view=holder.view.getTag()
-        local adata=talentdata[position+1]
-        Glide.with(this).load(adata[2].."_3.png").into(view.pic1)
-        Glide.with(this).load(adata[2].."_2.png").into(view.pic2)
-        Glide.with(this).load(adata[2].."_1.png").into(view.pic3)
-        view.text.text=adata[1]
-      end,
-    }))
-
-    talent.setAdapter(talentadp)
-
-    local gvmanager=StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL)
-
-    talent.setLayoutManager(gvmanager)
-
-    _debug_clock("adddaily_talentsetting")
-
-    weaponholder=function(parent,viewType)
-      local views={}
-      holder=LuaRecyclerHolder(loadlayout(dailylayoutw,views))
-      holder.view.setTag(views)
-      return holder
-    end
-
-    weaponadp=LuaRecyclerViewAdapter(LuaAdapterCreator({
-      getItemCount=function()
-        return #weapondata
-      end,
-      getItemViewType=function(position)
-        return 0
-      end,
-      onCreateViewHolder=weaponholder,
-      onBindViewHolder=function(holder,position)
-        view=holder.view.getTag()
-        local adata=weapondata[position+1]
-        Glide.with(this).load(adata[2].."_3.png").into(view.pic1)
-        Glide.with(this).load(adata[2].."_2.png").into(view.pic2)
-        Glide.with(this).load(adata[2].."_1.png").into(view.pic3)
-        view.text.text=adata[1]
-      end,
-    }))
-
-    weapon.setAdapter(weaponadp)
-
-    local gvmanager=StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL)
-
-    weapon.setLayoutManager(gvmanager)
-
-    _debug_clock("adddaily_weaponsetting")
-
-    function addDaily(t, n, i)
-      local i = activity.getLuaDir("res/daily/" .. i)
-
-      if t == 1 then
-        talentdata[#talentdata+1]={n,i}
-      end
-      if t == 2 then
-        weapondata[#weapondata+1]={n,i}
-      end
-    end
 
     local week = os.date("%a")
     if tointeger(os.date("%H")) < 4 then
@@ -5279,6 +5210,104 @@ function onCreate()
         week = "Fri"
        elseif week == "Sun" then
         week = "Sat"
+      end
+    end
+
+    talentholder=function(parent,viewType)
+      local views={}
+      if week=="Sun"
+        holder=LuaRecyclerHolder(loadlayout(alllayout,views))
+       else
+        holder=LuaRecyclerHolder(loadlayout(dailylayoutp,views))
+      end
+      holder.view.setTag(views)
+      return holder
+    end
+
+    talentadp=LuaRecyclerViewAdapter(LuaAdapterCreator({
+      getItemCount=function()
+        return #talentdata
+      end,
+      getItemViewType=function(position)
+        return 0
+      end,
+      onCreateViewHolder=talentholder,
+      onBindViewHolder=function(holder,position)
+        view=holder.view.getTag()
+        if week~="Sun"
+          local adata=talentdata[position+1]
+          Glide.with(this).load(adata[2].."_3.png").into(view.pic1)
+          Glide.with(this).load(adata[2].."_2.png").into(view.pic2)
+          Glide.with(this).load(adata[2].."_1.png").into(view.pic3)
+          view.text.text=adata[1]
+        end
+      end,
+    }))
+
+    talent.setAdapter(talentadp)
+
+    local gvmanager=StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL)
+
+    talent.setLayoutManager(gvmanager)
+
+    _debug_clock("adddaily_talentsetting")
+
+    weaponholder=function(parent,viewType)
+      local views={}
+      if week=="Sun"
+        holder=LuaRecyclerHolder(loadlayout(alllayout,views))
+       else
+        holder=LuaRecyclerHolder(loadlayout(dailylayoutw,views))
+      end
+      holder.view.setTag(views)
+      return holder
+    end
+
+    weaponadp=LuaRecyclerViewAdapter(LuaAdapterCreator({
+      getItemCount=function()
+        return #weapondata
+      end,
+      getItemViewType=function(position)
+        return 0
+      end,
+      onCreateViewHolder=weaponholder,
+      onBindViewHolder=function(holder,position)
+        view=holder.view.getTag()
+        local adata=weapondata[position+1]
+        if week~="Sun"
+          Glide.with(this).load(adata[2].."_3.png").into(view.pic1)
+          Glide.with(this).load(adata[2].."_2.png").into(view.pic2)
+          Glide.with(this).load(adata[2].."_1.png").into(view.pic3)
+          view.text.text=adata[1]
+        end
+      end,
+    }))
+
+    weapon.setAdapter(weaponadp)
+
+    local gvmanager=StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.HORIZONTAL)
+
+    weapon.setLayoutManager(gvmanager)
+
+    _debug_clock("adddaily_weaponsetting")
+
+    function addDaily(t, n, i)
+      if n~="all"
+        local i = activity.getLuaDir("res/daily/" .. i)
+
+        if t == 1 then
+          talentdata[#talentdata+1]={n,i}
+        end
+        if t == 2 then
+          weapondata[#weapondata+1]={n,i}
+        end
+       else
+        if t == 1 then
+          talentdata[#talentdata+1]={n}
+        end
+        if t == 2 then
+          weapondata[#weapondata+1]={n}
+        end
       end
     end
 
@@ -6984,13 +7013,13 @@ function onCreate()
     end
 
     --[[if mukactivity.getData("tanutai_token") == nil then
-        控件可见(talogin)
-      else
-        --tarv
-        获取用户信息()
-        ta_article_page = 1
-        获取文章()
-      end]]
+      控件可见(talogin)
+     else
+      --tarv
+      获取用户信息()
+      ta_article_page = 1
+      获取文章()
+    end--]]
 
     --[[page1.onLongClick=function()
       activity.newActivity("tools/scan")
