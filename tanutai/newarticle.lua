@@ -2,6 +2,14 @@ require "import"
 import "mods.muk"
 import "mods.tanutai"
 
+import "okhttp3.OkHttpClient"
+import "okhttp3.Request"
+import "okhttp3.Call"
+import "okhttp3.RequestBody"
+import "okhttp3.FormBody"
+import "okhttp3.MediaType"
+import "okhttp3.MultipartBody"
+
 activity.Title="写文章"
 
 layout={
@@ -367,7 +375,7 @@ markwon = Markwon.builder(this)
   load=function(drawable)
     local link=drawable.getDestination()
     local glideUrl
-    if link:find("tanutai%-1254044507") then
+    if link:find("tpic.mukapp.top") then
       glideUrl = GlideUrl(link, LazyHeaders.Builder()
       .addHeader("Referer", "https://tanutai.mukapp.top")
       .build())
@@ -379,6 +387,11 @@ markwon = Markwon.builder(this)
     return Glide.with(this)
     .load(glideUrl)
     .placeholder(BitmapDrawable(loadbitmap("res/loading_image.png")))
+    .transition(DrawableTransitionOptions
+    .with(DrawableCrossFadeFactory.Builder(328)
+    .setCrossFadeEnabled(true).build()))
+    .override(activity.Width-dp2px(16*2*2), dp2px(512))
+    .transform({FitCenter(), RoundedCorners(dp2px(6))})
   end,
   cancel=function(target)
     Glide.with(this).clear(target)
@@ -475,62 +488,12 @@ bardata={
   {"代码块","code_block_icons8"},
 }
 
-function uploadFile ( uploadUrl, filePath)
-  import "android.widget.LinearLayout"
-  import "android.widget.TextView"
-  import "java.net.URL"
-  import "java.io.DataOutputStream"
-  import "java.io.InputStreamReader"
-  import "java.io.BufferedReader"
-  import "java.io.FileInputStream"
-  import "java.lang.String"
-  -- Log.v(TAG, "url:" + uploadUrl);
-  -- Log.v(TAG, "filePath:" + filePath);String(filePath)
-  filePath=String(filePath)
-  nextLine = "\r\n";
-  dividerStart = "--";
-  boundary = "******";
-  --try {  URL
-  url = URL(uploadUrl);
-  connection = url.openConnection();
-  connection.setChunkedStreamingMode(1024 * 256);
-  connection.setDoInput(true);
-  connection.setDoOutput(true);
-  connection.setUseCaches(false);
-  connection.setRequestMethod("POST");
-  --// 设置Http请求头
-  connection.setRequestProperty("Connection", "Keep-Alive");
-  connection.setRequestProperty("Charset", "UTF-8");
-  --//必须在Content-Type 请求头中指定分界符
-  connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" .. boundary);
-  --//定义数据写入流，准备上传文件
-  dos = DataOutputStream(connection.getOutputStream());
-  dos.writeBytes(dividerStart .. boundary .. nextLine);
-
-  -----------------重点！！要考--------//设置与上传文件相关的信息---------------
-  dos.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\""..filePath.substring(filePath.lastIndexOf("/") + 1) .. "\"" .. nextLine);
-
-  dos.writeBytes(nextLine);
-  fis = FileInputStream(filePath);
-  buffer = byte[1024 * 32];
-  count = fis.read(buffer)
-  --// 读取文件内容，并写入OutputStream对象
-  while count~= -1 do
-    dos.write(buffer, 0, count);
-    count = fis.read(buffer)
+function watermark(n)
+  if n==""
+    return ""
+   else
+    return "?imageView2/0/q/75|watermark/2/text/"..n.."/font/6buR5L2T/fontsize/640/fill/I0VFRUVFRQ==/dissolve/83/gravity/SouthEast/dx/10/dy/10"
   end
-  fis.close();
-  dos.writeBytes(nextLine);
-  dos.writeBytes(dividerStart .. boundary .. dividerStart .. nextLine);
-  dos.flush();
-  --// 开始读取从服务器传过来的信息
-  is = connection.getInputStream();
-  br = BufferedReader( InputStreamReader(is, "UTF-8"));
-  result = br.readLine();
-  dos.close();
-  is.close();
-  connection.disconnect();
-  return result;
 end
 
 for i,v in ipairs(bardata) do
@@ -570,79 +533,50 @@ for i,v in ipairs(bardata) do
          elseif v[1]=="图片" then
           ChooseFile("image/*",function(f)
             加载对话框("正在上传图片","请稍等…",0)
-            local url="https://pic.mukapp.top/api/upload"
-            function uploadResponse(code,content)
-              关闭对话框()
-              if code==200 then
-                local data=JSON.decode(content)
-                if data.code==200 then
-                  local url=data.data.url
-                  insert(" [![图片描述]("..url..")](image::"..url..") ")
-                 else
-                  提示("上传失败："..data.msg)
-                end
-               else
-                提示("上传失败："..content)
+            local url="https://pic.mukapp.top/api/v1/upload"
+            -- 拿到Client
+            local okHttpClient = OkHttpClient()
+
+            local request_body = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart("file", String(f).substring(String(f).lastIndexOf("/") + 1), RequestBody.create(MediaType.parse("image/*"), File(f)))
+            .build()
+
+            local request = Request.Builder()
+            .header("Accept","application/json")
+            .header("Content-Type","multipart/form-data")
+            .url(url)
+            .post(request_body)
+            .build()
+
+            -- 封装为Call
+            local m_call = okHttpClient.newCall(request)
+
+            -- 异步请求
+            m_call.enqueue({
+              onFailure = function(call, e)
+                activity.runOnUiThread(function()
+                  关闭对话框()
+                  提示("上传失败："..e.getMessage())
+                end)
+              end,
+              onResponse = function(call, response)
+                local res = response.body().string()
+                activity.runOnUiThread(function()
+                  关闭对话框()
+                  local data=JSON.decode(res)
+                  printLog("uploadImage",data)
+                  if data.status==true then
+                    local thumbnail_url=data.data.links.thumbnail_url
+                    local url=data.data.links.url
+                    提示("上传成功")
+                    insert(" [![图片描述]("..thumbnail_url..")](image::"..url..") ")
+                   else
+                    提示("上传失败："..data.message)
+                  end
+                end)
               end
-            end
-            thread(function(uploadUrl,filePath)
-              xpcall(function()
-                require "import"
-                import "java.net.URL"
-                import "java.io.DataOutputStream"
-                import "java.io.InputStreamReader"
-                import "java.io.BufferedReader"
-                import "java.io.FileInputStream"
-                import "java.lang.String"
-
-                local filePath=String(filePath)
-                local nextLine = "\r\n";
-                local dividerStart = "--";
-                local boundary = UUID.randomUUID().toString()
-                local url = URL(uploadUrl);
-                local connection = url.openConnection();
-                connection.setChunkedStreamingMode(1024 * 256);
-                connection.setDoInput(true);
-                connection.setDoOutput(true);
-                connection.setUseCaches(false);
-                connection.setRequestMethod("POST");
-                --// 设置Http请求头
-                connection.setRequestProperty("Connection", "Keep-Alive");
-                connection.setRequestProperty("Charset", "UTF-8");
-                --//必须在Content-Type 请求头中指定分界符
-                connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" .. boundary);
-                --//定义数据写入流，准备上传文件
-                local dos = DataOutputStream(connection.getOutputStream())
-                dos.writeBytes(dividerStart .. boundary .. nextLine)
-                -----------------重点！！要考--------//设置与上传文件相关的信息---------------
-                dos.writeBytes("Content-Disposition: form-data; name=\"image\"; filename=\""..filePath.substring(filePath.lastIndexOf("/") + 1) .. "\""..nextLine.."Content-Type: multipart/form-data"..nextLine)
-
-                dos.writeBytes(nextLine)
-                local fis = FileInputStream(filePath);
-                local buffer = byte[1024 * 32];
-                local count = fis.read(buffer)
-                --// 读取文件内容，并写入OutputStream对象
-                while count~= -1 do
-                  dos.write(buffer, 0, count);
-                  count = fis.read(buffer)
-                end
-                fis.close()
-                dos.writeBytes((nextLine))
-                dos.writeBytes((dividerStart .. boundary .. dividerStart .. nextLine))
-                dos.flush()
-                --// 开始读取从服务器传过来的信息
-                local is = connection.getInputStream()
-                code=connection.getResponseCode()
-                local br = BufferedReader(InputStreamReader(is, "UTF-8"))
-                result = br.readLine()
-                dos.close()
-                is.close()
-                connection.disconnect()
-                call("uploadResponse",code,result)
-                end,function(e)
-                call("uploadResponse",1001,e)
-              end)
-            end,url,f)
+            })
 
           end)
          elseif v[1]=="视频" then

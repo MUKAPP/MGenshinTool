@@ -17,8 +17,6 @@ import "com.pretend.recyclerview.LuaSpanSizeLookup$luaSpanSizeLookup"
 import "com.michael.*"
 
 import "com.bumptech.glide.request.RequestOptions"
-import "com.bumptech.glide.load.resource.bitmap.RoundedCorners"
-import "com.bumptech.glide.load.resource.bitmap.CenterCrop"
 
 local content
 

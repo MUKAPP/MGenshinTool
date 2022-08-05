@@ -14,18 +14,40 @@ import "com.bumptech.glide.load.model.*"
 import "com.bumptech.glide.request.target.Target"
 
 import "android.graphics.drawable.ColorDrawable"
+import "android.graphics.PorterDuff"
+import "android.graphics.PorterDuffColorFilter"
 
 local link=...
 
 activity.setContentView(loadlayout{
-  PhotoView,
+  RelativeLayout,
   layout_width="-1",
   layout_height="-1",
-  id="photo",
+  {
+    LinearLayout,
+    layout_width="-1",
+    layout_height="-1",
+    Gravity = "center",
+    {
+      ProgressBar,
+      layout_width = "56dp",
+      layout_height = "56dp",
+      id="pb",
+    },
+  },
+  {
+    PhotoView,
+    layout_width="-1",
+    layout_height="-1",
+    id="photo",
+  },
 })
 
+
+pb.IndeterminateDrawable.setColorFilter(PorterDuffColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP))
+
 local glideUrl
-if link:find("tanutai%-1254044507") then
+if link:find("tpic.mukapp.top") then
   glideUrl = GlideUrl(link, LazyHeaders.Builder()
   .addHeader("Referer", "https://tanutai.mukapp.top")
   .build())
@@ -38,12 +60,11 @@ end
 Glide.with(activity)
 .load(glideUrl)
 --.skipMemoryCache(true)
-.override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) 
+.override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
 .into(photo)
 
 photo.onClick=function()
   activity.finish()
-
 end
 
 photo.onLongClick=function()

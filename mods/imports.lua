@@ -87,6 +87,10 @@ import "com.bumptech.glide.load.resource.drawable.*"
 import "com.bumptech.glide.request.*"
 import "com.bumptech.glide.request.transition.*"
 
+import "com.bumptech.glide.load.resource.bitmap.RoundedCorners"
+import "com.bumptech.glide.load.resource.bitmap.CenterCrop"
+import "com.bumptech.glide.load.resource.bitmap.FitCenter"
+
 import "com.dingyi.dialog.*"
 
 --import "com.github.mmin18.widget.*"

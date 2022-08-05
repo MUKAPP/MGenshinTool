@@ -144,7 +144,7 @@ api.articles=function(page,order,include,ret,err)
   map.put("token",mukactivity.getData("tanutai_token"))
 
   Http.get(
-  api.apiurl.."articles?page="..page.."&order="..order..
+  api.apiurl.."articles?per_page=10&page="..page.."&order="..order..
   "&include="..include,nil,nil,
   map,
   function(code,content)

@@ -40,6 +40,8 @@ import "jp.wasabeef.glide.transformations.BlurTransformation"
 
 import "mods.tanutai"
 
+import "mods.hoyobbs"
+
 _debug_clock("import_end")
 
 local subtitle,
@@ -3481,72 +3483,6 @@ function onCreate()
       mNManager.notify(tointeger(id), notification)
     end
 
-    function getDS()
-      local i = tostring(tointeger(os.time()))
-
-      local ascii_lowercase_digits = {
-        "0",
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z"
-      }
-      local r = ""
-
-      for i = 1, 6 do
-        local ran = math.random(1, #ascii_lowercase_digits)
-        r = r .. ascii_lowercase_digits[ran]
-        table.remove(ascii_lowercase_digits, ran)
-      end
-
-      local c = string.lower(MD5("salt=h8w582wxwgqvahcdkpvdhbh2w9casgfl&t=" .. i .. "&r=" .. r))
-      return i .. "," .. r .. "," .. c
-    end
-
-    function getNewDS(q, b)
-      local b = b or ""
-      local q = q or ""
-
-      local i = tostring(tointeger(os.time()))
-
-      local r = tostring(math.random(100000, 200000))
-
-      local c =
-      string.lower(MD5("salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=" .. i .. "&r=" .. r .. "&b=" .. b .. "&q=" .. q))
-      return i .. "," .. r .. "," .. c
-    end
-
     function mys_signIn()
       local datas = {}
       xpcall(
@@ -3669,6 +3605,7 @@ function onCreate()
               Http.get(
               "https://bbs-api.mihoyo.com/apihub/api/home/new?cpu=mt6785v/cc&device=Xiaomi%20Redmi%20Note%208%20Pro&gids=2",
               function(code, content)
+                printLog("BBS Sign","get info",code, content)
                 if code ~= 200 then
                   签到加文字("请求失败，错误码：" .. code)
                   issigning = false
@@ -3687,13 +3624,18 @@ function onCreate()
                         --print(ds)
 
                         local map = HashMap()
+                        map.put("Origin", "https://webstatic.mihoyo.com")
+                        map.put("x-rpc-app_version", mihoyobbs_Version)
                         map.put(
                         "User-Agent",
-                        "Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro Build/RKQ1.210518.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.120 Mobile Safari/537.36 miHoYoBBS/2.10.1"
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
                         )
-                        map.put("x-rpc-device_id", string.upper(tostring(UUID.randomUUID()):gsub("%-", "")))
                         map.put("x-rpc-client_type", "5")
-                        map.put("x-rpc-app_version", "2.3.0")
+                        map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
+                        map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+                        map.put("X-Requested-With", "com.mihoyo.hyperion")
+                        map.put("Content-Type", "application/json")
+
                         map.put("DS", ds)
 
                         Http.post(
@@ -3709,6 +3651,7 @@ function onCreate()
                         nil,
                         map,
                         function(code, content)
+                          printLog("BBS Sign","sign",code, content)
                           if code ~= 200 then
                             签到加文字("请求失败，错误码：" .. code)
                             issigning = false
@@ -3728,6 +3671,7 @@ function onCreate()
                           nil,
                           function(code, content)
                             local content = JSON.decode(content)
+                            printLog("BBS Sign","get sign info",code, content)
                             --[[data={
                           ["message"] = "OK" ;
                           ["data"] = {
@@ -3754,6 +3698,7 @@ function onCreate()
                             nil,
                             nil,
                             function(code, content)
+                              printLog("BBS Sign","get final",code, content)
                               if code ~= 200 then
                                 签到加文字("请求失败，错误码：" .. code)
                                 issigning = false
@@ -3875,6 +3820,7 @@ function onCreate()
               nil,
               map,
               function(code, content)
+                关闭对话框()
                 if code ~= 200 then
                   提示("请求失败，错误码：" .. code)
                   return true
@@ -3883,7 +3829,6 @@ function onCreate()
                   提示("获取失败：" .. JSON.decode(content).message)
                   return true
                 end
-                关闭对话框()
                 activity.newActivity("tools/get_info", {content, uid})
               end
               )
@@ -4460,7 +4405,7 @@ function onCreate()
       {"悬浮浏览器", "floatweb"},
       {"查询账号信息","getinfo"},
       --{"深渊数据库","abyss"},
-      {"查询深渊信息","getabyssinfo"},
+      --{"查询深渊信息","getabyssinfo"},
     }
 
     for i, v in ipairs(tooltab) do
@@ -4809,7 +4754,10 @@ function onCreate()
               end
             }).start()
           end
-          Glide.with(activity).load(startphoto_image).into(startPhoto)
+          Glide.with(activity).load(startphoto_image)
+          .transition(DrawableTransitionOptions
+          .with(DrawableCrossFadeFactory.Builder(128)
+          .setCrossFadeEnabled(true).build())).into(startPhoto)
         end
        else
         pcall(
@@ -4833,7 +4781,7 @@ function onCreate()
     _debug_clock("getservercontent_end")
 
     sti = Ticker()
-    sti.Period = 5000
+    sti.Period = 5500
     sti.onTick = function()
       pcall(
       function()
@@ -6179,7 +6127,7 @@ function onCreate()
       load = function(drawable)
         local link = drawable.getDestination()
         local glideUrl
-        if link:find("tanutai%-1254044507") then
+        if link:find("tpic.mukapp.top") then
           glideUrl =
           GlideUrl(link, LazyHeaders.Builder().addHeader("Referer", "https://tanutai.mukapp.top").build())
          else
@@ -6193,7 +6141,8 @@ function onCreate()
         return Glide.with(this).load(glideUrl).transition(
         --.placeholder(BitmapDrawable(loadbitmap("res/loading_image.png")))
         DrawableTransitionOptions.with(DrawableCrossFadeFactory.Builder(328).setCrossFadeEnabled(true).build())
-        ).override(activity.Width - dp2px(16 * 2 * 2), dp2px(80)).fitCenter()
+        ).override(activity.Width - dp2px(16 * 2 * 2), dp2px(80))
+        .transform({FitCenter(), RoundedCorners(dp2px(6))})
       end,
       cancel = function(target)
         Glide.with(this).clear(target)

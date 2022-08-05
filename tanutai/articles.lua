@@ -690,7 +690,7 @@ markwon = Markwon.builder(this)
                 local aid=content.data.aid
                 local pages=content.data.pages
                 local pagesinfo={}
-                for i=1,#pages  do
+                for i=1,#pages do
                   pagesinfo[#pagesinfo+1]={pages[i].cid,pages[i].dimension.width,pages[i].dimension.height,}
                 end
                 activity.newActivity("tanutai/bili",{aid,bv,pagesinfo,page})
@@ -720,7 +720,7 @@ markwon = Markwon.builder(this)
   load=function(drawable)
     local link=drawable.getDestination()
     local glideUrl
-    if link:find("tanutai%-1254044507") then
+    if link:find("tpic.mukapp.top") then
       glideUrl = GlideUrl(link, LazyHeaders.Builder()
       .addHeader("Referer", "https://tanutai.mukapp.top")
       .build())
@@ -736,7 +736,7 @@ markwon = Markwon.builder(this)
     .with(DrawableCrossFadeFactory.Builder(328)
     .setCrossFadeEnabled(true).build()))
     .override(activity.Width-dp2px(16*2*2), dp2px(512))
-    .fitCenter()
+    .transform({FitCenter(), RoundedCorners(dp2px(6))})
   end,
   cancel=function(target)
     Glide.with(this).clear(target)

@@ -18,6 +18,8 @@ import "android.graphics.Color"
 import "java.net.URL"
 
 import "mods.mukmod"
+import "mods.hoyobbs"
+
 loadstring([[JSON=import "mods.json"]])()
 
 lastresin=0
@@ -116,71 +118,6 @@ function sendNotification(notification_title,notification_content,
 
   notification=builder.build();
   mNManager.notify(tointeger(id),notification);
-end
-
-function getNewDS(q,b)
-  local b=b or ""
-  local q=q or ""
-
-  local i = tostring(tointeger(os.time()))
-
-  local r = tostring(math.random(100000, 200000))
-
-  local c = string.lower(MD5("salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t="..i.."&r="..r.."&b="..b.."&q="..q))
-  return i..","..r..","..c
-end
-
-function getDS()
-  local i = tostring(tointeger(os.time()))
-
-  local ascii_lowercase_digits = {
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-    "a",
-    "b",
-    "c",
-    "d",
-    "e",
-    "f",
-    "g",
-    "h",
-    "i",
-    "j",
-    "k",
-    "l",
-    "m",
-    "n",
-    "o",
-    "p",
-    "q",
-    "r",
-    "s",
-    "t",
-    "u",
-    "v",
-    "w",
-    "x",
-    "y",
-    "z"
-  }
-  local r = ""
-
-  for i = 1, 6 do
-    local ran = math.random(1, #ascii_lowercase_digits)
-    r = r .. ascii_lowercase_digits[ran]
-    table.remove(ascii_lowercase_digits, ran)
-  end
-
-  local c = string.lower(MD5("salt=h8w582wxwgqvahcdkpvdhbh2w9casgfl&t=" .. i .. "&r=" .. r))
-  return i .. "," .. r .. "," .. c
 end
 
 function MD5(s)
@@ -725,13 +662,18 @@ function mys_signIn()
                     --print(ds)
 
                     local map = HashMap()
+                    map.put("Origin", "https://webstatic.mihoyo.com")
+                    map.put("x-rpc-app_version", mihoyobbs_Version)
                     map.put(
                     "User-Agent",
-                    "Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro Build/RKQ1.210518.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.120 Mobile Safari/537.36 miHoYoBBS/2.10.1"
+                    "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
                     )
-                    map.put("x-rpc-device_id", string.upper(tostring(UUID.randomUUID()):gsub("%-", "")))
                     map.put("x-rpc-client_type", "5")
-                    map.put("x-rpc-app_version", "2.3.0")
+                    map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
+                    map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+                    map.put("X-Requested-With", "com.mihoyo.hyperion")
+                    map.put("Content-Type", "application/json")
+
                     map.put("DS", ds)
 
                     Http.post(
