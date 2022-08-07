@@ -396,5 +396,5 @@ function json.decode(str)
   return res
 end
 
-
+JSON=json
 return json

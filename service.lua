@@ -1,26 +1,42 @@
 require "import"
 
+import "android.content.*"
+import "android.util.*"
+import "android.app.*"
+import "android.icu.util.*"
+import "java.util.*"
+import "android.net.*"
+import "android.os.*"
+import "android.graphics.*"
 import "androidx.core.app.NotificationCompat"
-
-import "android.app.NotificationChannel"
-import "android.content.Context"
-import "java.util.HashMap"
-import "com.androlua.Http"
-import "android.app.PendingIntent"
-import "android.os.Build"
-import "android.content.Intent"
-import "android.app.Notification"
+import "com.androlua.*"
 import "java.lang.Thread"
-import "android.app.NotificationManager"
-import "android.net.Uri"
-import "android.graphics.Color"
-
 import "java.net.URL"
 
-import "mods.mukmod"
+--import "mods.mukmod"
 import "mods.hoyobbs"
 
 loadstring([[JSON=import "mods.json"]])()
+
+
+function split(s, delim)
+  if not s then
+    return {}
+  end
+  assert (type (delim) == "string" and string.len (delim) > 0, "bad delimiter")
+  local start = 1
+  local t = {}
+  while true do
+    local pos = string.find(s, delim, start, true)
+    if not pos then
+      break
+    end
+    table.insert (t, string.sub (s, start, pos - 1))
+    start = pos + string.len (delim)
+  end
+  table.insert (t, string.sub (s, start))
+  return t
+end
 
 lastresin=0
 lastcoin=0
@@ -77,7 +93,7 @@ function sendNotification(notification_title,notification_content,
    else
   end
   --常驻通知
-  --if mukactivity.getData("Note_Notification_Ongoing")=="true"
+  --if this.getSharedData("Note_Notification_Ongoing")=="true"
   builder.setOngoing(ongoing)
   --else
   --builder.setOngoing(false)
@@ -482,7 +498,7 @@ function dailyNote2(retry)
           add("参量质变仪 未获得")
         end
 
-        add("（每"..tostring(mukactivity.getData("Note_Time")).."分钟刷新一次）")
+        add("（每"..tostring(this.getSharedData("Note_Time")).."分钟刷新一次）")
 
         if tointeger(data.current_resin)<lastresin then
           lastresin=0
@@ -532,11 +548,11 @@ function mys_signIn()
   local datas = {}
   xpcall(
   function()
-    datas = JSON.decode(mukactivity.getData("myscookies"))
+    datas = JSON.decode(this.getSharedData("myscookies"))
   end,
   function(e)
-    mukactivity.setData("myscookies", JSON.encode({}))
-    datas = JSON.decode(mukactivity.getData("myscookies"))
+    this.setSharedData("myscookies", JSON.encode({}))
+    datas = JSON.decode(this.getSharedData("myscookies"))
   end
   )
 
@@ -574,7 +590,7 @@ function mys_signIn()
     if signed >= allsign then
       cancel(4)
       signres = signres .. "\n\n若出现429错误码为短时间内请求过多，可以稍后再试\n"
-      mukactivity.setData("signresult", signres)
+      this.setSharedData("signresult", signres)
       --[[sendNotification(
               "签到结果",
               "点击查看更多\n" .. signres,
@@ -652,7 +668,7 @@ function mys_signIn()
             local content = JSON.decode(content)
             for i, v in ipairs(content.data.navigator) do
               if v.name == "签到福利" then
-                local data = mukutils.split(v.app_path:match("%?(.+)"), "&")
+                local data = split(v.app_path:match("%?(.+)"), "&")
                 for i, v in pairs(data) do
                   if v:find("act_id") then
                     local act_id = v:match("=(.+)")
@@ -793,7 +809,7 @@ function openService()
     end)
   end
   tidailyNote2=Ticker()
-  tidailyNote2.Period=tointeger(mukactivity.getData("Note_Time"))*60*1000
+  tidailyNote2.Period=tointeger(this.getSharedData("Note_Time"))*60*1000
   tidailyNote2.onTick=function()
     dailyNote2()
   end
@@ -809,16 +825,29 @@ function openService()
   autoSign.onTick=function()
     if tointeger(os.date("%H"))>=8 and tointeger(os.date("%H"))<=22
       if tointeger(os.date("%M"))==00
-        if mukactivity.getData("Note_Auto_Sign")=="true"
+        if this.getSharedData("Note_Auto_Sign")=="true"
           mys_signIn()
         end
       end
     end
   end
   autoSign.start()
-  if mukactivity.getData("Note_Auto_Sign2")=="true"
+  if this.getSharedData("Note_Auto_Sign2")=="true"
     mys_signIn()
   end
+end
+
+function closeService()
+  pcall(function()
+    cancel(1)
+    cancel(4)
+  end)
+  pcall(function()
+    tidailyNote2.stop()
+  end)
+  pcall(function()
+    autoSign.stop()
+  end)
 end
 
 openService()

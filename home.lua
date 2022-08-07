@@ -4405,7 +4405,7 @@ function onCreate()
       {"悬浮浏览器", "floatweb"},
       {"查询账号信息","getinfo"},
       --{"深渊数据库","abyss"},
-      --{"查询深渊信息","getabyssinfo"},
+      {"查询深渊信息","getabyssinfo"},
     }
 
     for i, v in ipairs(tooltab) do
@@ -5787,6 +5787,7 @@ function onCreate()
         --print("启用服务")
         activity.startService()
        else
+        LuaService.getService().runFunc("closeService", nil)
         activity.stopService()
         activity.startService()
       end
@@ -7463,7 +7464,13 @@ function onStart()
       --print("启用服务")
       activity.startService()
     end
+   else
+    if LuaService.getService() then
+      LuaService.getService().runFunc("closeService", nil)
+      activity.stopService()
+    end
   end
+
   _debug_clock("onstart_end")
 end
 

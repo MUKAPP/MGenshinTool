@@ -1651,9 +1651,48 @@ page2b.setAdapter(adapter2b)
 page3b.setAdapter(adapter3b)
 page7b.setAdapter(adapter7b)
 
+local localtable={}
+local localtable2={}
+
+function addlocaltable(num,n)
+  if num==1
+    localtable[#localtable+1]=n
+   elseif num==2
+    localtable2[#localtable2+1]=n
+  end
+end
+
+function addlocaltable_start(num,tab)
+  if num==1
+    localtable=tab
+   elseif num==2
+    localtable2=tab
+  end
+end
+
+function addlocaltable_end(num,tab)
+  if num==1
+    tab=localtable
+    localtable={}
+   elseif num==2
+    tab=localtable2
+    localtable2={}
+  end
+end
+
 function addtalent(i,v)
-  table.insert(loadstring("return data"..(v+1))(),{"角色天赋素材"})
-  table.insert(loadstring("return data"..(v+1).."_type")(),1)
+
+  --local lastclock=os.clock()
+
+  addlocaltable_start(1,loadstring("return data"..(v+1))())
+  addlocaltable_start(2,loadstring("return data"..(v+1).."_type")())
+
+  addlocaltable(1,{"角色天赋素材"})
+  addlocaltable(2,1)
+
+  --table.insert(loadstring("return data"..(v+1))(),{"角色天赋素材"})
+  --table.insert(loadstring("return data"..(v+1).."_type")(),1)
+
   local ntab=talenttab[i]
   for i2=1,#ntab do
     local sttext=ntab[i2][1];
@@ -1664,13 +1703,13 @@ function addtalent(i,v)
 
     local stsrc3="res/daily/"..ntab[i2][2].."_1.png"
 
-
-    table.insert(loadstring("return data"..(v+1))(),{sttext,stsrc1,stsrc2,stsrc3})
-    table.insert(loadstring("return data"..(v+1).."_type")(),2)
+    addlocaltable(1,{sttext,stsrc1,stsrc2,stsrc3})
+    addlocaltable(2,2)
+    --table.insert(loadstring("return data"..(v+1))(),{sttext,stsrc1,stsrc2,stsrc3})
+    --table.insert(loadstring("return data"..(v+1).."_type")(),2)
 
     local tab=ntab[i2][3]
     --遍历tab数据
-    local sh=0
     for k,v1 in ipairs(tab) do
       if all_person[v1] then
         if all_person[v1][2]==5 then
@@ -1680,29 +1719,27 @@ function addtalent(i,v)
         end
         local pname=all_person[v1][1];
         local ping=imgUrl..v1.."_avatar.png"
-        table.insert(loadstring("return data"..(v+1))(),{ping,pname,pcolor})
-        table.insert(loadstring("return data"..(v+1).."_type")(),3)
-        sh=sh+1
+        addlocaltable(1,{ping,pname,pcolor})
+        addlocaltable(2,3)
+        --table.insert(loadstring("return data"..(v+1))(),{ping,pname,pcolor})
+        --table.insert(loadstring("return data"..(v+1).."_type")(),3)
        else
         print(v)
       end
     end
-    --[[if tointeger(sh/3)~=sh/3
-      print("共"..3+(tointeger(sh/3)-sh/3)*3)
-      for i3=1,3+(tointeger(sh/3)-sh/3)*3
-        xpcall(function()
-          table.insert(loadstring("return data"..(v+1))(),{"空"})
-          table.insert(loadstring("return data"..(v+1).."_type")(),4)
-          end,function(e)
-          print(e)
-        end)
-      end
-    end]]
-
   end
 
-  table.insert(loadstring("return data"..(v+1).."b")(),{"武器突破素材"})
-  table.insert(loadstring("return data"..(v+1).."b_type")(),1)
+  addlocaltable_end(1,loadstring("return data"..(v+1))())
+  addlocaltable_end(2,loadstring("return data"..(v+1).."_type")())
+
+  addlocaltable_start(1,loadstring("return data"..(v+1).."b")())
+  addlocaltable_start(2,loadstring("return data"..(v+1).."b_type")())
+
+  addlocaltable(1,{"武器突破素材"})
+  addlocaltable(2,1)
+
+  --table.insert(loadstring("return data"..(v+1).."b")(),{"武器突破素材"})
+  --table.insert(loadstring("return data"..(v+1).."b_type")(),1)
   local ntab=weapontab[i]
 
   for i2=1,#ntab do
@@ -1715,14 +1752,15 @@ function addtalent(i,v)
 
     local stsrc3="res/daily/"..ntab[i2][2].."_1.png"
 
-    table.insert(loadstring("return data"..(v+1).."b")(),{sttext,stsrc1,stsrc2,stsrc3})
-    table.insert(loadstring("return data"..(v+1).."b_type")(),2)
+    addlocaltable(1,{sttext,stsrc1,stsrc2,stsrc3})
+    addlocaltable(2,2)
+
+    --table.insert(loadstring("return data"..(v+1).."b")(),{sttext,stsrc1,stsrc2,stsrc3})
+    --table.insert(loadstring("return data"..(v+1).."b_type")(),2)
 
     local tab=all_weapon[ntab[i2][1]]
     --遍历tab数据
-    local sh=0
     for k,v1 in ipairs(tab) do
-      sh=sh+1
       if tointeger(v1[4])==5 then
         pcolor="background5"
        elseif tointeger(v1[4])==4 then
@@ -1753,21 +1791,25 @@ function addtalent(i,v)
         ping=imgUrl2..v1[2].."_tn.webp"
       end]]
       --print(ping)
-      
-      table.insert(loadstring("return data"..(v+1).."b")(),{ping,pname,pcolor})
-      table.insert(loadstring("return data"..(v+1).."b_type")(),3)
+
+      addlocaltable(1,{ping,pname,pcolor})
+      addlocaltable(2,3)
+      --table.insert(loadstring("return data"..(v+1).."b")(),{ping,pname,pcolor})
+      --table.insert(loadstring("return data"..(v+1).."b_type")(),3)
     end
-    --[[if tointeger(sh/3)~=sh/3
-      for i3=1,3+(tointeger(sh/3)-sh/3)*3
-        table.insert(loadstring("return data"..(v+1))(),{"空"})
-        table.insert(loadstring("return data"..(v+1).."_type")(),4)
-      end
-    end]]
 
   end
 
+  addlocaltable_end(1,loadstring("return data"..(v+1).."b")())
+  addlocaltable_end(2,loadstring("return data"..(v+1).."b_type")())
+
+  --local clock=os.clock()
+  --print(clock-lastclock)
+
   loadstring("return adapter"..(v+1))().notifyDataSetChanged()
   loadstring("return adapter"..(v+1).."b")().notifyDataSetChanged()
+
+  --print(os.clock()-clock)
 end
 
 jc.setOnPageChangeListener(PageView.OnPageChangeListener{
