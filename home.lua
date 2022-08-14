@@ -4496,7 +4496,7 @@ function onCreate()
       {"悬浮浏览器", "floatweb"},
       {"查询账号信息","getinfo"},
       --{"深渊数据库","abyss"},
-      {"查询深渊信息","getabyssinfo"},
+      --{"查询深渊信息","getabyssinfo"},
     }
 
     for i, v in ipairs(tooltab) do
