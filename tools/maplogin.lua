@@ -117,10 +117,10 @@ function onCreate()
               Text = "登录完成后点击这里",
               onClick = function()
                 mukactivity.setData(
-                  "myscookie_map",
-                  CookieManager.getInstance().getCookie(
-                    "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html"
-                  )
+                "myscookie_map",
+                CookieManager.getInstance().getCookie(
+                "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html"
+                )
                 )
                 activity.getActivity("home").call("floatload",{"mihoyo"})
                 activity.finish()
@@ -295,14 +295,14 @@ function onCreate()
                 onClick = function()
                   closethirdpart()
                   xpcall(
-                    function()
-                      local uri = Uri.parse(thirdparturl)
-                      local intent = Intent(Intent.ACTION_VIEW, uri)
-                      activity.startActivity(intent)
-                    end,
-                    function(e)
-                      提示("拉起第三方应用失败")
-                    end
+                  function()
+                    local uri = Uri.parse(thirdparturl)
+                    local intent = Intent(Intent.ACTION_VIEW, uri)
+                    activity.startActivity(intent)
+                  end,
+                  function(e)
+                    提示("拉起第三方应用失败")
+                  end
                   )
                 end,
                 {
@@ -318,7 +318,7 @@ function onCreate()
                   Text = "跳转",
                   textColor = backgroundc,
                   BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
-                    ColorStateList(int[0].class {int {}}, int {bwz})
+                  ColorStateList(int[0].class {int {}}, int {bwz})
                   )
                 }
               },
@@ -346,7 +346,7 @@ function onCreate()
                   Text = "取消",
                   textColor = 转0x(backgroundc),
                   BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
-                    ColorStateList(int[0].class {int {}}, int {bwz})
+                  ColorStateList(int[0].class {int {}}, int {bwz})
                   )
                 }
               }
@@ -360,7 +360,7 @@ function onCreate()
   设置视图(layout)
 
   波纹({back, _more}, "圆主题")
-  波纹({xz}, "方主题")
+  波纹({xz,loginsuccess}, "方主题")
 
   web.removeView(web.getChildAt(0))
 
@@ -422,24 +422,24 @@ function onCreate()
   popadp.add {popadp_text = "停止加载"}
 
   Popup_list.setOnItemClickListener(
-    AdapterView.OnItemClickListener {
-      onItemClick = function(parent, v, pos, id)
-        pop.dismiss()
-        local s = v.Tag.popadp_text.Text
-        if s == "刷新" then
-          web.reload()
-        end
-        if s == "前进" then
-          web.goForward()
-        end
-        if s == "后退" then
-          web.goBack()
-        end
-        if s == "停止加载" then
-          web.stopLoading()
-        end
+  AdapterView.OnItemClickListener {
+    onItemClick = function(parent, v, pos, id)
+      pop.dismiss()
+      local s = v.Tag.popadp_text.Text
+      if s == "刷新" then
+        web.reload()
       end
-    }
+      if s == "前进" then
+        web.goForward()
+      end
+      if s == "后退" then
+        web.goBack()
+      end
+      if s == "停止加载" then
+        web.stopLoading()
+      end
+    end
+  }
   )
 
   import "com.lua.*"
@@ -447,114 +447,114 @@ function onCreate()
   静态渐变(转0x(primaryc) - 转0x("#9f000000"), 转0x(primaryc), webprogress, "横")
 
   darkmode =
-    'if(!document.getElementById(\'via_inject_css_night\')){var css=document.createElement(\'style\');css.id=\'via_inject_css_night\';css.type=\'text/css\';css.rel="stylesheet";var textNode=document.createTextNode(\'html{background-color:#202125!important}*{color:#999!important;box-shadow:none!important;background-color:transparent!important;border-color:#444!important;border-top-color:#444!important;border-bottom-color:#444!important;border-left-color:#444!important;border-right-color:#444!important}body{background-color:transparent!important}:after,:before{background-color:transparent!important;border-color:#444!important}a,a *{color:#88A8E8!important;text-decoration:none!important}.link:hover,.link:hover *,[role=button]:hover *,[role=link]:hover,[role=link]:hover *,[role=menuitem]:hover,[role=menuitem]:hover *,a:hover,a:hover *,a:visited:hover,a:visited:hover *,div[onclick]:hover,span[onclick]:hover{color:#F0F0F0!important}a:visited,a:visited *{color:#88a!important}.selected,.selected *,[href="#"],a.active,a.active *,a.highlight,a.highlight *{color:#DDD!important;font-weight:700!important}[class*=header],[class*=header] td,[class*=headline],[id*=header],[id*=headline],h1,h1 *,h2,h2 *,h3,h3 *,h4,h5,h6,strong{color:#DDD!important}[class*=alert],[class*=error],code,div[onclick],span[onclick]{color:#900!important}::-moz-selection{background-color:#88A8E8fa!important;color:#202125!important}::selection{background-color:#88A8E8fa!important;color:#202125!important}:focus{outline:0!important}div[role=navigation],div[style="display: block;"]{background-color:rgba(0,0,0,.5)!important}table{background-color:rgba(30,30,30,.4)!important;border-radius:6px!important}table>tbody>tr:nth-child(even),table>tbody>tr>td:nth-child(even){background-color:rgba(0,0,0,.2)!important}#ghostery-purple-bubble,#translator-popup,.hovercard,.menu,.tooltip,.vbmenu_popup,[class*=dropdown],[class*=nav] ul,[class*=popup],[class=title],[id*=Menu],[id*=menu],[id*=nav] ul,a[id*=ghosteryfirefox],a[onclick][style*=display],div[role=dialog],div[role=menu],div[style*="position:"][style*="left:"][style*=visible],div[style*="z-index:"][style*="left:"][style*=visible],div[style*="-moz-user-select"],embed,iframe,label [onclick],nav,nav ul,span[class*=script] div,ul[class*=menu],ul[style*="display:"],ul[style*="visibility:"] ul{background-color:rgba(5,5,5,.9)!important;border-radius:5px;box-shadow:1px 1px 5px #202125!important}#footer,#header,footer,header{background-color:rgba(19,19,19,.9)!important;box-shadow:0 0 5px #202125!important}body>#dialog,body>.xenOverlay{background-color:rgba(19,19,19,.96)!important;background-clip:padding-box!important;box-shadow:0 0 15px #202125,inset 0 0 0 1px rgba(200,200,200,.5),inset 0 0 5px #111!important}[id*=lightbox],[id*=overlay],blockquote{background-color:rgba(35,35,35,.9)!important;border-radius:5px}.Message code,dl,pre{background-color:rgba(5,5,5,.5)!important}.install[onclick],[role=button],a.BigButton,a.TabLink,a.button,a.submit,button,input,select{-moz-appearance:none!important;-webkit-appearance:none!important;transition:border-color .3s!important;background-color:#060606!important;color:#BBB!important;box-shadow:0 0 2px rgba(0,0,0,.9)!important}a[class*=button]:not(:empty),a[href="javascript:;"],a[id*=Button]:not(:empty),a[id*=button]:not(:empty),div[class*=button][onclick]{transition:border-color .3s!important;background-color:#060606!important;color:#BBB!important;border-color:#333!important;box-shadow:0 0 2px rgba(0,0,0,.9)!important}a[class*=button]:not(:empty):hover,a[href="javascript:;"]:hover,a[id*=Button]:not(:empty):hover,a[id*=button]:hover,div[class*=button][onclick]:hover{background-color:#151515!important;color:#FFF!important}a.button *,a.submit *,button *,input *,select *{color:#BBB!important}[role=button]:hover,a.BigButton:hover,a.TabLink:hover,a.button:hover,a.submit:hover,button:hover,input:hover,input[type=button]:hover,select:hover{border-top-color:#555!important;border-bottom-color:#555!important;border-left-color:#555!important;border-right-color:#555!important}input:focus,select:focus{box-shadow:0 0 5px #077!important}input :hover *{color:#F0F0F0!important}button[disabled],button[disabled]:focus,button[disabled]:hover,input[disabled],input[disabled]:focus,input[disabled]:hover,select[disabled],select[disabled]:focus,select[disabled]:hover{opacity:.5!important;border-color:#333!important}input[type=checkbox]{border-radius:1px!important}input[type=radio],input[type=radio]:focus{border-radius:100%!important}input[type=checkbox],input[type=radio]{min-width:12px;min-height:12px}input[type=checkbox]:checked,input[type=radio]:checked{border-color:#077!important;box-shadow:0 0 5px #077!important}select{padding-right:15px!important;background-color:#060606!important;transition:border-color .3s,background-position .3s!important}.Active .TabLink,a.BigButton:active,a.TabLink:active,a.button:active,a.submit:active,a[class*=button]:not(:empty):active,button:active,input[type=button]:active,input[type=submit]:active{background-color:#292929!important;color:#FFF!important}textarea{-moz-appearance:none!important;-webkit-appearance:none!important;background-color:rgba(0,0,0,.3)!important;border-radius:3px!important;box-shadow:inset 0 0 8px #202125!important;transition:border-color,background,.3s!important}textarea,textarea *{color:#C8C8C8!important}textarea:focus:hover,textarea:hover{border-color:#333!important}textarea:focus{background-color:rgba(0,0,0,.5)!important;border-color:#222!important}textarea:focus,textarea:focus>*{box-shadow:none!important}optgroup,option{-moz-appearance:none!important;-webkit-appearance:none!important;background-color:0 0!important;color:#666!important}optgroup{background-color:#222!important;color:#DDD!important}option:checked,option:focus,option:not([disabled]):hover{background-color:linear-gradient(#333,#292929)!important;color:#DDD!important}img{opacity:.7!important;transition:opacity .2s}#mpiv-popup,a:hover img,img:hover{opacity:1!important}.read-whole-mask .exp-mask,.se-head-tabcover,.wgt-exp-content .exp-img-mask{background-image:none!important}.s_card{background:0 0!important}\');css.appendChild(textNode);var o=document.getElementsByTagName("head");if(o.length>0&&o[0].appendChild(css)){}};'
+  'if(!document.getElementById(\'via_inject_css_night\')){var css=document.createElement(\'style\');css.id=\'via_inject_css_night\';css.type=\'text/css\';css.rel="stylesheet";var textNode=document.createTextNode(\'html{background-color:#202125!important}*{color:#999!important;box-shadow:none!important;background-color:transparent!important;border-color:#444!important;border-top-color:#444!important;border-bottom-color:#444!important;border-left-color:#444!important;border-right-color:#444!important}body{background-color:transparent!important}:after,:before{background-color:transparent!important;border-color:#444!important}a,a *{color:#88A8E8!important;text-decoration:none!important}.link:hover,.link:hover *,[role=button]:hover *,[role=link]:hover,[role=link]:hover *,[role=menuitem]:hover,[role=menuitem]:hover *,a:hover,a:hover *,a:visited:hover,a:visited:hover *,div[onclick]:hover,span[onclick]:hover{color:#F0F0F0!important}a:visited,a:visited *{color:#88a!important}.selected,.selected *,[href="#"],a.active,a.active *,a.highlight,a.highlight *{color:#DDD!important;font-weight:700!important}[class*=header],[class*=header] td,[class*=headline],[id*=header],[id*=headline],h1,h1 *,h2,h2 *,h3,h3 *,h4,h5,h6,strong{color:#DDD!important}[class*=alert],[class*=error],code,div[onclick],span[onclick]{color:#900!important}::-moz-selection{background-color:#88A8E8fa!important;color:#202125!important}::selection{background-color:#88A8E8fa!important;color:#202125!important}:focus{outline:0!important}div[role=navigation],div[style="display: block;"]{background-color:rgba(0,0,0,.5)!important}table{background-color:rgba(30,30,30,.4)!important;border-radius:6px!important}table>tbody>tr:nth-child(even),table>tbody>tr>td:nth-child(even){background-color:rgba(0,0,0,.2)!important}#ghostery-purple-bubble,#translator-popup,.hovercard,.menu,.tooltip,.vbmenu_popup,[class*=dropdown],[class*=nav] ul,[class*=popup],[class=title],[id*=Menu],[id*=menu],[id*=nav] ul,a[id*=ghosteryfirefox],a[onclick][style*=display],div[role=dialog],div[role=menu],div[style*="position:"][style*="left:"][style*=visible],div[style*="z-index:"][style*="left:"][style*=visible],div[style*="-moz-user-select"],embed,iframe,label [onclick],nav,nav ul,span[class*=script] div,ul[class*=menu],ul[style*="display:"],ul[style*="visibility:"] ul{background-color:rgba(5,5,5,.9)!important;border-radius:5px;box-shadow:1px 1px 5px #202125!important}#footer,#header,footer,header{background-color:rgba(19,19,19,.9)!important;box-shadow:0 0 5px #202125!important}body>#dialog,body>.xenOverlay{background-color:rgba(19,19,19,.96)!important;background-clip:padding-box!important;box-shadow:0 0 15px #202125,inset 0 0 0 1px rgba(200,200,200,.5),inset 0 0 5px #111!important}[id*=lightbox],[id*=overlay],blockquote{background-color:rgba(35,35,35,.9)!important;border-radius:5px}.Message code,dl,pre{background-color:rgba(5,5,5,.5)!important}.install[onclick],[role=button],a.BigButton,a.TabLink,a.button,a.submit,button,input,select{-moz-appearance:none!important;-webkit-appearance:none!important;transition:border-color .3s!important;background-color:#060606!important;color:#BBB!important;box-shadow:0 0 2px rgba(0,0,0,.9)!important}a[class*=button]:not(:empty),a[href="javascript:;"],a[id*=Button]:not(:empty),a[id*=button]:not(:empty),div[class*=button][onclick]{transition:border-color .3s!important;background-color:#060606!important;color:#BBB!important;border-color:#333!important;box-shadow:0 0 2px rgba(0,0,0,.9)!important}a[class*=button]:not(:empty):hover,a[href="javascript:;"]:hover,a[id*=Button]:not(:empty):hover,a[id*=button]:hover,div[class*=button][onclick]:hover{background-color:#151515!important;color:#FFF!important}a.button *,a.submit *,button *,input *,select *{color:#BBB!important}[role=button]:hover,a.BigButton:hover,a.TabLink:hover,a.button:hover,a.submit:hover,button:hover,input:hover,input[type=button]:hover,select:hover{border-top-color:#555!important;border-bottom-color:#555!important;border-left-color:#555!important;border-right-color:#555!important}input:focus,select:focus{box-shadow:0 0 5px #077!important}input :hover *{color:#F0F0F0!important}button[disabled],button[disabled]:focus,button[disabled]:hover,input[disabled],input[disabled]:focus,input[disabled]:hover,select[disabled],select[disabled]:focus,select[disabled]:hover{opacity:.5!important;border-color:#333!important}input[type=checkbox]{border-radius:1px!important}input[type=radio],input[type=radio]:focus{border-radius:100%!important}input[type=checkbox],input[type=radio]{min-width:12px;min-height:12px}input[type=checkbox]:checked,input[type=radio]:checked{border-color:#077!important;box-shadow:0 0 5px #077!important}select{padding-right:15px!important;background-color:#060606!important;transition:border-color .3s,background-position .3s!important}.Active .TabLink,a.BigButton:active,a.TabLink:active,a.button:active,a.submit:active,a[class*=button]:not(:empty):active,button:active,input[type=button]:active,input[type=submit]:active{background-color:#292929!important;color:#FFF!important}textarea{-moz-appearance:none!important;-webkit-appearance:none!important;background-color:rgba(0,0,0,.3)!important;border-radius:3px!important;box-shadow:inset 0 0 8px #202125!important;transition:border-color,background,.3s!important}textarea,textarea *{color:#C8C8C8!important}textarea:focus:hover,textarea:hover{border-color:#333!important}textarea:focus{background-color:rgba(0,0,0,.5)!important;border-color:#222!important}textarea:focus,textarea:focus>*{box-shadow:none!important}optgroup,option{-moz-appearance:none!important;-webkit-appearance:none!important;background-color:0 0!important;color:#666!important}optgroup{background-color:#222!important;color:#DDD!important}option:checked,option:focus,option:not([disabled]):hover{background-color:linear-gradient(#333,#292929)!important;color:#DDD!important}img{opacity:.7!important;transition:opacity .2s}#mpiv-popup,a:hover img,img:hover{opacity:1!important}.read-whole-mask .exp-mask,.se-head-tabcover,.wgt-exp-content .exp-img-mask{background-image:none!important}.s_card{background:0 0!important}\');css.appendChild(textNode);var o=document.getElementsByTagName("head");if(o.length>0&&o[0].appendChild(css)){}};'
 
   js = ""
 
   web.setWebChromeClient(
-    LuaWebChrome(
-      LuaWebChrome.IWebChrine {
-        onProgressChanged = function(view, newProgress)
-          local lpm = webprogress.getLayoutParams()
-          lpm.width = newProgress * (activity.Width / 100)
-          webprogress.setLayoutParams(lpm)
-          if 全局主题值 == "Night" or 全局主题值 == "Star" then
-            local v =
-              "var style = document.createElement('style');style.type='text/css';style.id='QQBrowserSDKNightMode';style.innerHTML='html,body{background:none !important;background-color: #1d1e2a !important;}html *{background-color: #1d1e2a !important; color:#888888 !important;border-color:#3e4f61 !important;text-shadow:none !important;box-shadow:none !important;}a,a *{border-color:#4c5b99 !important; color:#2d69b3 !important;text-decoration:none !important;}a:visited,a:visited *{color:#a600a6 !important;}a:active,a:active *{color:#5588AA !important;}input,select,textarea,option,button{background-image:none !important;color:#AAAAAA !important;border-color:#4c5b99 !important;}form,div,button,span{background-color:#1d1e2a !important; border-color:#4c5b99 !important;}img{opacity:0.5}';document.getElementsByTagName('HEAD').item(0).appendChild(style);"
-            web.loadUrl([[
+  LuaWebChrome(
+  LuaWebChrome.IWebChrine {
+    onProgressChanged = function(view, newProgress)
+      local lpm = webprogress.getLayoutParams()
+      lpm.width = newProgress * (activity.Width / 100)
+      webprogress.setLayoutParams(lpm)
+      if 全局主题值 == "Night" or 全局主题值 == "Star" then
+        local v =
+        "var style = document.createElement('style');style.type='text/css';style.id='QQBrowserSDKNightMode';style.innerHTML='html,body{background:none !important;background-color: #1d1e2a !important;}html *{background-color: #1d1e2a !important; color:#888888 !important;border-color:#3e4f61 !important;text-shadow:none !important;box-shadow:none !important;}a,a *{border-color:#4c5b99 !important; color:#2d69b3 !important;text-decoration:none !important;}a:visited,a:visited *{color:#a600a6 !important;}a:active,a:active *{color:#5588AA !important;}input,select,textarea,option,button{background-image:none !important;color:#AAAAAA !important;border-color:#4c5b99 !important;}form,div,button,span{background-color:#1d1e2a !important; border-color:#4c5b99 !important;}img{opacity:0.5}';document.getElementsByTagName('HEAD').item(0).appendChild(style);"
+        web.loadUrl([[
       javascript:(function()
-        { ]] .. darkmode .. [[ })()
+        { ]].. darkmode .. [[ })()
       ]])
-          end
-          web.loadUrl([[
+      end
+      web.loadUrl([[
       javascript:(function()
-        { ]] .. js .. [[ })()
+        { ]].. js .. [[ })()
       ]])
-        end,
-        onShowFileChooser = function(view, valueCallbackuri, fileChooserParams)
-          uploadMessageAboveL = valueCallbackuri
-          local intet = Intent(Intent.ACTION_GET_CONTENT)
-          intet.addCategory(Intent.CATEGORY_OPENABLE)
-          if fileChooserParams.getAcceptTypes() then
-            if tostring(fileChooserParams.getAcceptTypes()):find("/") then
-              --print(fileChooserParams.getAcceptTypes())
-              intet.setType(fileChooserParams.getAcceptTypes())
-            else
-              if fileChooserParams.getAcceptTypes()[0] ~= "" and fileChooserParams.getAcceptTypes()[0]:find("/") then
-                local types,
-                  num = "", 0
-                while true do
-                  local n = (fileChooserParams.getAcceptTypes()[num])
-                  if n:find("%.") then
-                  --n=n:gsub("%.","*/")
-                  end
-                  if types == "" then
-                    types = n
-                  else
-                    types = types .. ";" .. n
-                  end
-                  num = num + 1
-                  if
-                    not pcall(
-                      function()
-                        local a = fileChooserParams.getAcceptTypes()[num]
-                      end
-                    )
-                   then
-                    break
-                  end
+    end,
+    onShowFileChooser = function(view, valueCallbackuri, fileChooserParams)
+      uploadMessageAboveL = valueCallbackuri
+      local intet = Intent(Intent.ACTION_GET_CONTENT)
+      intet.addCategory(Intent.CATEGORY_OPENABLE)
+      if fileChooserParams.getAcceptTypes() then
+        if tostring(fileChooserParams.getAcceptTypes()):find("/") then
+          --print(fileChooserParams.getAcceptTypes())
+          intet.setType(fileChooserParams.getAcceptTypes())
+         else
+          if fileChooserParams.getAcceptTypes()[0] ~= "" and fileChooserParams.getAcceptTypes()[0]:find("/") then
+            local types,
+            num = "", 0
+            while true do
+              local n = (fileChooserParams.getAcceptTypes()[num])
+              if n:find("%.") then
+                --n=n:gsub("%.","*/")
+              end
+              if types == "" then
+                types = n
+               else
+                types = types .. ";" .. n
+              end
+              num = num + 1
+              if
+                not pcall(
+                function()
+                  local a = fileChooserParams.getAcceptTypes()[num]
                 end
-                intet.setType(types)
-              else
-                --print("* /1")
-                intet.setType("*/*")
+                )
+                then
+                break
               end
             end
-          else
-            --print("* /2")
+            intet.setType(types)
+           else
+            --print("* /1")
             intet.setType("*/*")
           end
-          if mukactivity.getData("Web_Upload_All_Types_File") == "true" then
-            intet.setType("*/*")
-          end
-          activity.startActivityForResult(Intent.createChooser(intet, "File Chooser"), 1)
-          --准备回调
-          onActivityResult = function(req, res, intent)
-            if (res == Activity.RESULT_CANCELED) then
-              if (uploadMessageAboveL ~= nil) then
-                uploadMessageAboveL.onReceiveValue(nil)
-              end
-            end
-            local results
-            if (res == Activity.RESULT_OK) then
-              if (uploadMessageAboveL == nil or type(uploadMessageAboveL) == "number") then
-                return
-              end
-              if (intent ~= nil) then
-                local dataString = intent.getDataString()
-                local clipData = intent.getClipData()
-                if (clipData ~= nil) then
-                  results = Uri[clipData.getItemCount()]
-                  for i = 0, clipData.getItemCount() - 1 do
-                    local item = clipData.getItemAt(i)
-                    results[i] = item.getUri()
-                  end
-                end
-                if (dataString ~= nil) then
-                  results = Uri[1]
-                  results[0] = Uri.parse(dataString)
-                end
-              end
-            end
-            if (results ~= nil) then
-              uploadMessageAboveL.onReceiveValue(results)
-              uploadMessageAboveL = nil
-            end
-          end
-          return true
         end
-      }
-    )
+       else
+        --print("* /2")
+        intet.setType("*/*")
+      end
+      if mukactivity.getData("Web_Upload_All_Types_File") == "true" then
+        intet.setType("*/*")
+      end
+      activity.startActivityForResult(Intent.createChooser(intet, "File Chooser"), 1)
+      --准备回调
+      onActivityResult = function(req, res, intent)
+        if (res == Activity.RESULT_CANCELED) then
+          if (uploadMessageAboveL ~= nil) then
+            uploadMessageAboveL.onReceiveValue(nil)
+          end
+        end
+        local results
+        if (res == Activity.RESULT_OK) then
+          if (uploadMessageAboveL == nil or type(uploadMessageAboveL) == "number") then
+            return
+          end
+          if (intent ~= nil) then
+            local dataString = intent.getDataString()
+            local clipData = intent.getClipData()
+            if (clipData ~= nil) then
+              results = Uri[clipData.getItemCount()]
+              for i = 0, clipData.getItemCount() - 1 do
+                local item = clipData.getItemAt(i)
+                results[i] = item.getUri()
+              end
+            end
+            if (dataString ~= nil) then
+              results = Uri[1]
+              results[0] = Uri.parse(dataString)
+            end
+          end
+        end
+        if (results ~= nil) then
+          uploadMessageAboveL.onReceiveValue(results)
+          uploadMessageAboveL = nil
+        end
+      end
+      return true
+    end
+  }
+  )
   )
 
   loaderror = false
@@ -590,10 +590,10 @@ function onCreate()
       title.setText(web.getTitle())
       if 全局主题值 == "Night" then
         local v =
-          "var style = document.createElement('style');style.type='text/css';style.id='QQBrowserSDKNightMode';style.innerHTML='html,body{background:none !important;background-color: #1d1e2a !important;}html *{background-color: #1d1e2a !important; color:#888888 !important;border-color:#3e4f61 !important;text-shadow:none !important;box-shadow:none !important;}a,a *{border-color:#4c5b99 !important; color:#2d69b3 !important;text-decoration:none !important;}a:visited,a:visited *{color:#a600a6 !important;}a:active,a:active *{color:#5588AA !important;}input,select,textarea,option,button{background-image:none !important;color:#AAAAAA !important;border-color:#4c5b99 !important;}form,div,button,span{background-color:#1d1e2a !important; border-color:#4c5b99 !important;}img{opacity:0.5}';document.getElementsByTagName('HEAD').item(0).appendChild(style);"
+        "var style = document.createElement('style');style.type='text/css';style.id='QQBrowserSDKNightMode';style.innerHTML='html,body{background:none !important;background-color: #1d1e2a !important;}html *{background-color: #1d1e2a !important; color:#888888 !important;border-color:#3e4f61 !important;text-shadow:none !important;box-shadow:none !important;}a,a *{border-color:#4c5b99 !important; color:#2d69b3 !important;text-decoration:none !important;}a:visited,a:visited *{color:#a600a6 !important;}a:active,a:active *{color:#5588AA !important;}input,select,textarea,option,button{background-image:none !important;color:#AAAAAA !important;border-color:#4c5b99 !important;}form,div,button,span{background-color:#1d1e2a !important; border-color:#4c5b99 !important;}img{opacity:0.5}';document.getElementsByTagName('HEAD').item(0).appendChild(style);"
         web.loadUrl([[
       javascript:(function()
-        { ]] .. darkmode .. [[ })()
+        { ]].. darkmode .. [[ })()
       ]])
       end
       activity.Title = web.getTitle()
@@ -614,16 +614,16 @@ function onCreate()
       if url:find("getUserGameRolesByCookie") then
         --web.getCookie()
         web.post(
-          Runnable {
-            run = function()
-              --[[Http.get(url,web.getCookie(),nil,nil,
+        Runnable {
+          run = function()
+            --[[Http.get(url,web.getCookie(),nil,nil,
             function(code,con)
               local con=JSON.decode(con)
               --print(con.data.list[0])
               --web.loadUrl("https://api-takumi.mihoyo.com/event/bbs_sign_reward/info?act_id=e202009291139501&region=cn_gf01&uid=114640851")
             end)]]
-            end
-          }
+          end
+        }
         )
       end
     end
@@ -649,8 +649,30 @@ function onCreate()
   CookieManager.getInstance().removeAllCookies(nil)
   CookieManager.getInstance().flush()
 
+  CookieSyncManager.createInstance(this)
+  cookieManager = CookieManager.getInstance()
+  cookieManager.setAcceptCookie(true)
+  cookieManager.removeSessionCookie() --移除
+  cookieManager.setCookie(
+  "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
+  ""
+  )
+  cookieManager.setCookie(".mihoyo.com", "") --cookies是在HttpClient中获得的cookie
+  CookieSyncManager.getInstance().sync()
+
+  CookieManager.getInstance().setCookie(
+  "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
+  ""
+  )
+
+  web.setCookie(".mihoyo.com", "")
+  web.setCookie(
+  "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
+  ""
+  )
+
   web.loadUrl(
-    "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=zh-cn"
+  "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html?bbs_presentation_style=no_header&lang=zh-cn"
   )
 
   --web.getSettings().setUserAgentString("Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro Build/RKQ1.210518.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.120 Mobile Safari/537.36 miHoYoBBS/2.10.1");
@@ -663,36 +685,36 @@ function onCreate()
       --print(url,contentDisposition,mimetype,contentLength)
       size = "未知"
       xpcall(
-        function()
-          size = tostring(contentLength / 1024 / 1024):sub(1, 4) .. "MB"
-        end,
-        function()
-          size = "未知"
-        end
+      function()
+        size = tostring(contentLength / 1024 / 1024):sub(1, 4) .. "MB"
+      end,
+      function()
+        size = "未知"
+      end
       )
       xpcall(
-        function()
-          filename = string.match(url, ".+/([^/]*%.%w+)$")
-        end,
-        function()
-          filename = os.date("%m-%d_%H-%M-%S")
-        end
+      function()
+        filename = string.match(url, ".+/([^/]*%.%w+)$")
+      end,
+      function()
+        filename = os.date("%m-%d_%H-%M-%S")
+      end
       )
       if filename == nil then
         filename = os.date("%m-%d_%H-%M-%S")
       end
       双按钮对话框(
-        "下载文件",
-        "文件描述: " .. filename .. "\n文件大小: " .. size,
-        "下载",
-        "取消",
-        function()
-          关闭对话框()
-          下载文件(url, filename)
-        end,
-        function()
-          关闭对话框()
-        end
+      "下载文件",
+      "文件描述: " .. filename .. "\n文件大小: " .. size,
+      "下载",
+      "取消",
+      function()
+        关闭对话框()
+        下载文件(url, filename)
+      end,
+      function()
+        关闭对话框()
+      end
       )
     end
   }
@@ -700,14 +722,14 @@ function onCreate()
   function closethirdpart()
     local id = thirdpart
     mfbha =
-      ViewAnimator.animate({id}).translationY({id.translationY, dp2px(64)}).alpha({id.alpha, 0}).interpolator(
-      AccelerateInterpolator()
+    ViewAnimator.animate({id}).translationY({id.translationY, dp2px(64)}).alpha({id.alpha, 0}).interpolator(
+    AccelerateInterpolator()
     ).duration(256).onStop(
-      {
-        onStop = function()
-          控件隐藏(id)
-        end
-      }
+    {
+      onStop = function()
+        控件隐藏(id)
+      end
+    }
     ).start()
   end
 
@@ -717,14 +739,14 @@ function onCreate()
     local id = thirdpart
     控件可见(id)
     mfbsa =
-      ViewAnimator.animate({id}).translationY({id.translationY, 0}).alpha({id.alpha, 1}).interpolator(
-      OvershootInterpolator()
+    ViewAnimator.animate({id}).translationY({id.translationY, 0}).alpha({id.alpha, 1}).interpolator(
+    OvershootInterpolator()
     ).duration(256).onStop(
-      {
-        onStop = function()
-          控件可见(id)
-        end
-      }
+    {
+      onStop = function()
+        控件可见(id)
+      end
+    }
     ).start()
   end
 
@@ -756,7 +778,7 @@ function 分屏()
   if activity.Height * 0.9 < activity.Width then
     --横屏
     setHeight(mActionBar, dp2px(48))
-  else
+   else
     setHeight(mActionBar, dp2px(56))
   end
 end

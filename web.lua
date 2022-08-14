@@ -1,7 +1,7 @@
 require "import"
 import "mods.muk"
 
-pageurl, shouldload, beforeload, afterload = ...
+pageurl, shouldload, beforeload, afterload,type_,cookie = ...
 --print(...)
 
 function onCreate()
@@ -341,7 +341,37 @@ function onCreate()
 
   import "org.jsoup.*"
 
-  web.loadUrl(pageurl)
+  if type_=="hoyobbscapacha"
+    local map=HashMap()
+    map.put("x-requested-with", "com.mihoyo.hyperion")
+    map.put("upgrade-insecure-requests", "1")
+    --map.put("Cookie",cookie)
+    web.getSettings().setUserAgentString("Mozilla/5.0 (Linux; Android 12; Redmi Note 8 Pro Build/SQ3A.220705.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/104.0.5112.69 Mobile Safari/537.36 miHoYoBBS/2.35.1")
+    CookieSyncManager.createInstance(this)
+    cookieManager = CookieManager.getInstance()
+    cookieManager.setAcceptCookie(true)
+    cookieManager.removeSessionCookie() --移除
+    cookieManager.setCookie(
+    pageurl,
+    cookie
+    )
+    cookieManager.setCookie(".mihoyo.com", cookie) --cookies是在HttpClient中获得的cookie
+    CookieSyncManager.getInstance().sync()
+
+    CookieManager.getInstance().setCookie(
+    pageurl,
+    cookie
+    )
+
+    web.setCookie(".mihoyo.com", cookie)
+    web.setCookie(
+    pageurl,
+    cookie
+    )
+    web.loadUrl(pageurl,map)
+   else
+    web.loadUrl(pageurl)
+  end
 
   --PopupWindow
   Popup_layout = {
@@ -591,6 +621,7 @@ function onCreate()
       activity.Title = "加载中"
       控件隐藏(loaderr)
       loaderror = false
+      
       if beforeload then
         loadstring(beforeload)()
       end
@@ -622,6 +653,7 @@ function onCreate()
       javascript:(function()
         { ]].. js .. [[ })()
       ]])
+
       activity.Title = web.getTitle()
       web.evaluateJavascript(
       'function getSource(){return "<html>"+document.getElementsByTagName(\'html\')[0].innerHTML+"</html>";};getSource();',
@@ -652,6 +684,7 @@ function onCreate()
       activity.Title = furl
     end,
     shouldInterceptRequest = function(view, url)
+      --print(url)
       if url:find("getUserGameRolesByCookie") then
         --web.getCookie()
         web.post(

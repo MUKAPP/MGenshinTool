@@ -21,3 +21,8 @@ import "com.bumptech.glide.request.RequestOptions"
 import "com.bumptech.glide.load.resource.bitmap.RoundedCorners"
 import "com.bumptech.glide.load.resource.bitmap.CenterCrop"
 
+local t={
+  "android.permission.WRITE_EXTERNAL_STORAGE"
+}
+
+print(activity.requestPermissions(t,0))

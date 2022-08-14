@@ -73,3 +73,7 @@ function getNewDS(q, b)
   string.lower(MD5("salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=" .. i .. "&r=" .. r .. "&b=" .. b .. "&q=" .. q))
   return i .. "," .. r .. "," .. c
 end
+
+
+function checkMobileRegistered()
+  end

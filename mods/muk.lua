@@ -1296,8 +1296,7 @@ function 单按钮对话框(bt, nr, qd, qdnr, gb)
             Text = qd,
             textColor = backgroundc,
             BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
-            ColorStateList(int[0].class {int {}}, int {bwz})
-            )
+            ColorStateList(int[0].class {int {}}, int {bwz}))
           }
         }
       }
