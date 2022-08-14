@@ -183,7 +183,7 @@ adp=LuaRecyclerViewAdapter(LuaAdapterCreator({
     控件隐藏(view.button.getParent())
     view.uid.Text=data[position+1][1]
     view.memo.Text=data[position+1][2]
-    if data[position+1][3]
+    --[[if data[position+1][3] then
       波纹({view.button},"方自适应")
       view.button.onClick=function()
         local url="https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..mukactivity.getData("sign_act_id").."&utm_source=bbs&utm_medium=mys&utm_campaign=icon"
@@ -196,14 +196,14 @@ adp=LuaRecyclerViewAdapter(LuaAdapterCreator({
           data[position+1][3]
         })
       end
-      if data[position+1][2]:find("验证码")
+      if data[position+1][2]:find("验证码") then
         控件可见(view.button.getParent())
         view.button.text="手动签到"
-       elseif tointeger(data[position+1][2]:match("漏签: (.-) 天"))>=0
+       elseif tointeger(data[position+1][2]:match("漏签: (.-) 天"))>=0 then
         控件可见(view.button.getParent())
         view.button.text="手动补签"
       end
-    end
+    end]]
   end,
 }))
 
