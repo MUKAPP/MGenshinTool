@@ -74,6 +74,32 @@ function getNewDS(q, b)
   return i .. "," .. r .. "," .. c
 end
 
+SOURCE = "webstatic.mihoyo.com"
+BBSAPI = "https://bbs-api.mihoyo.com"
+SDKAPI = "https://api-sdk.mihoyo.com"
+HK4API = "https://hk4e-api.mihoyo.com"
+WEBAPI = "https://webapi.account.mihoyo.com/Api"
+RECAPI = "https://api-takumi-record.mihoyo.com/game_record/app"
+TAKUMI_AUTH_API = "https://api-takumi.mihoyo.com/auth/api"
+TAKUMI_BINDING_API = "https://api-takumi.mihoyo.com/binding/api"
 
-function checkMobileRegistered()
-  end
+function checkMobileRegistered(phoneNumber,ret)
+  local currentTimeMills=os.time()
+  local url = WEBAPI .. "/is_mobile_registrable?mobile="..phoneNumber.."&t="..currentTimeMills
+  Http.get(url,nil,nil,function(code,content)
+    if code==200 then
+      local json = JSON.decode(content)
+      if json.code==0 then
+        if json.data.is_registrable then
+          ret(true)
+        else
+          ret(false)
+        end
+      else
+        ret(nil,json.msg)
+      end
+    else
+      ret(nil,"网络错误")
+    end
+  end)
+end
