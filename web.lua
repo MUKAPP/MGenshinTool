@@ -342,32 +342,35 @@ function onCreate()
   import "org.jsoup.*"
 
   if type_=="hoyobbscapacha"
+    web.clearCache(true)
+    cookie="ltuid=183512966;login_ticket=tC8GaDtwOGDUqjHriabw1l0hVuXS63A9LkPRcIVZ;account_id=183512966;ltoken=Kd6eaYj1ss7pxnZVljnxp7nwwUvbU12yWunEqubV;cookie_token=ME1VVCKJen2ZWWmX8IDfxV6D33xuTJGJbFmUVwlN;_MHYUUID=9f06ef1f-98d8-4f4d-9e05-9e4170f1ea4f;_ga_KJ6J9V9VZQ=GS1.1.1660453104.1.0.1660453104.0;_ga=GA1.1.337297460.1660453104"
+
     local map=HashMap()
     map.put("x-requested-with", "com.mihoyo.hyperion")
     map.put("upgrade-insecure-requests", "1")
-    --map.put("Cookie",cookie)
+    map.put("cache-control", "max-age=0")
     web.getSettings().setUserAgentString("Mozilla/5.0 (Linux; Android 12; Redmi Note 8 Pro Build/SQ3A.220705.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/104.0.5112.69 Mobile Safari/537.36 miHoYoBBS/2.35.1")
     CookieSyncManager.createInstance(this)
     cookieManager = CookieManager.getInstance()
     cookieManager.setAcceptCookie(true)
     cookieManager.removeSessionCookie() --移除
-    cookieManager.setCookie(
+    --[[cookieManager.setCookie(
     pageurl,
     cookie
     )
-    cookieManager.setCookie(".mihoyo.com", cookie) --cookies是在HttpClient中获得的cookie
+    cookieManager.setCookie(".mihoyo.com", cookie) --cookies是在HttpClient中获得的cookie]]
     CookieSyncManager.getInstance().sync()
 
-    CookieManager.getInstance().setCookie(
+    --[[CookieManager.getInstance().setCookie(
     pageurl,
     cookie
-    )
+    )]]
 
     web.setCookie(".mihoyo.com", cookie)
-    web.setCookie(
+    --[[web.setCookie(
     pageurl,
     cookie
-    )
+    )]]
     web.loadUrl(pageurl,map)
    else
     web.loadUrl(pageurl)
@@ -621,10 +624,21 @@ function onCreate()
       activity.Title = "加载中"
       控件隐藏(loaderr)
       loaderror = false
-      
+
       if beforeload then
         loadstring(beforeload)()
       end
+
+      web.evaluateJavascript("window.webkit = { messageHandlers: { iosListener: window.AndroidListener} }",{
+        onReceiveValue = function(result)
+          local result =
+          result:gsub("%%", "%%;"):gsub("\\\\n", "%%n"):gsub("\\n", "\n"):gsub("%%n", "\\n"):gsub("%%;", "%%"):gsub(
+          "\\u003C",
+          "<"
+          ):gsub('\\"', '"'):gsub('^"', ""):gsub('"$', "")
+          source = result
+        end
+      })
     end,
     onPageFinished = function(view, url)
       控件隐藏(webprogress)
@@ -669,6 +683,27 @@ function onCreate()
       }
       )
       loaderror = false
+      if type_=="hoyobbscapacha"
+        local data='{method: "getHTTPRequestHeaders", payload: null, callback: "bbs_callback_2"}'
+        --web.loadUrl("javascript:setData('"..data.."')");
+        web.evaluateJavascript(
+        "setData('"..data.."');",
+        {
+          onReceiveValue = function(result)
+          end
+        }
+        )
+        local data='{method: "getUserInfo", payload: null, callback: "bbs_callback_3"}'
+        --web.loadUrl("javascript:setData('"..data.."')");
+        web.evaluateJavascript(
+        "setData('"..data.."');",
+        {
+          onReceiveValue = function(result)
+
+          end
+        }
+        )
+      end
       if afterload then
         loadstring(afterload)()
       end
@@ -710,11 +745,15 @@ function onCreate()
   web.getSettings().setUseWideViewPort(true)
   web.getSettings().setLoadWithOverviewMode(true)
   web.getSettings().setJavaScriptEnabled(true)
-  web.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE)
   web.getSettings().setAllowFileAccess(true)
   web.getSettings().setAppCacheEnabled(true)
   web.getSettings().setDomStorageEnabled(true)
   web.getSettings().setDatabaseEnabled(true)
+  web.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE)
+
+  if type_=="hoyobbscapacha"
+    web.getSettings().setAppCacheEnabled(false)
+  end
 
   --web.getSettings().setUserAgentString("Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro Build/RKQ1.210518.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.120 Mobile Safari/537.36 miHoYoBBS/2.10.1");
 

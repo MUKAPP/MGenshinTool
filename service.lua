@@ -671,6 +671,7 @@ function mys_signIn()
                     local nickname = data.nickname
                     local uid = data.game_uid
                     local region = data.region
+                    local region_name = data.region_name
                     --[[data={
             ["level"] = 55 ;
             ["is_official"] = true ;
@@ -705,126 +706,134 @@ function mys_signIn()
                           ["retcode"] = 0 ;
                         } ;
                         ]]
-                      local data = content.data
-                      local total_sign_day = data.total_sign_day
+                      xpcall(function()
+                        local data = content.data
+                        local total_sign_day = data.total_sign_day
 
-                      local calendar = Calendar.getInstance()
-                      local month = calendar.get(Calendar.MONTH) + 1
-                      local day = calendar.get(Calendar.DAY_OF_MONTH)
+                        local calendar = Calendar.getInstance()
+                        local month = calendar.get(Calendar.MONTH) + 1
+                        local day = calendar.get(Calendar.DAY_OF_MONTH)
 
-                      local is_sign=content.data.is_sign
-                      local sign_cnt_missed=content.data.sign_cnt_missed
+                        local is_sign=content.data.is_sign
+                        local sign_cnt_missed=content.data.sign_cnt_missed
 
-                      Http.get(
-                      "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home?act_id=" .. act_id,
-                      cookie,
-                      nil,
-                      nil,
-                      function(code, all_sign_content)
-                        --printLog("BBS Sign","get final",code, content)
-                        if code ~= 200 then
-                          signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
-                          签到加文字("请求失败，错误码：" .. code)
+                        Http.get(
+                        "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home?act_id=" .. act_id,
+                        cookie,
+                        nil,
+                        nil,
+                        function(code, all_sign_content)
+                          --printLog("BBS Sign","get final",code, content)
+                          if code ~= 200 then
+                            signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
+                            签到加文字("请求失败，错误码：" .. code)
+                            issigning = false
+                            return true
+                          end
                           issigning = false
-                          return true
-                        end
-                        issigning = false
-                        local all_sign_content = JSON.decode(all_sign_content)
+                          local all_sign_content = JSON.decode(all_sign_content)
 
-                        if is_sign==true
-                          signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid,[[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                            all_sign_content.data.awards[total_sign_day].cnt .. [[ 
-本月累签: ]].. total_sign_day .. [[ 天
-本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. "今天已经签到过啦",cookie}
-                          签到加文字(
-                          [[ 🔅]] .. nickname .. "  UID: " .. uid ..
-                          [[ 
-今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                          all_sign_content.data.awards[total_sign_day].cnt .. [[ 
-本月累签: ]].. total_sign_day .. [[ 天
-本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. "今天已经签到过啦")
-                          --printLog("BBS Sign",nickname .. "  UID: " .. uid,"重复签到")
-                         else
-
-                          local ds = getDS()
-
-                          --print(ds)
-
-                          local map = HashMap()
-                          map.put("Origin", "https://webstatic.mihoyo.com")
-                          map.put("x-rpc-app_version", mihoyobbs_Version)
-                          map.put(
-                          "User-Agent",
-                          "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
-                          )
-                          map.put("x-rpc-client_type", "5")
-                          map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
-                          map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
-                          map.put("X-Requested-With", "com.mihoyo.hyperion")
-                          map.put("Content-Type", "application/json")
-
-                          map.put("DS", ds)
-
-                          Http.post(
-                          "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
-                          JSON.encode(
-                          {
-                            ["act_id"] = act_id,
-                            ["uid"] = uid,
-                            ["region"] = region
-                          }
-                          ),
-                          cookie,
-                          nil,
-                          map,
-                          function(code, content)
-                            --printLog("BBS Sign","sign",code)
-                            if code ~= 200 then
-                              signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
-                              签到加文字("请求失败，错误码：" .. code)
-                              issigning = false
-                              return true
-                            end
-                            local content = JSON.decode(content)
-                            --printLog("BBS Sign","sign_dump",code, dump(content))
-                            local message = content.message
-                            local data=content.data
-                            if content.retcode == 0 and data.success==0 then
-                              message = "签到成功"
-                              --printLog("BBS Sign",nickname .. "  UID: " .. uid,"签到成功")
-                             else
-                              if data
-                                if data.success == 1
-                                  capacha_challenge=data.challenge
-                                  capacha_gt=data.gt
-                                  message = "需要验证码，暂时没有解决方法，请手动签到"
-                                  --printLog("BBS Sign",nickname .. "  UID: " .. uid,"需要验证码")
-                                  sign_has_capacha=true
-                                end
-                              end
-                            end
-
-                            signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid, [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                          if is_sign==true
+                            signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid.." (".. region_name..")",[[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
                               all_sign_content.data.awards[total_sign_day].cnt .. [[ 
 本月累签: ]].. total_sign_day .. [[ 天
 本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. message,cookie}
-                            签到加文字([[ 🔅]] .. nickname .. "  UID: " .. uid .. [[ 
+签到结果: ]].. "今天已经签到过啦",cookie}
+                            签到加文字(
+                            [[ 🔅]] .. nickname .. "  UID: " .. uid.." (".. region_name..")" ..
+                            [[ 
 今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
                             all_sign_content.data.awards[total_sign_day].cnt .. [[ 
 本月累签: ]].. total_sign_day .. [[ 天
 本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. message)
-                          end)
+签到结果: ]].. "今天已经签到过啦")
+                            --printLog("BBS Sign",nickname .. "  UID: " .. uid,"重复签到")
+                           else
 
-                        end
+                            local ds = getDS()
+
+                            --print(ds)
+
+                            local map = HashMap()
+                            map.put("Origin", "https://webstatic.mihoyo.com")
+                            map.put("x-rpc-app_version", mihoyobbs_Version)
+                            map.put(
+                            "User-Agent",
+                            "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
+                            )
+                            map.put("x-rpc-client_type", "5")
+                            map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
+                            map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+                            map.put("X-Requested-With", "com.mihoyo.hyperion")
+                            map.put("Content-Type", "application/json")
+
+                            map.put("DS", ds)
+
+                            Http.post(
+                            "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
+                            JSON.encode(
+                            {
+                              ["act_id"] = act_id,
+                              ["uid"] = uid,
+                              ["region"] = region
+                            }
+                            ),
+                            cookie,
+                            nil,
+                            map,
+                            function(code, content)
+                              --printLog("BBS Sign","sign",code)
+                              if code ~= 200 then
+                                signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
+                                签到加文字("请求失败，错误码：" .. code)
+                                issigning = false
+                                return true
+                              end
+                              local content = JSON.decode(content)
+                              --printLog("BBS Sign","sign_dump",code, dump(content))
+                              local message = content.message
+                              local data=content.data
+                              if data
+                                if content.retcode == 0 and data.success==0 then
+                                  message = "签到成功"
+                                  --printLog("BBS Sign",nickname .. "  UID: " .. uid,"签到成功")
+                                 else
+                                  if data.success == 1
+                                    capacha_challenge=data.challenge
+                                    capacha_gt=data.gt
+                                    message = "需要验证码，暂时没有解决方法，请手动签到"
+                                    --printLog("BBS Sign",nickname .. "  UID: " .. uid,"需要验证码")
+                                    sign_has_capacha=true
+                                  end
+                                end
+                              end
+
+                              signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                                all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+本月累签: ]].. total_sign_day .. [[ 天
+本月漏签: ]].. sign_cnt_missed .. [[ 天
+签到结果: ]].. message,cookie}
+                              签到加文字([[ 🔅]] .. nickname .. "  UID: " .. uid .." (".. region_name..")".. [[ 
+今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                              all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+本月累签: ]].. total_sign_day .. [[ 天
+本月漏签: ]].. sign_cnt_missed .. [[ 天
+签到结果: ]].. message)
+                            end)
+
+                          end
+                        end)
+
+                        end,function(e)
+                        signin_table_2[#signin_table_2+1]={"签到失败","请求失败，未知错误："..dump(content),cookie}
+                        签到加文字("请求失败，未知错误："..dump(content))
+                        issigning = false
+                        return true
                       end)
                     end)
 
-
                   end
+
                 end)
                else
                 signticker.stop()

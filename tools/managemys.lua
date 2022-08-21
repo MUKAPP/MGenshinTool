@@ -96,7 +96,151 @@ layout={
           gravity="center";
           paddingLeft="12dp",
           paddingRight="24dp",
-          onClick=function()activity.newActivity("tools/login")end;
+          onClick=function()
+
+            双按钮对话框("选择登录方式","",
+            "账号密码登录","输入cookie",function()
+              关闭对话框()
+              activity.newActivity("tools/login")
+              end,function()
+              关闭对话框()
+
+              local data={}
+              xpcall(function()
+                data=JSON.decode(mukactivity.getData("myscookies"))
+                end,function(e)
+                mukactivity.setData("myscookies",JSON.encode({}))
+                data=JSON.decode(mukactivity.getData("myscookies"))
+              end)
+
+              xpcall(function()
+                dann={
+                  LinearLayout;
+                  layout_width="-1";
+                  layout_height="-1";
+                  {
+                    LinearLayout;
+                    orientation="vertical";
+                    layout_width="-1";
+                    layout_height="-2";
+                    id="ztbj";
+                    {
+                      TextView;
+                      layout_width="-1";
+                      layout_height="-2";
+                      textSize="20sp";
+                      layout_marginTop="24dp";
+                      layout_marginLeft="24dp";
+                      layout_marginRight="24dp";
+                      Text="输入cookie";
+                      Typeface=AppFont.特粗;
+                      textColor=primaryc;
+                    };
+                    {
+                      MEditText
+                      {
+                        textSize="14sp",
+                        textColor=textc;
+                        HintTextColor=stextc;
+                        hint="请输入有效的cookie";
+                        layout_width="-1";
+                        layout_height="-1";
+                        --text="#2196F3";
+                        id="strength_edit",
+                      };
+                      layout_marginTop="8dp";
+                      layout_margin="24dp";
+                      layout_marginBottom="8dp";
+                      layout_height="112dp";
+                    };
+                    {
+                      LinearLayout;
+                      orientation="horizontal";
+                      layout_width="-1";
+                      layout_height="-2";
+                      gravity="right|center";
+                      {
+                        CardView;
+                        layout_width="-2";
+                        layout_height="-2";
+                        radius="4dp";
+                        background=primaryc;
+                        layout_marginTop="8dp";
+                        layout_marginLeft="8dp";
+                        layout_marginRight="24dp";
+                        layout_marginBottom="24dp";
+                        Elevation="1dp";
+                        onClick=function()
+                          关闭对话框()
+                          加载对话框("正在确认cookie是否有效","请稍等")
+
+                          if tostring(strength_edit.Text)==nil and tostring(strength_edit.Text)=="" then
+                            提示("内容不能为空")
+                            return true
+                          end
+                          local cookie=tostring(strength_edit.Text)
+
+                          Http.get(
+                          "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn",
+                          cookie,
+                          nil,
+                          nil,
+                          function(code, content)
+                            关闭对话框()
+                            if code ~= 200 then
+                              提示("获取cookie可用性失败")
+                            end
+
+                            local content = JSON.decode(content)
+                            printLog("getUserGameRolesByCookie",content)
+
+                            if content.data == nil then
+                              提示("cookie不可用")
+                              return true
+                            end
+                            if #content.data.list==0
+                              提示("cookie不可用")
+                              return true
+                            end
+                            enterCookieName(cookie)
+                          end)
+                        end;
+                        {
+                          TextView;
+                          layout_width="-1";
+                          layout_height="-2";
+                          textSize="16sp";
+                          paddingRight="16dp";
+                          paddingLeft="16dp";
+                          Typeface=AppFont.特粗;
+                          paddingTop="8dp";
+                          paddingBottom="8dp";
+                          Text="确定";
+                          textColor=backgroundc;
+                          BackgroundDrawable=activity.Resources.getDrawable(ripples).setColor(ColorStateList(int[0].class{int{}},int{bwz}));
+                        };
+                      };
+                    };
+                  };
+                };
+
+                dl=BottomDialog(activity)
+                dl.setView(loadlayout(dann))
+                dl.setGravity(Gravity.BOTTOM)
+                dl.setHeight(WindowManager.LayoutParams.WRAP_CONTENT)
+                dl.setMinHeight(0)
+                dl.setWidth(WindowManager.LayoutParams.MATCH_PARENT)
+                --设置圆角
+                dl.setRadius(dp2px(16),转0x(backgroundc))
+
+                an=dl.show()
+                dl.setCanceledOnTouchOutside(true);
+                end,function(e)
+                提示("出现错误：\n"..e)
+              end)
+
+            end)
+          end;
           {
             ImageView;
             layout_width="32dp";
@@ -190,10 +334,11 @@ tool_list_item={
           if v.Text==默认提示 then
             return true
           end
-          双按钮对话框("操作账号 "..v.Text,
+          三按钮对话框("操作账号 "..v.Text,
           "*请仔细查看以下内容：\n米游社Cookies需要谨慎使用！\n尽量不要将米游社Cookies发给他人！\n他人有了您的Cookies相当于有了您的米游社登录状态！\n若账号出现异常请及时修改米游社密码！\n应急食品承诺不会将您的Cookies泄露给任何人，同时您的Cookies仅会用于米游社大地图、米游社签到和实时便笺。",
-          "复制Cookies","删除账号",
+          "复制Cookies","重命名","删除账号",
           function()
+            关闭对话框()
             local data={}
             xpcall(function()
               data=JSON.decode(mukactivity.getData("myscookies"))
@@ -204,9 +349,21 @@ tool_list_item={
 
             复制文本(data[v.Text])
             提示("已复制")
-            关闭对话框()
           end,
           function()
+            关闭对话框()
+            local data={}
+            xpcall(function()
+              data=JSON.decode(mukactivity.getData("myscookies"))
+              end,function(e)
+              mukactivity.setData("myscookies",JSON.encode({}))
+              data=JSON.decode(mukactivity.getData("myscookies"))
+            end)
+
+            enterCookieName(nil,v.Text)
+          end,
+          function()
+            关闭对话框()
             local data={}
             xpcall(function()
               data=JSON.decode(mukactivity.getData("myscookies"))
@@ -219,7 +376,6 @@ tool_list_item={
             mukactivity.setData("myscookies",JSON.encode(data))
 
             更新()
-            关闭对话框()
           end)
           return true
         end;
@@ -320,120 +476,133 @@ end
 
 更新()
 
-function onResult(name,...)
-  if name=="tools/login" then
-    cookie=...
+function enterCookieName(cookie,before)
+  local data={}
+  xpcall(function()
+    data=JSON.decode(mukactivity.getData("myscookies"))
+    end,function(e)
+    mukactivity.setData("myscookies",JSON.encode({}))
+    data=JSON.decode(mukactivity.getData("myscookies"))
+  end)
 
-    local data={}
-    xpcall(function()
-      data=JSON.decode(mukactivity.getData("myscookies"))
-      end,function(e)
-      mukactivity.setData("myscookies",JSON.encode({}))
-      data=JSON.decode(mukactivity.getData("myscookies"))
-    end)
-
-    xpcall(function()
-      dann={
-        LinearLayout;
+  dann={
+    LinearLayout;
+    layout_width="-1";
+    layout_height="-1";
+    {
+      LinearLayout;
+      orientation="vertical";
+      layout_width="-1";
+      layout_height="-2";
+      id="ztbj";
+      {
+        TextView;
         layout_width="-1";
-        layout_height="-1";
+        layout_height="-2";
+        textSize="20sp";
+        layout_marginTop="24dp";
+        layout_marginLeft="24dp";
+        layout_marginRight="24dp";
+        Text="请输入备注";
+        Typeface=AppFont.特粗;
+        textColor=primaryc;
+      };
+      {
+        MEditText
         {
-          LinearLayout;
-          orientation="vertical";
+          textSize="14sp",
+          textColor=textc;
+          HintTextColor=stextc;
+          hint="备注（不要使用空格、符号等）";
           layout_width="-1";
           layout_height="-2";
-          id="ztbj";
+          --text="#2196F3";
+          id="strength_edit",
+        };
+        layout_marginTop="8dp";
+        layout_margin="24dp";
+        layout_marginBottom="8dp";
+      };
+      {
+        LinearLayout;
+        orientation="horizontal";
+        layout_width="-1";
+        layout_height="-2";
+        gravity="right|center";
+        {
+          CardView;
+          layout_width="-2";
+          layout_height="-2";
+          radius="4dp";
+          background=primaryc;
+          layout_marginTop="8dp";
+          layout_marginLeft="8dp";
+          layout_marginRight="24dp";
+          layout_marginBottom="24dp";
+          Elevation="1dp";
+          onClick=function()
+            if before
+              if tostring(strength_edit.Text)==nil and tostring(strength_edit.Text)=="" then
+                提示("内容不能为空")
+                return true
+              end
+              local cookie=data[before]
+              data[before]=nil
+              data[tostring(strength_edit.Text)]=cookie
+              mukactivity.setData("myscookies",JSON.encode(data))
+
+              更新()
+
+              关闭对话框()
+             else
+              if tostring(strength_edit.Text)==nil and tostring(strength_edit.Text)=="" then
+                提示("内容不能为空")
+                return true
+              end
+              data[tostring(strength_edit.Text)]=cookie
+              mukactivity.setData("myscookies",JSON.encode(data))
+
+              更新()
+
+              关闭对话框()
+            end
+          end;
           {
             TextView;
             layout_width="-1";
             layout_height="-2";
-            textSize="20sp";
-            layout_marginTop="24dp";
-            layout_marginLeft="24dp";
-            layout_marginRight="24dp";
-            Text="请输入备注";
+            textSize="16sp";
+            paddingRight="16dp";
+            paddingLeft="16dp";
             Typeface=AppFont.特粗;
-            textColor=primaryc;
-          };
-          {
-            MEditText
-            {
-              textSize="14sp",
-              textColor=textc;
-              HintTextColor=stextc;
-              hint="备注（不要使用空格、符号等）";
-              layout_width="-1";
-              layout_height="-2";
-              --text="#2196F3";
-              id="strength_edit",
-            };
-            layout_marginTop="8dp";
-            layout_margin="24dp";
-            layout_marginBottom="8dp";
-          };
-          {
-            LinearLayout;
-            orientation="horizontal";
-            layout_width="-1";
-            layout_height="-2";
-            gravity="right|center";
-            {
-              CardView;
-              layout_width="-2";
-              layout_height="-2";
-              radius="4dp";
-              background=primaryc;
-              layout_marginTop="8dp";
-              layout_marginLeft="8dp";
-              layout_marginRight="24dp";
-              layout_marginBottom="24dp";
-              Elevation="1dp";
-              onClick=function()
-                if tostring(strength_edit.Text)==nil and tostring(strength_edit.Text)=="" then
-                  提示("内容不能为空")
-                  return true
-                end
-                data[tostring(strength_edit.Text)]=cookie
-                mukactivity.setData("myscookies",JSON.encode(data))
-
-                更新()
-
-                关闭对话框()
-              end;
-              {
-                TextView;
-                layout_width="-1";
-                layout_height="-2";
-                textSize="16sp";
-                paddingRight="16dp";
-                paddingLeft="16dp";
-                Typeface=AppFont.特粗;
-                paddingTop="8dp";
-                paddingBottom="8dp";
-                Text="确定";
-                textColor=backgroundc;
-                BackgroundDrawable=activity.Resources.getDrawable(ripples).setColor(ColorStateList(int[0].class{int{}},int{bwz}));
-              };
-            };
+            paddingTop="8dp";
+            paddingBottom="8dp";
+            Text="确定";
+            textColor=backgroundc;
+            BackgroundDrawable=activity.Resources.getDrawable(ripples).setColor(ColorStateList(int[0].class{int{}},int{bwz}));
           };
         };
       };
+    };
+  };
 
-      dl=BottomDialog(activity)
-      dl.setView(loadlayout(dann))
-      dl.setGravity(Gravity.BOTTOM)
-      dl.setHeight(WindowManager.LayoutParams.WRAP_CONTENT)
-      dl.setMinHeight(0)
-      dl.setWidth(WindowManager.LayoutParams.MATCH_PARENT)
-      --设置圆角
-      dl.setRadius(dp2px(16),转0x(backgroundc))
+  dl=BottomDialog(activity)
+  dl.setView(loadlayout(dann))
+  dl.setGravity(Gravity.BOTTOM)
+  dl.setHeight(WindowManager.LayoutParams.WRAP_CONTENT)
+  dl.setMinHeight(0)
+  dl.setWidth(WindowManager.LayoutParams.MATCH_PARENT)
+  --设置圆角
+  dl.setRadius(dp2px(16),转0x(backgroundc))
 
-      an=dl.show()
-      dl.setCanceledOnTouchOutside(true);
-      end,function(e)
-      提示("出现错误：\n"..e)
-    end)
+  an=dl.show()
+  dl.setCanceledOnTouchOutside(true);
+end
 
+function onResult(name,...)
+  if name=="tools/login" then
+    cookie=...
+    enterCookieName(cookie)
   end
 end
 

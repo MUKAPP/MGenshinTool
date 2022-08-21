@@ -1,5 +1,7 @@
 require "import"
 
+ACTIVITY="home"
+
 local _debug_last_clock=os.clock()
 local _debug_last_name="openapp"
 
@@ -915,7 +917,7 @@ function onCreate()
                         id = "_title_w",
                         {
                           TextView,
-                          Text = activity.Title,
+                          Text = getLanguage("应急食品",0),
                           textColor = primaryc,
                           textSize = "18sp",
                           layout_marginLeft = "16dp",
@@ -2080,7 +2082,7 @@ function onCreate()
                   paddingTop = "12dp",
                   paddingBottom = "12dp",
                   gravity = "center",
-                  Text = "Meal time | 跳过",
+                  Text = getLanguage("跳过"),
                   textColor = textc,
                   id = "startPage_skip"
                 }
@@ -2099,7 +2101,7 @@ function onCreate()
             end,
             {
               TextView,
-              Text = activity.Title,
+              Text = getLanguage("应急食品",0),
               textColor = primaryc,
               textSize = "24sp",
               layout_height = "-2",
@@ -2165,6 +2167,7 @@ function onCreate()
 
     memo_in.getParent().setLayoutTransition(transitioner)
     talogin.getParent().setLayoutTransition(transitioner)
+    dym2.getParent().setLayoutTransition(transitioner)
 
     _debug_clock("设置一些乱七八糟")
 
@@ -3674,6 +3677,7 @@ function onCreate()
                         local nickname = data.nickname
                         local uid = data.game_uid
                         local region = data.region
+                        local region_name = data.region_name
                         --[[data={
             ["level"] = 55 ;
             ["is_official"] = true ;
@@ -3708,123 +3712,131 @@ function onCreate()
                           ["retcode"] = 0 ;
                         } ;
                         ]]
-                          local data = content.data
-                          local total_sign_day = data.total_sign_day
+                          xpcall(function()
+                            local data = content.data
+                            local total_sign_day = data.total_sign_day
 
-                          local calendar = Calendar.getInstance()
-                          local month = calendar.get(Calendar.MONTH) + 1
-                          local day = calendar.get(Calendar.DAY_OF_MONTH)
+                            local calendar = Calendar.getInstance()
+                            local month = calendar.get(Calendar.MONTH) + 1
+                            local day = calendar.get(Calendar.DAY_OF_MONTH)
 
-                          local is_sign=content.data.is_sign
-                          local sign_cnt_missed=content.data.sign_cnt_missed
+                            local is_sign=content.data.is_sign
+                            local sign_cnt_missed=content.data.sign_cnt_missed
 
-                          Http.get(
-                          "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home?act_id=" .. act_id,
-                          cookie,
-                          nil,
-                          nil,
-                          function(code, all_sign_content)
-                            --printLog("BBS Sign","get final",code, content)
-                            if code ~= 200 then
-                              signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
-                              签到加文字("请求失败，错误码：" .. code)
+                            Http.get(
+                            "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home?act_id=" .. act_id,
+                            cookie,
+                            nil,
+                            nil,
+                            function(code, all_sign_content)
+                              --printLog("BBS Sign","get final",code, content)
+                              if code ~= 200 then
+                                signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
+                                签到加文字("请求失败，错误码：" .. code)
+                                issigning = false
+                                return true
+                              end
                               issigning = false
-                              return true
-                            end
-                            issigning = false
-                            local all_sign_content = JSON.decode(all_sign_content)
+                              local all_sign_content = JSON.decode(all_sign_content)
 
-                            if is_sign==true
-                              signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid,[[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                                all_sign_content.data.awards[total_sign_day].cnt .. [[ 
-本月累签: ]].. total_sign_day .. [[ 天
-本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. "今天已经签到过啦",cookie}
-                              签到加文字(
-                              [[ 🔅]] .. nickname .. "  UID: " .. uid ..
-                              [[ 
-今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                              all_sign_content.data.awards[total_sign_day].cnt .. [[ 
-本月累签: ]].. total_sign_day .. [[ 天
-本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. "今天已经签到过啦")
-                              printLog("BBS Sign",signin_table_2)
-                              printLog("BBS Sign",nickname .. "  UID: " .. uid,"重复签到")
-                             else
-
-                              local ds = getDS()
-
-                              --print(ds)
-
-                              local map = HashMap()
-                              map.put("Origin", "https://webstatic.mihoyo.com")
-                              map.put("x-rpc-app_version", mihoyobbs_Version)
-                              map.put(
-                              "User-Agent",
-                              "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
-                              )
-                              map.put("x-rpc-client_type", "5")
-                              map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
-                              map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
-                              map.put("X-Requested-With", "com.mihoyo.hyperion")
-                              map.put("Content-Type", "application/json")
-
-                              map.put("DS", ds)
-
-                              Http.post(
-                              "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
-                              JSON.encode(
-                              {
-                                ["act_id"] = act_id,
-                                ["uid"] = uid,
-                                ["region"] = region
-                              }
-                              ),
-                              cookie,
-                              nil,
-                              map,
-                              function(code, content)
-                                printLog("BBS Sign","sign",code)
-                                if code ~= 200 then
-                                  signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
-                                  签到加文字("请求失败，错误码：" .. code)
-                                  issigning = false
-                                  return true
-                                end
-                                local content = JSON.decode(content)
-                                printLog("BBS Sign","sign_dump",code, dump(content))
-                                local message = content.message
-                                local data=content.data
-                                if content.retcode == 0 and data.success==0 then
-                                  message = "签到成功"
-                                  printLog("BBS Sign",nickname .. "  UID: " .. uid,"签到成功")
-                                 else
-                                  if data
-                                    if data.success == 1
-                                      capacha_challenge=data.challenge
-                                      capacha_gt=data.gt
-                                      message = "需要验证码，暂时没有解决方法，请手动签到"
-                                      printLog("BBS Sign",nickname .. "  UID: " .. uid,"需要验证码")
-                                      sign_has_capacha=true
-                                    end
-                                  end
-                                end
-
-                                signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid, [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                              if is_sign==true
+                                --[=[signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid .." (".. region_name..")",[[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
                                   all_sign_content.data.awards[total_sign_day].cnt .. [[ 
 本月累签: ]].. total_sign_day .. [[ 天
 本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. message,cookie}
-                                签到加文字([[ 🔅]] .. nickname .. "  UID: " .. uid .. [[ 
+签到结果: ]].. "今天已经签到过啦",cookie}
+                                签到加文字(
+                                [[ 🔅]] .. nickname .. "  UID: " .. uid.." (".. region_name..")" ..
+                                [[ 
 今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
                                 all_sign_content.data.awards[total_sign_day].cnt .. [[ 
 本月累签: ]].. total_sign_day .. [[ 天
 本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. message)
-                              end
-                              )
+签到结果: ]].. "今天已经签到过啦")
+                                --printLog("BBS Sign",signin_table_2)
+                                printLog("BBS Sign",nickname .. "  UID: " .. uid,"重复签到")
+                               else=]=]
 
-                            end
+                                local ds = getDS()
+
+                                --print(ds)
+
+                                local map = HashMap()
+                                map.put("Origin", "https://webstatic.mihoyo.com")
+                                map.put("x-rpc-app_version", mihoyobbs_Version)
+                                map.put(
+                                "User-Agent",
+                                "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
+                                )
+                                map.put("x-rpc-client_type", "5")
+                                map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
+                                map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+                                map.put("X-Requested-With", "com.mihoyo.hyperion")
+                                map.put("Content-Type", "application/json")
+
+                                map.put("DS", ds)
+
+                                Http.post(
+                                "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
+                                JSON.encode(
+                                {
+                                  ["act_id"] = act_id,
+                                  ["uid"] = uid,
+                                  ["region"] = region
+                                }
+                                ),
+                                cookie,
+                                nil,
+                                map,
+                                function(code, content)
+                                  printLog("BBS Sign","sign",code)
+                                  if code ~= 200 then
+                                    signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
+                                    签到加文字("请求失败，错误码：" .. code)
+                                    issigning = false
+                                    return true
+                                  end
+                                  local content = JSON.decode(content)
+                                  printLog("BBS Sign","sign_dump",code, dump(content))
+                                  local message = content.message
+                                  local data=content.data
+                                  if data
+                                    if content.retcode == 0 and data.success==0 then
+                                      message = "签到成功"
+                                      printLog("BBS Sign",nickname .. "  UID: " .. uid,"签到成功")
+                                     else
+                                      if data.success == 1
+                                        capacha_challenge=data.challenge
+                                        capacha_gt=data.gt
+                                        message = "需要验证码，暂时没有解决方法，请手动签到"
+                                        printLog("BBS Sign",nickname .. "  UID: " .. uid,"需要验证码")
+                                        sign_has_capacha=true
+                                      end
+                                    end
+                                  end
+
+                                  signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                                    all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+本月累签: ]].. total_sign_day .. [[ 天
+本月漏签: ]].. sign_cnt_missed .. [[ 天
+签到结果: ]].. message,cookie}
+                                  签到加文字([[ 🔅]] .. nickname .. "  UID: " .. uid.." (".. region_name..")" .. [[ 
+今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                                  all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+本月累签: ]].. total_sign_day .. [[ 天
+本月漏签: ]].. sign_cnt_missed .. [[ 天
+签到结果: ]].. message)
+                                end
+                                )
+
+                              end
+                            end)
+
+                            end,function(e)
+                            signin_table_2[#signin_table_2+1]={"签到失败","请求失败，未知错误："..dump(content),cookie}
+                            签到加文字("请求失败，未知错误："..dump(content))
+                            issigning = false
+                            return true
                           end)
                         end)
 
@@ -4149,36 +4161,40 @@ function onCreate()
           local suiddata={}
 
           local uid_already=0
-          for i=1,#datas do
+          local all_uid=#datas
+          for i=1,all_uid do
             Http.get(
             "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn",
             datas[i],
             nil,
             nil,
             function(code, content)
-              uid_already=uid_already+1
               if code ~= 200 then
+                uid_already=uid_already+1
                 提示("请求失败，错误码：" .. code)
-                if uid_already==#datas
+                if uid_already==all_uid
                   suiddialog(suiddata)
                 end
                 return true
               end
 
               local content = JSON.decode(content)
+              all_uid = all_uid + (#content.data.list - 1)
 
               if content.data == nil then
+                uid_already=uid_already+1
                 提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
-                if uid_already==#datas
+                if uid_already==all_uid
                   suiddialog(suiddata)
                 end
                 return true
               end
               for i0, v0 in ipairs(content.data.list) do
+                uid_already=uid_already+1
                 local uidn = content.data.list[i0].game_uid
 
                 suiddata[#suiddata+1]=tostring(uidn)
-                if uid_already==#datas
+                if uid_already==all_uid
                   suiddialog(suiddata)
                 end
               end
@@ -4285,6 +4301,378 @@ function onCreate()
 
                       local uid = tostring(getinfo_edit.Text)
                       getinfo(uid)
+                    end,
+                    {
+                      TextView,
+                      layout_width = "-1",
+                      layout_height = "-2",
+                      textSize = "16sp",
+                      paddingRight = "16dp",
+                      paddingLeft = "16dp",
+                      Typeface = AppFont.特粗,
+                      paddingTop = "8dp",
+                      paddingBottom = "8dp",
+                      Text = "查询",
+                      textColor = backgroundc,
+                      BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
+                      ColorStateList(int[0].class {int {}}, int {bwz})
+                      )
+                    }
+                  }
+                }
+              }
+            }
+
+            dl = BottomDialog(activity)
+            dl.setView(loadlayout(dann))
+            dl.setGravity(Gravity.BOTTOM)
+            dl.setHeight(WindowManager.LayoutParams.WRAP_CONTENT)
+            dl.setMinHeight(0)
+            dl.setWidth(WindowManager.LayoutParams.MATCH_PARENT)
+            --设置圆角
+            dl.setRadius(dp2px(16), 转0x(backgroundc))
+
+            an = dl.show()
+            dl.setCanceledOnTouchOutside(true)
+          end
+
+          return true
+        end
+        if n == "relicscore_player" then
+          local datas = {}
+          xpcall(
+          function()
+            for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+              datas[#datas + 1] = cookie
+            end
+          end,
+          function(e)
+            mukactivity.setData("myscookies", JSON.encode({}))
+            for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+              datas[#datas + 1] = cookie
+            end
+          end
+          )
+          if #datas == 0 then
+            提示("请先登录至少一个米游社账号")
+            return true
+          end
+
+          function suiddialog(suiddata)
+            local bwz
+            if 全局主题值 ~= "Night" and 全局主题值 ~= "Star" then
+              bwz = 0x3f000000
+             else
+              bwz = 0x3fffffff
+            end
+            local dannsuid = {
+              LinearLayout,
+              layout_width = "-1",
+              layout_height = "-1",
+              {
+                LinearLayout,
+                orientation = "vertical",
+                layout_width = "-1",
+                layout_height = "-2",
+                id = "ztbj",
+                {
+                  TextView,
+                  layout_width = "-1",
+                  layout_height = "-2",
+                  textSize = "20sp",
+                  layout_marginTop = "24dp",
+                  layout_marginLeft = "24dp",
+                  layout_marginRight = "24dp",
+                  Text = "选择UID",
+                  Typeface = AppFont.特粗,
+                  textColor = primaryc,
+                },
+                {
+                  GridView,
+                  layout_width = "-1",
+                  layout_height = "-1",
+                  layout_weight = "1",
+                  id = "suidgv",
+                  paddingTop = "8dp",
+                  paddingBottom = "8dp"
+                },
+                {
+                  LinearLayout,
+                  orientation = "horizontal",
+                  layout_width = "-1",
+                  layout_height = "-2",
+                  gravity = "right|center",
+                  {
+                    CardView,
+                    layout_width = "-2",
+                    layout_height = "-2",
+                    radius = "2dp",
+                    background = "#00000000",
+                    layout_marginTop = "8dp",
+                    layout_marginLeft = "8dp",
+                    layout_marginBottom = "24dp",
+                    Elevation = "0",
+                    onClick = function()
+                      关闭对话框(ansuid)
+                      input()
+                    end,
+                    {
+                      TextView,
+                      layout_width = "-1",
+                      layout_height = "-2",
+                      textSize = "16sp",
+                      Typeface = AppFont.特粗,
+                      paddingRight = "16dp",
+                      paddingLeft = "16dp",
+                      paddingTop = "8dp",
+                      paddingBottom = "8dp",
+                      Text = "输入UID",
+                      textColor = stextc,
+                      BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
+                      ColorStateList(int[0].class {int {}}, int {bwz})
+                      )
+                    }
+                  },
+                  {
+                    CardView,
+                    layout_width = "-2",
+                    layout_height = "-2",
+                    radius = "4dp",
+                    background = primaryc,
+                    layout_marginTop = "8dp",
+                    layout_marginLeft = "8dp",
+                    layout_marginRight = "24dp",
+                    layout_marginBottom = "24dp",
+                    Elevation = "1dp",
+                    onClick = function()
+                      关闭对话框(ansuid)
+                    end,
+                    {
+                      TextView,
+                      layout_width = "-1",
+                      layout_height = "-2",
+                      textSize = "16sp",
+                      paddingRight = "16dp",
+                      paddingLeft = "16dp",
+                      Typeface = AppFont.特粗,
+                      paddingTop = "8dp",
+                      paddingBottom = "8dp",
+                      Text = "关闭",
+                      textColor = backgroundc,
+                      BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
+                      ColorStateList(int[0].class {int {}}, int {bwz})
+                      )
+                    }
+                  },
+                }
+              }
+            }
+
+            dlsuid = BottomDialog(activity)
+            dlsuid.setView(loadlayout(dannsuid))
+            dlsuid.setGravity(Gravity.BOTTOM)
+            dlsuid.setHeight(WindowManager.LayoutParams.WRAP_CONTENT)
+            dlsuid.setMinHeight(0)
+            dlsuid.setWidth(WindowManager.LayoutParams.MATCH_PARENT)
+            --设置圆角
+            dlsuid.setRadius(dp2px(16), 转0x(backgroundc))
+            dlsuid.setCancelable(true)
+            dlsuid.setCanceledOnTouchOutside(true)
+            ansuid = dlsuid.show()
+
+            local suiditem = {
+              LinearLayout,
+              layout_width = "-1",
+              layout_height = "48dp",
+              onClick = function()
+              end,
+              {
+                RelativeLayout,
+                layout_width = "-1",
+                layout_height = "-1",
+                {
+                  TextView,
+                  id = "tladp_text",
+                  textColor = textc,
+                  textSize = "14sp",
+                  gravity = "center|left",
+                  Typeface = AppFont.粗体,
+                  layout_width = "-1",
+                  layout_height = "-1",
+                  paddingLeft = "24dp"
+                },
+                {
+                  TextView,
+                  id = "tladp_activity",
+                  layout_width = "-1",
+                  layout_height = "-1",
+                  onClick = function(v)
+                    关闭对话框(ansuid)
+                    activity.newActivity("tools/relicscore_player",{v.text})
+                  end,
+                  textColor = "#00000000"
+                }
+              }
+            }
+
+            local suidadp
+            suidadp = LuaAdapter(activity, suiditem)
+            for i=1,#suiddata do
+              suidadp.add {
+                tladp_text = suiddata[i],
+                tladp_activity = {
+                  text = suiddata[i],
+                  BackgroundDrawable = 波纹2("方自适应")
+                }
+              }
+            end
+
+            suidgv.setAdapter(suidadp)
+          end
+
+          local suiddata={}
+
+          local uid_already=0
+          local all_uid=#datas
+          for i=1,all_uid do
+            Http.get(
+            "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn",
+            datas[i],
+            nil,
+            nil,
+            function(code, content)
+              if code ~= 200 then
+                uid_already=uid_already+1
+                提示("请求失败，错误码：" .. code)
+                if uid_already==all_uid
+                  suiddialog(suiddata)
+                end
+                return true
+              end
+
+              local content = JSON.decode(content)
+              all_uid = all_uid + (#content.data.list - 1)
+
+              if content.data == nil then
+                uid_already=uid_already+1
+                提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
+                if uid_already==all_uid
+                  suiddialog(suiddata)
+                end
+                return true
+              end
+              for i0, v0 in ipairs(content.data.list) do
+                uid_already=uid_already+1
+                local uidn = content.data.list[i0].game_uid
+
+                suiddata[#suiddata+1]=tostring(uidn)
+                if uid_already==all_uid
+                  suiddialog(suiddata)
+                end
+              end
+            end)
+          end
+
+          function input()
+            local bwz
+            if 全局主题值 ~= "Night" and 全局主题值 ~= "Star" then
+              bwz = 0x3f000000
+             else
+              bwz = 0x3fffffff
+            end
+            local dann = {
+              LinearLayout,
+              layout_width = "-1",
+              layout_height = "-1",
+              {
+                LinearLayout,
+                orientation = "vertical",
+                layout_width = "-1",
+                layout_height = "-2",
+                {
+                  TextView,
+                  layout_width = "-1",
+                  layout_height = "-2",
+                  textSize = "20sp",
+                  layout_marginTop = "24dp",
+                  layout_marginLeft = "24dp",
+                  layout_marginRight = "24dp",
+                  Text = "查询账号信息",
+                  Typeface = AppFont.特粗,
+                  textColor = primaryc
+                },
+                {
+                  MEditText {
+                    textSize = "14sp",
+                    textColor = textc,
+                    HintTextColor = stextc,
+                    hint = "请输入UID",
+                    layout_width = "-1",
+                    layout_height = "-2",
+                    --text="#2196F3";
+                    id = "getinfo_edit",
+                    inputType = "number"
+                  },
+                  layout_marginTop = "8dp",
+                  layout_margin = "24dp",
+                  layout_marginBottom = "8dp"
+                },
+                {
+                  LinearLayout,
+                  orientation = "horizontal",
+                  layout_width = "-1",
+                  layout_height = "-2",
+                  gravity = "right|center",
+                  {
+                    CardView,
+                    layout_width = "-2",
+                    layout_height = "-2",
+                    radius = "2dp",
+                    background = "#00000000",
+                    layout_marginTop = "8dp",
+                    layout_marginLeft = "8dp",
+                    layout_marginBottom = "24dp",
+                    Elevation = "0",
+                    onClick = function()
+                      关闭对话框()
+                    end,
+                    {
+                      TextView,
+                      layout_width = "-1",
+                      layout_height = "-2",
+                      textSize = "16sp",
+                      Typeface = AppFont.特粗,
+                      paddingRight = "16dp",
+                      paddingLeft = "16dp",
+                      paddingTop = "8dp",
+                      paddingBottom = "8dp",
+                      Text = "取消",
+                      textColor = stextc,
+                      BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
+                      ColorStateList(int[0].class {int {}}, int {bwz})
+                      )
+                    }
+                  },
+                  {
+                    CardView,
+                    layout_width = "-2",
+                    layout_height = "-2",
+                    radius = "4dp",
+                    background = primaryc,
+                    layout_marginTop = "8dp",
+                    layout_marginLeft = "8dp",
+                    layout_marginRight = "24dp",
+                    layout_marginBottom = "24dp",
+                    Elevation = "1dp",
+                    onClick = function()
+                      if tostring(getinfo_edit.Text) == "" then
+                        提示("内容不能为空")
+                        return true
+                      end
+                      关闭对话框()
+
+                      local uid = tostring(getinfo_edit.Text)
+                      activity.newActivity("tools/relicscore_player",{uid})
                     end,
                     {
                       TextView,
@@ -4488,6 +4876,7 @@ function onCreate()
 
     tooltab = {
       {"圣遗物评分", "relicscore"},
+      --{"角色评分","relicscore_player"},
       {"抽卡记录分析", "gacha_export"},
       --{"抽卡模拟器","wish"},
       {"圣遗物强化模拟器", "relic_str"},

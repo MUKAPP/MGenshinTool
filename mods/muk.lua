@@ -2570,6 +2570,7 @@ function MEditText(v)
   if v.text ~= nil then
     TransY = -dp2px(24 / 2)
   end
+
   return function()
     return loadlayout(
     {
@@ -2595,11 +2596,11 @@ function MEditText(v)
             EditText,
             textColor = v.textColor,
             textSize = "14sp",
-            gravity = "center|left",
+            gravity = "left|top",
             SingleLine = v.SingleLine,
             MaxLines = v.MaxLines,
             layout_width = "-1",
-            layout_height = "-2",
+            layout_height = v.layout_height,
             id = v.id,
             background = "#00212121",
             padding = "16dp",

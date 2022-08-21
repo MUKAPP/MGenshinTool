@@ -1,6 +1,8 @@
 require "import"
 import "mods.muk"
 
+import "mods.hoyobbs"
+
 import "androidx.recyclerview.widget.GridLayoutManager"
 import "androidx.recyclerview.widget.*"
 import "androidx.recyclerview.widget.RecyclerView"
@@ -73,7 +75,6 @@ layout={
 activity.setContentView(loadlayout(layout))
 
 波纹({fh},"圆主题")
-
 
 tool_list_item={
   LinearLayout;
@@ -378,18 +379,6 @@ tool_list_item={
 
 };
 
-function getNewDS(q,b)
-  local b=b or ""
-  local q=q or ""
-
-  local i = tostring(tointeger(os.time()))
-
-  local r = tostring(math.random(100000, 200000))
-
-  local c = string.lower(MD5("salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t="..i.."&r="..r.."&b="..b.."&q="..q))
-  return i..","..r..","..c
-end
-
 function secondtostring(n)
   local day
   local dif=tointeger(os.date("%d",os.time()+n))-tointeger(os.date("%d"))
@@ -429,6 +418,9 @@ function addt(name,cookie)
     for i=1,#content.data.list do
       local serverid=content.data.list[i].region
       local uid=content.data.list[i].game_uid
+      local nickname = content.data.list[i].nickname
+      local region_name = content.data.list[i].region_name
+      printLog("getUserGameRolesByCookie",content)
 
       local ds=getNewDS("role_id="..uid.."&server="..serverid)
 
@@ -512,7 +504,7 @@ function addt(name,cookie)
             expedition_time,
             coin_num,
             discount_num,
-            "UID："..uid,
+            nickname.."  UID: "..uid.." (".. region_name..")",
             transformer_num,
             transformer_time,
             transformer_time_visible,
@@ -599,7 +591,6 @@ adp=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.coin_num.Text=adata[6]
       view.discount_num.Text=adata[7]
       view.uid.Text=adata[8]
-      printLog(nil,adata)
       view.transformer_num.Text=adata[9]
       view.transformer_time.Text=adata[10]
       view.transformer_time.visibility=adata[11]

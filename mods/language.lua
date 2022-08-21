@@ -1,20 +1,20 @@
 LanguageTable_Simplified_Chinese={
   应急食品="应急食品",
-  main={
-    正在加载="正在加载…"
-  }
+  loc="zh-CN",
+  home={
+    跳过="Meal time | 跳过",
+  },
+  relicscore_player={
+    获取失败="获取失败",
+  },
 }
 LanguageTable_traditional_Chinese={
   应急食品="應急食品",
-  main={
-    正在加载="正在加載…"
-  }
+  loc="zh-TW",
 }
 LanguageTable_English={
   应急食品="Emergency food",
-  main={
-    正在加载="loading…"
-  }
+  loc="en",
 }
 
 function setLanguage(lan)
@@ -33,18 +33,25 @@ function setLanguage(lan)
   end
 end
 
-function getLanguage(act,name)
-  if name==nil then
-    if LanguageTable[act] then
-      return LanguageTable[act]
+function getLanguage(name,root)
+  if ACTIVITY==nil
+    return "未设置ACTIVITY"
+  end
+  if root~=nil then
+    if LanguageTable[name] then
+      return LanguageTable[name]
      else
-      return LanguageTable_Simplified_Chinese[act]
+      return LanguageTable_Simplified_Chinese[name]
     end
    else
-    if LanguageTable[act][name] then
-      return LanguageTable[act][name]
+    if LanguageTable[ACTIVITY] then
+      if LanguageTable[ACTIVITY][name] then
+        return LanguageTable[ACTIVITY][name]
+       else
+        return LanguageTable_Simplified_Chinese[ACTIVITY][name]
+      end
      else
-      return LanguageTable_Simplified_Chinese[act][name]
+      return LanguageTable_Simplified_Chinese[ACTIVITY][name]
     end
   end
 end

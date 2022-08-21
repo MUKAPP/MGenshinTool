@@ -247,7 +247,7 @@ function onCreate()
   adp.add{__type=2,subtitle="校准屏幕大小",message="如果你的悬浮浏览器等功能的尺寸不正常，请退出小窗等状态、正常打开该页面并将屏幕竖置，点击此项来校准屏幕大小"}
   adp.add{__type=2,subtitle="重置引导界面",message="将会在下一次启动软件时重新显示引导界面"}
   adp.add{__type=1,title="本地化"}
-  adp.add{__type=2,subtitle="语言/語言/Language(暂未开放)",message="简体中文/繁體中文/English"}
+  adp.add{__type=2,subtitle="语言/語言/Language(未开放)",message="简体中文/繁體中文/English"}
   --adp.add{__type=1,title="实验性（以下项目若不清楚是什么就不要更改）"}
   --adp.add{__type=4,subtitle="实时便笺通知不可清除",message="开启此项之后，通知栏的实时便笺通知将不可被清除",status={Checked=Boolean.valueOf(实时便笺通知不可清除)}}
 
