@@ -5,7 +5,10 @@ LanguageTable_Simplified_Chinese={
     跳过="Meal time | 跳过",
   },
   relicscore_player={
+    角色评分="角色评分",
     获取失败="获取失败",
+    等级="等级",
+    世界等级="世界等级",
   },
 }
 LanguageTable_traditional_Chinese={

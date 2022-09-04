@@ -1049,6 +1049,7 @@ function openService()
   end
   tidailyNote2.start()
   dailyNote2()
+  --[[
   if autoSign
     pcall(function()
       autoSign.stop()
@@ -1068,7 +1069,7 @@ function openService()
   autoSign.start()
   if this.getSharedData("Note_Auto_Sign2")=="true"
     mys_signIn()
-  end
+  end]]
 end
 
 function closeService()

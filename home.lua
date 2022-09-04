@@ -46,6 +46,8 @@ import "mods.hoyobbs"
 
 _debug_clock("import_end")
 
+activity.Title=getLanguage("应急食品",0)
+
 local subtitle,
 intentstr = ...
 if subtitle == "" or subtitle == nil then
@@ -3740,7 +3742,7 @@ function onCreate()
                               local all_sign_content = JSON.decode(all_sign_content)
 
                               if is_sign==true
-                                --[=[signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid .." (".. region_name..")",[[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                                signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid .." (".. region_name..")",[[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
                                   all_sign_content.data.awards[total_sign_day].cnt .. [[ 
 本月累签: ]].. total_sign_day .. [[ 天
 本月漏签: ]].. sign_cnt_missed .. [[ 天
@@ -3755,7 +3757,7 @@ function onCreate()
 签到结果: ]].. "今天已经签到过啦")
                                 --printLog("BBS Sign",signin_table_2)
                                 printLog("BBS Sign",nickname .. "  UID: " .. uid,"重复签到")
-                               else=]=]
+                               else
 
                                 local ds = getDS()
 
@@ -4876,12 +4878,12 @@ function onCreate()
 
     tooltab = {
       {"圣遗物评分", "relicscore"},
-      --{"角色评分","relicscore_player"},
+      {"角色评分","relicscore_player"},
       {"抽卡记录分析", "gacha_export"},
       --{"抽卡模拟器","wish"},
       {"圣遗物强化模拟器", "relic_str"},
       {"管理米游社账号", "managemys"},
-      {"米游社签到", "signin"},
+      --{"米游社签到", "signin"},
       {"悬浮浏览器", "floatweb"},
       {"查询账号信息","getinfo"},
       --{"深渊数据库","abyss"},
