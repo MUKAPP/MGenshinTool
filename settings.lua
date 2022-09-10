@@ -235,8 +235,8 @@ function onCreate()
 
   adp.add{__type=1,title="功能"}
   adp.add{__type=4,subtitle="实时便笺通知栏常驻",message="开启此项即开启 实时便笺 功能的通知栏常驻，同时也会开启树脂提醒功能。",status={Checked=Boolean.valueOf(实时便笺通知栏常驻)}}
-  --adp.add{__type=4,subtitle="进入软件时自动签到",message="“实时便笺通知栏常驻”启用时该项才会生效。进入软件时自动签到。",status={Checked=Boolean.valueOf(进入软件时自动签到)}}
-  --adp.add{__type=4,subtitle="自动签到",message="“实时便笺通知栏常驻”启用时该项才会生效。自动签到时间：8:00~22:00，每到整点自动签到。",status={Checked=Boolean.valueOf(自动签到)}}
+  adp.add{__type=4,subtitle="进入软件时自动签到",message="“实时便笺通知栏常驻”启用时该项才会生效。进入软件时自动签到。",status={Checked=Boolean.valueOf(进入软件时自动签到)}}
+  adp.add{__type=4,subtitle="自动签到",message="“实时便笺通知栏常驻”启用时该项才会生效。自动签到时间：8:00~22:00，每到整点自动签到。",status={Checked=Boolean.valueOf(自动签到)}}
   adp.add{__type=2,subtitle="实时便笺刷新时间",message="每隔多少分钟刷新一次实时便笺"}
   adp.add{__type=2,subtitle="关闭对该应用的电池优化",message="“实时便笺”及“自动签到”需要应用在后台运行，点击进入电池优化界面，选择无限制，并且在多任务界面锁定本软件。"}
   adp.add{__type=1,title="界面"}
@@ -247,7 +247,7 @@ function onCreate()
   adp.add{__type=2,subtitle="校准屏幕大小",message="如果你的悬浮浏览器等功能的尺寸不正常，请退出小窗等状态、正常打开该页面并将屏幕竖置，点击此项来校准屏幕大小"}
   adp.add{__type=2,subtitle="重置引导界面",message="将会在下一次启动软件时重新显示引导界面"}
   adp.add{__type=1,title="本地化"}
-  adp.add{__type=2,subtitle="语言/語言/Language",message="简体中文/繁體中文/English"}
+  adp.add{__type=2,subtitle="语言/語言/Language(暂未开放)",message="简体中文/繁體中文/English"}
   --adp.add{__type=1,title="实验性（以下项目若不清楚是什么就不要更改）"}
   --adp.add{__type=4,subtitle="实时便笺通知不可清除",message="开启此项之后，通知栏的实时便笺通知将不可被清除",status={Checked=Boolean.valueOf(实时便笺通知不可清除)}}
 

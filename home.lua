@@ -3661,8 +3661,8 @@ function onCreate()
                     nil,
                     function(code, content)
                       if code ~= 200 then
-                        signin_table_2[#signin_table_2+1]={"签到失败","获取账号信息失败，错误码："..code,cookie}
-                        签到加文字("请求失败，错误码：" .. code)
+                        signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","获取账号信息失败，错误码："..code,cookie}
+                        签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
                         return true
                       end
 
@@ -3733,8 +3733,8 @@ function onCreate()
                             function(code, all_sign_content)
                               --printLog("BBS Sign","get final",code, content)
                               if code ~= 200 then
-                                signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
-                                签到加文字("请求失败，错误码：" .. code)
+                                signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
+                                签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
                                 issigning = false
                                 return true
                               end
@@ -3768,9 +3768,9 @@ function onCreate()
                                 map.put("x-rpc-app_version", mihoyobbs_Version)
                                 map.put(
                                 "User-Agent",
-                                "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
+                                getUA().." miHoYoBBS/"..mihoyobbs_Version
                                 )
-                                map.put("x-rpc-client_type", "5")
+                                map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
                                 map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
                                 map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
                                 map.put("X-Requested-With", "com.mihoyo.hyperion")
@@ -3793,8 +3793,8 @@ function onCreate()
                                 function(code, content)
                                   printLog("BBS Sign","sign",code)
                                   if code ~= 200 then
-                                    signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
-                                    签到加文字("请求失败，错误码：" .. code)
+                                    signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
+                                    签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
                                     issigning = false
                                     return true
                                   end
@@ -3835,8 +3835,8 @@ function onCreate()
                             end)
 
                             end,function(e)
-                            signin_table_2[#signin_table_2+1]={"签到失败","请求失败，未知错误："..dump(content),cookie}
-                            签到加文字("请求失败，未知错误："..dump(content))
+                            signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，未知错误："..dump(content),cookie}
+                            签到加文字("账号 " .. nam .. " 签到失败，未知错误："..dump(content))
                             issigning = false
                             return true
                           end)
@@ -4878,12 +4878,12 @@ function onCreate()
 
     tooltab = {
       {"圣遗物评分", "relicscore"},
-      {"角色评分","relicscore_player"},
+      --{"角色评分","relicscore_player"},
       {"抽卡记录分析", "gacha_export"},
       --{"抽卡模拟器","wish"},
       {"圣遗物强化模拟器", "relic_str"},
       {"管理米游社账号", "managemys"},
-      --{"米游社签到", "signin"},
+      {"米游社签到", "signin"},
       {"悬浮浏览器", "floatweb"},
       {"查询账号信息","getinfo"},
       --{"深渊数据库","abyss"},

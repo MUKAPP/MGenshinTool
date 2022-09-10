@@ -4213,3 +4213,10 @@ end
 function firstToLower(str)
   return (str:gsub("^%u",string.lower))
 end
+
+function getUA()
+  local web=WebView(this)
+  local userAgentString = web.getSettings().getUserAgentString()
+  web=nil
+  return userAgentString
+end

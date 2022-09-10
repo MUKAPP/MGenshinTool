@@ -653,8 +653,8 @@ function mys_signIn()
                 nil,
                 function(code, content)
                   if code ~= 200 then
-                    signin_table_2[#signin_table_2+1]={"签到失败","获取账号信息失败，错误码："..code,cookie}
-                    签到加文字("请求失败，错误码：" .. code)
+                    signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","获取账号信息失败，错误码："..code,cookie}
+                    签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
                     return true
                   end
 
@@ -725,8 +725,8 @@ function mys_signIn()
                         function(code, all_sign_content)
                           --printLog("BBS Sign","get final",code, content)
                           if code ~= 200 then
-                            signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
-                            签到加文字("请求失败，错误码：" .. code)
+                            signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
+                            签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
                             issigning = false
                             return true
                           end
@@ -759,9 +759,9 @@ function mys_signIn()
                             map.put("x-rpc-app_version", mihoyobbs_Version)
                             map.put(
                             "User-Agent",
-                            "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
+                            getUA().." miHoYoBBS/"..mihoyobbs_Version
                             )
-                            map.put("x-rpc-client_type", "5")
+                            map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
                             map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
                             map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
                             map.put("X-Requested-With", "com.mihoyo.hyperion")
@@ -784,8 +784,8 @@ function mys_signIn()
                             function(code, content)
                               --printLog("BBS Sign","sign",code)
                               if code ~= 200 then
-                                signin_table_2[#signin_table_2+1]={"签到失败","请求失败，错误码：" .. code,cookie}
-                                签到加文字("请求失败，错误码：" .. code)
+                                signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
+                                签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
                                 issigning = false
                                 return true
                               end
@@ -825,8 +825,8 @@ function mys_signIn()
                         end)
 
                         end,function(e)
-                        signin_table_2[#signin_table_2+1]={"签到失败","请求失败，未知错误："..dump(content),cookie}
-                        签到加文字("请求失败，未知错误："..dump(content))
+                        signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，未知错误："..dump(content),cookie}
+                        签到加文字("账号 " .. nam .. " 签到失败，未知错误："..dump(content))
                         issigning = false
                         return true
                       end)
@@ -1049,7 +1049,7 @@ function openService()
   end
   tidailyNote2.start()
   dailyNote2()
-  --[[
+  
   if autoSign
     pcall(function()
       autoSign.stop()
@@ -1069,7 +1069,7 @@ function openService()
   autoSign.start()
   if this.getSharedData("Note_Auto_Sign2")=="true"
     mys_signIn()
-  end]]
+  end
 end
 
 function closeService()
