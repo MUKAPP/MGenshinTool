@@ -1,5 +1,5 @@
 appname="应急食品"
-appver="1.6.3"
+appver="1.6.4pre"
 appcode="16300"
 appsdk="21"
 path_pattern=""

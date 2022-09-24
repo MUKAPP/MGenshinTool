@@ -297,7 +297,7 @@ layout = {
                   TextView,
                   textSize = "14sp",
                   textColor = textc,
-                  text = "首先进入游戏，打开抽卡历史记录。",
+                  text = "新版还没来得及写，这里先应用 Yunzai bot 的获取教程",
                   Typeface = AppFont.标准,
                   layout_width = "-1",
                   layout_height = "-2",
@@ -309,61 +309,39 @@ layout = {
                 {
                   CardView,
                   CardElevation = "0dp",
-                  CardBackgroundColor = cardbackc,
+                  CardBackgroundColor = 转0x(primaryc) - 0xde000000,
                   Radius = "8dp",
-                  layout_width = "-1",
-                  layout_height = (activity.Width - dp2px(4 * 16)) / 2340 * 1080,
-                  layout_margin = "8dp",
-                  layout_marginLeft = "16dp",
-                  layout_marginRight = "16dp",
-                  layout_marginBottom = "0",
-                  {
-                    ImageView,
-                    scaleType = "fitCenter",
-                    layout_width = "-1",
-                    layout_height = "-1",
-                    colorFilter = viewshaderc,
-                    id = "img1"
-                  }
-                },
-                {
-                  TextView,
-                  textSize = "14sp",
-                  textColor = textc,
-                  text = "关闭所有网络，点击右上角刷新。",
-                  Typeface = AppFont.标准,
-                  paddingTop = "8dp",
-                  paddingLeft = "16dp",
-                  paddingRight = "16dp",
                   layout_width = "-1",
                   layout_height = "-2",
-                  gravity = "left"
-                },
-                {
-                  CardView,
-                  CardElevation = "0dp",
-                  CardBackgroundColor = cardbackc,
-                  Radius = "8dp",
-                  layout_width = "-1",
-                  layout_height = (activity.Width - dp2px(4 * 16)) / 2340 * 1080,
-                  layout_margin = "8dp",
                   layout_marginLeft = "16dp",
                   layout_marginRight = "16dp",
-                  layout_marginBottom = "0",
+                  layout_marginTop = "8dp",
                   {
-                    ImageView,
-                    scaleType = "fitCenter",
+                    TextView,
                     layout_width = "-1",
                     layout_height = "-1",
-                    colorFilter = viewshaderc,
-                    id = "img2"
+                    textSize = "14sp",
+                    paddingRight = "16dp",
+                    paddingLeft = "16dp",
+                    Typeface = AppFont.特粗,
+                    paddingTop = "12dp",
+                    paddingBottom = "12dp",
+                    gravity = "center",
+                    Text = "抽卡链接获取教程",
+                    onClick = function()
+                      activity.newActivity("web",{
+                        "https://docs.qq.com/doc/DUWpYaXlvSklmVXlX"
+                      })
+                    end,
+                    textColor = primaryc,
+                    id = "course"
                   }
                 },
                 {
                   TextView,
                   textSize = "14sp",
                   textColor = textc,
-                  text = "复制链接，一定要复制完整！",
+                  text = "注意：链接以https开头，log结尾。部分输入法剪贴板限制了字数，如果发现粘贴完链接不完整可以尝试更换输入法）",
                   Typeface = AppFont.标准,
                   paddingTop = "8dp",
                   paddingLeft = "16dp",
@@ -625,7 +603,7 @@ layout = {
 设置视图(layout)
 
 波纹({back, _more}, "圆主题")
-波纹({xz, btn1}, "方主题")
+波纹({xz, btn1,course}, "方主题")
 波纹({btn2, btn3, btn4, btn5, btn6}, "方自适应")
 
 web.removeView(web.getChildAt(0))
@@ -660,7 +638,7 @@ js =
   
   var thisNode = document.getElementById( "mihoyo_landscape" );
   
-  if ( thisNode != null && thisNode.parentElement != null ) {undefined
+  if ( thisNode != null && thisNode.parentElement != null ) {
       thisNode.parentElement.removeChild( thisNode );
   };]]
 
@@ -982,8 +960,8 @@ TranslationClick.setOnTouchListener(
 }
 )
 
-Glide.with(activity).load(activity.getLuaDir("res/exam/gacha1.jpg")).skipMemoryCache(true).into(img1)
-Glide.with(activity).load(activity.getLuaDir("res/exam/gacha2.jpg")).skipMemoryCache(true).into(img2)
+--Glide.with(activity).load(activity.getLuaDir("res/exam/gacha1.jpg")).skipMemoryCache(true).into(img1)
+--Glide.with(activity).load(activity.getLuaDir("res/exam/gacha2.jpg")).skipMemoryCache(true).into(img2)
 
 btn1.onClick = function()
   activity.newActivity("tools/gacha_export_result")

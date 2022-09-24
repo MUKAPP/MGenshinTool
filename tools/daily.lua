@@ -711,7 +711,7 @@ activity.setContentView(loadlayout(layout))
 
 all_person={
   ["Albedo"]={"阿贝多",5},
-  ["Amber"]={"安柏",4},
+  ["Ambor"]={"安柏",4},
   ["Barbara"]={"芭芭拉",4},
   ["Bennett"]={"班尼特",4},
   ["Beidou"]={"北斗",4},
@@ -721,7 +721,7 @@ all_person={
   ["Diluc"]={"迪卢克",5},
   ["Fischl"]={"菲谢尔",4},
   ["Ganyu"]={"甘雨",5},
-  ["HuTao"]={"胡桃",5},
+  ["Hutao"]={"胡桃",5},
   ["Kaeya"]={"凯亚",4},
   ["Klee"]={"可莉",5},
   ["Keqing"]={"刻晴",5},
@@ -730,8 +730,8 @@ all_person={
   ["Rosaria"]={"罗莎莉亚",4},
   ["Mona"]={"莫娜",5},
   ["Ningguang"]={"凝光",4},
-  ["Noelle"]={"诺艾尔",4},
-  ["Jean"]={"琴",5},
+  ["Noel"]={"诺艾尔",4},
+  ["Qin"]={"琴",5},
   ["Qiqi"]={"七七",5},
   ["Sucrose"]={"砂糖",4},
   ["Venti"]={"温迪",5},
@@ -739,54 +739,66 @@ all_person={
   ["Xiao"]={"魈",5},
   ["Xingqiu"]={"行秋",4},
   ["Xinyan"]={"辛焱",4},
-  ["Yanfei"]={"烟绯",4},
+  ["Feiyan"]={"烟绯",4},
   ["Zhongli"]={"钟离",5},
   ["Eula"]={"优菈",5},
-  ["KaedeharaKazuha"]={"枫原万叶",5},
-  ["KamisatoAyaka"]={"神里绫华",5},
+  ["Kazuha"]={"枫原万叶",5},
+  ["Ayaka"]={"神里绫华",5},
   ["Yoimiya"]={"宵宫",5},
   ["Sayu"]={"早柚",4},
   ["Aloy"]={"埃洛伊",5},
-  ["KujouSara"]={"九条裟罗",4},
-  ["RaidenShogun"]={"雷电将军",5},
-  ["SangonomiyaKokomi"]={"珊瑚宫心海",5},
-  ["Thoma"]={"托马",4},
-  ["AratakiItto"]={"荒泷一斗",5},
+  ["Sara"]={"九条裟罗",4},
+  ["Shougun"]={"雷电将军",5},
+  ["Kokomi"]={"珊瑚宫心海",5},
+  ["Tohma"]={"托马",4},
+  ["Itto"]={"荒泷一斗",5},
   ["Gorou"]={"五郎",4},
   ["Yunjin"]={"云堇",4},
   ["Shenhe"]={"申鹤",5},
-  ["YaeMiko"]={"八重神子",5},
-  ["KamisatoAyato"]={"神里绫人",5},
-  ["KukiShinobu"]={"久岐忍",4},
+  ["Yae"]={"八重神子",5},
+  ["Ayato"]={"神里绫人",5},
+  ["Shinobu"]={"久岐忍",4},
   ["Yelan"]={"夜兰",5},
-  ["ShikanoinHeizou"]={"鹿野院平藏",4},
+  ["Heizo"]={"鹿野院平藏",4},
+  ["Tighnari"]={"提纳里",5},
+  ["Collei"]={"柯莱",4},
+  ["Dori"]={"多莉",4},
 }
 
 繁荣={"Qiqi","Keqing","Xiao","Shenhe","Yelan","Ningguang"}
-自由={"Tartaglia","Klee","Aloy","Amber","Sucrose","Barbara","Diona"}
-勤劳={"Ganyu","HuTao","KaedeharaKazuha","Yunjin","Chongyun","Xiangling",}
-抗争={"Eula","Jean","Mona","Diluc","Bennett","Noelle","Razor"}
-黄金={"Zhongli","Xinyan","Beidou","Xingqiu","Yanfei"}
+黄金={"Zhongli","Xinyan","Beidou","Xingqiu","Feiyan"}
+勤劳={"Ganyu","Hutao","Kazuha","Yunjin","Chongyun","Xiangling",}
+
+自由={"Tartaglia","Klee","Aloy","Ambor","Sucrose","Barbara","Diona"}
+抗争={"Eula","Qin","Mona","Diluc","Bennett","Noel","Razor"}
 诗文={"Venti","Albedo","Lisa","Kaeya","Fischl","Rosaria"}
-浮世={"Yoimiya","SangonomiyaKokomi","Thoma","ShikanoinHeizou",}
-风雅={"KamisatoAyaka","AratakiItto","KamisatoAyato","KujouSara","KukiShinobu",}
-天光={"RaidenShogun","YaeMiko","Gorou","Sayu",}
+
+浮世={"Yoimiya","Kokomi","Tohma","Heizo",}
+风雅={"Ayaka","Itto","Ayato","Sara","Shinobu",}
+天光={"Shougun","Yae","Gorou","Sayu",}
+
+诤言={"Tighnari",}
+巧思={"Dori",}
+笃行={"Collei",}
 
 talenttab={
   ["Mon"]={
     {"繁荣","s0",繁荣},
     {"自由","s5",自由},
     {"浮世","s6",浮世},
+    {"诤言","s9",诤言},
   },
   ["Tue"]={
     {"勤劳","s3",勤劳},
     {"抗争","s2",抗争},
     {"风雅","s7",风雅},
+    {"巧思","s10",巧思},
   },
   ["Wed"]={
     {"黄金","s1",黄金},
     {"诗文","s4",诗文},
     {"天光","s8",天光},
+    {"笃行","s11",笃行},
   },
   ["Sun"]={
     {"繁荣","s0",繁荣},
@@ -798,6 +810,9 @@ talenttab={
     {"黄金","s1",黄金},
     {"诗文","s4",诗文},
     {"天光","s8",天光},
+    {"诤言","s9",诤言},
+    {"巧思","s10",巧思},
+    {"笃行","s11",笃行},
   },
 }
 
@@ -976,6 +991,20 @@ all_weapon={
     {"渔获","TheCatch","stick",4,"Mori"},
     {"断浪长鳍","WavebreakersFin","stick",4,"Maria"},
   },
+  谧林涓露={
+    {"原木刀","SapwoodBlade","sword",4,"Arakalari"},
+    {"森林王器","ForestRegalia","sword2",4,"Arakalari"},
+  },
+  绿洲花园={
+    {"盈满之实","FruitOfFulfillment","book",4,"Arakalari"},
+    {"贯月矢","Moonpiercer","stick",4,"Arakalari"},
+  },
+  烈日权威={
+    {"猎人之径","HuntersPath","bow",5,"Ayus"},
+    
+    {"王下近侍","KingsSquire","bow",4,"Arakalari"},
+    {"竭泽","Trawler","bow",4,"Fin"},
+  },
 }
 
 weapontab={
@@ -983,29 +1012,35 @@ weapontab={
     {"高塔孤王","w0"},
     {"孤云寒林","w1"},
     {"远海夷地","w6"},
+    {"谧林涓露","w11"},
   },
   ["Tue"]={
     {"凛风奔狼","w2"},
     {"雾海云间","w5"},
     {"鸣神御灵","w7"},
+    {"绿洲花园","w9"},
   },
   ["Wed"]={
     {"狮牙斗士","w4"},
     {"漆黑陨铁","w3"},
     {"今昔剧画","w8"},
+    {"烈日权威","w10"},
   },
   ["Sun"]={
     {"高塔孤王","w0"},
     {"孤云寒林","w1"},
     {"远海夷地","w6"},
+    {"谧林涓露","w11"},
 
     {"凛风奔狼","w2"},
     {"雾海云间","w5"},
     {"鸣神御灵","w7"},
+    {"绿洲花园","w9"},
 
     {"狮牙斗士","w4"},
     {"漆黑陨铁","w3"},
     {"今昔剧画","w8"},
+    {"烈日权威","w10"},
   },
 }
 
@@ -1045,6 +1080,7 @@ jcpage(daytab[week])
 
 imgUrl="https://pan.mukapp.top/onedrive/genshin_artifact-main/src/images/characters/"
 imgUrl2="https://upload-bbs.mihoyo.com/game_record/genshin/equip/UI_EquipIcon_"
+imgUrl3="https://upload-bbs.mihoyo.com/game_record/genshin/character_icon/UI_AvatarIcon_"
 
 --用表存放数据
 for i=1,7 do
@@ -1718,7 +1754,7 @@ function addtalent(i,v)
           pcolor="background4"
         end
         local pname=all_person[v1][1];
-        local ping=imgUrl..v1.."_avatar.png"
+        local ping=imgUrl3..v1..".png?x-oss-process=image/crop,w_200,h_200,y_5,g_north"
         addlocaltable(1,{ping,pname,pcolor})
         addlocaltable(2,3)
         --table.insert(loadstring("return data"..(v+1))(),{ping,pname,pcolor})

@@ -2560,6 +2560,7 @@ function onCreate()
                   layout_width = "-1",
                   onTouch = function()
                     关闭floaturl()
+                    关闭floatsearch()
                     控件隐藏(floatlist.getParent())
                     floatcard2.getChildAt(0).getChildAt(3).getChildAt(0).setColorFilter(转0x(stextc))
                     控件隐藏(floatalpha.getParent())
@@ -2585,6 +2586,137 @@ function onCreate()
                   layout_width = "-1",
                   orientation = "vertical",
                   gravity = "bottom",
+                  {
+                    CardView,
+                    CardElevation = "4dp",
+                    CardBackgroundColor = backgroundc,
+                    Radius = "12dp",
+                    layout_width = "-1",
+                    layout_height = "-2",
+                    layout_margin = "8dp",
+                    --layout_marginBottom="0",
+                    Visibility = View.GONE,
+                    id = "floatsearch_card",
+                    onClick = function()
+                    end,
+                    {
+                      LinearLayout,
+                      layout_height = "-1",
+                      layout_width = "-1",
+                      orientation = "vertical",
+                      {
+                        MEditText {
+                          textSize = "14sp",
+                          textColor = textc,
+                          HintTextColor = stextc,
+                          hint = "搜索",
+                          layout_width = "-1",
+                          layout_height = "-2",
+                          --text="#2196F3";
+                          id = "floatsearch",
+                        },
+                        layout_marginTop = "16dp",
+                        layout_margin = "16dp",
+                        layout_marginBottom = "8dp"
+                      },
+                      {
+                        LinearLayout,
+                        orientation = "horizontal",
+                        layout_width = "-1",
+                        layout_height = "-2",
+                        gravity = "right|center",
+                        {
+                          CardView,
+                          layout_width = "-2",
+                          layout_height = "-2",
+                          radius = "2dp",
+                          background = "#00000000",
+                          layout_marginTop = "8dp",
+                          layout_marginLeft = "8dp",
+                          layout_marginBottom = "16dp",
+                          Elevation = "0",
+                          onClick = function()
+                            关闭floatsearch()
+                          end,
+                          {
+                            TextView,
+                            layout_width = "-1",
+                            layout_height = "-2",
+                            textSize = "16sp",
+                            Typeface = AppFont.特粗,
+                            paddingRight = "8dp",
+                            paddingLeft = "8dp",
+                            paddingTop = "4dp",
+                            paddingBottom = "4dp",
+                            Text = "取消",
+                            textColor = stextc,
+                            BackgroundDrawable = 波纹2("方自适应")
+                          }
+                        },
+                        {
+                          CardView,
+                          layout_width = "-2",
+                          layout_height = "-2",
+                          radius = "2dp",
+                          background = "#00000000",
+                          layout_marginTop = "8dp",
+                          layout_marginLeft = "8dp",
+                          layout_marginBottom = "16dp",
+                          Elevation = "0",
+                          onClick = function()
+                            floatload("https://fsoufsou.com/search?tbn=all&q="..floatsearch.Text)
+                            关闭floatsearch()
+                          end,
+                          {
+                            TextView,
+                            layout_width = "-1",
+                            layout_height = "-2",
+                            textSize = "16sp",
+                            Typeface = AppFont.特粗,
+                            paddingRight = "8dp",
+                            paddingLeft = "8dp",
+                            paddingTop = "4dp",
+                            paddingBottom = "4dp",
+                            Text = "F搜",
+                            textColor = stextc,
+                            BackgroundDrawable = 波纹2("方自适应")
+                          }
+                        },
+                        {
+                          CardView,
+                          layout_width = "-2",
+                          layout_height = "-2",
+                          radius = "4dp",
+                          background = primaryc,
+                          layout_marginTop = "8dp",
+                          layout_marginLeft = "8dp",
+                          layout_marginRight = "16dp",
+                          layout_marginBottom = "16dp",
+                          Elevation = "1dp",
+                          onClick = function()
+                            floatload("https://m.bbs.mihoyo.com/ys/#/search?keyword="..floatsearch.Text)
+                            关闭floatsearch()
+                          end,
+                          {
+                            TextView,
+                            layout_width = "-1",
+                            layout_height = "-2",
+                            textSize = "16sp",
+                            paddingRight = "8dp",
+                            paddingLeft = "8dp",
+                            Typeface = AppFont.特粗,
+                            paddingTop = "4dp",
+                            paddingBottom = "4dp",
+                            Text = "米游社",
+                            textColor = backgroundc,
+                            BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
+                            ColorStateList(int[0].class {int {}}, int {bwz})
+                            )
+                          }
+                        }
+                      }
+                    }
+                  },
                   {
                     CardView,
                     CardElevation = "4dp",
@@ -2816,11 +2948,11 @@ function onCreate()
                   if floatlock == true then
                     控件可见(v.getParent().getChildAt(2))
                    else
-                    控件可见(v.getParent().getChildAt(5))
                     控件可见(v.getParent().getChildAt(1))
                     控件可见(v.getParent().getChildAt(2))
                     控件可见(v.getParent().getChildAt(3))
                     控件可见(v.getParent().getChildAt(4))
+                    控件可见(v.getParent().getChildAt(6))
                   end
                   v.getChildAt(0).setImageBitmap(loadbitmap(图标("close_fullscreen")))
                   v.getChildAt(0).setColorFilter(转0x(stextc))
@@ -2833,12 +2965,13 @@ function onCreate()
                  else
                   控件隐藏(floatcard)
                   控件隐藏(floatroot)
-                  控件隐藏(v.getParent().getChildAt(5))
                   控件隐藏(v.getParent().getChildAt(1))
                   控件隐藏(v.getParent().getChildAt(2))
                   控件隐藏(v.getParent().getChildAt(3))
                   控件隐藏(v.getParent().getChildAt(4))
+                  控件隐藏(v.getParent().getChildAt(6))
                   关闭floaturl()
+                  关闭floatsearch()
                   v.getChildAt(0).setImageBitmap(loadbitmap(图标("open_in_full")))
                   v.getChildAt(0).setColorFilter(转0x(primaryc))
                   floatlp2.height = WindowManager.LayoutParams.WRAP_CONTENT
@@ -2872,6 +3005,7 @@ function onCreate()
                   v.getParent().getChildAt(3).getChildAt(0).setColorFilter(转0x(stextc))
 
                   关闭floaturl()
+                  关闭floatsearch()
                  else
                   控件隐藏(floatalpha.getParent())
                   v.getChildAt(0).setColorFilter(转0x(stextc))
@@ -2894,11 +3028,12 @@ function onCreate()
               gravity = "center",
               onClick = function(v)
                 if floatlock == true then
-                  控件可见(v.getParent().getChildAt(5))
                   控件可见(v.getParent().getChildAt(1))
                   --控件可见(v.getParent().getChildAt(2))
                   控件可见(v.getParent().getChildAt(3))
                   控件可见(v.getParent().getChildAt(4))
+                  控件可见(v.getParent().getChildAt(5))
+                  控件可见(v.getParent().getChildAt(6))
                   floatlock = false
                   v.getChildAt(0).setImageBitmap(loadbitmap(图标("lock_open")))
                   v.getChildAt(0).setColorFilter(转0x(stextc))
@@ -2906,12 +3041,14 @@ function onCreate()
                   floatwm.updateViewLayout(floatroot, floatlp)
                  else
                   关闭floaturl()
+                  关闭floatsearch()
 
-                  控件隐藏(v.getParent().getChildAt(5))
                   控件隐藏(v.getParent().getChildAt(1))
                   --控件隐藏(v.getParent().getChildAt(2))
                   控件隐藏(v.getParent().getChildAt(3))
                   控件隐藏(v.getParent().getChildAt(4))
+                  控件隐藏(v.getParent().getChildAt(5))
+                  控件隐藏(v.getParent().getChildAt(6))
                   floatlock = true
                   floatlp.flags =
                   WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
@@ -2949,6 +3086,7 @@ function onCreate()
                   v.getParent().getChildAt(1).getChildAt(0).setColorFilter(转0x(stextc))
 
                   关闭floaturl()
+                  关闭floatsearch()
                  else
                   控件隐藏(floatlist.getParent())
                   v.getChildAt(0).setColorFilter(转0x(stextc))
@@ -2999,6 +3137,34 @@ function onCreate()
                 ImageView,
                 ColorFilter = stextc,
                 src = 图标("fullscreen"),
+                layout_height = "32dp",
+                layout_width = "32dp",
+                padding = "4dp"
+              }
+            },
+            {
+              LinearLayout,
+              layout_height = "32dp",
+              layout_width = "32dp",
+              gravity = "center",
+              onTouch = function(v,e)
+                floatmovex=e.getRawX()-dp2px(8)-状态栏高度 --获取触摸绝对X位置
+                if e.getAction() == MotionEvent.ACTION_DOWN then
+                  floatvx=floatmovex-e.getX()--获取视图的X位置
+                  floatlastX=floatmovex--记录按下的X位置
+                 elseif e.getAction() == MotionEvent.ACTION_MOVE then
+                  floatlp.x=floatvx+(floatmovex-floatlastX)--移动的相对位置
+                  floatwm.updateViewLayout(floatroot,floatlp)--调整悬浮窗至指定的位置
+                  floatlp2.x=floatvx+(floatmovex-floatlastX)--移动的相对位置
+                  floatwm.updateViewLayout(floatmenuroot,floatlp2)--调整悬浮窗至指定的位置
+                end
+                return true
+              end,
+              background = 波纹2("圆主题"),
+              {
+                ImageView,
+                ColorFilter = stextc,
+                src = 图标("open_with"),
                 layout_height = "32dp",
                 layout_width = "32dp",
                 padding = "4dp"
@@ -3065,6 +3231,9 @@ function onCreate()
 
       floatlock = false
       fullscreen = false
+      inputmode = false
+      floatmovex = 0
+      floatvx = 0
 
       floatalpha.setOnSeekBarChangeListener {
         onStartTrackingTouch = function()
@@ -3105,7 +3274,60 @@ function onCreate()
 
       darkmode = ""
 
-      js = [[document.getElementsByTagName('body')[0].style.zoom=0.6]]
+      js = [[document.getElementsByTagName('body')[0].style.zoom=0.6;]]
+
+      function sethoyojs(url)
+        if url:find("mihoyo%.com") and url:find("interactive%-map")
+          js =
+          [[
+            var x=document.getElementsByClassName("mhy-bbs-app-header");
+            for (var i = 0; i<x.length;i++) {
+                   x[i].style.display="none";
+                 };
+            
+            var x=document.getElementsByClassName("menu-item menu-item--logout");
+            for (var i = 0; i<x.length;i++) {
+                   x[i].style.display="none";
+                 };
+                 
+            ]]
+          if mukactivity.getData("myscookie_map") ~= nil then
+            CookieSyncManager.createInstance(this)
+            cookieManager = CookieManager.getInstance()
+            cookieManager.setAcceptCookie(true)
+            cookieManager.removeSessionCookie() --移除
+            cookieManager.setCookie(
+            "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
+            mukactivity.getData("myscookie_map")
+            )
+            cookieManager.setCookie(".mihoyo.com", mukactivity.getData("myscookie_map")) --cookies是在HttpClient中获得的cookie
+            CookieSyncManager.getInstance().sync()
+
+            CookieManager.getInstance().setCookie(
+            "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
+            mukactivity.getData("myscookie_map")
+            )
+
+            floatweb.setCookie(".mihoyo.com", mukactivity.getData("myscookie_map"))
+            floatweb.setCookie(
+            "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
+            mukactivity.getData("myscookie_map")
+            )
+          end
+         elseif url:find("mihoyo%.com")
+          js = [=[var x=document.getElementsByClassName("mihoyo_landscape");
+  for (var i = 0; i<x.length;i++) {
+      x[i].style.display="none";
+  };
+  
+  var thisNode = document.getElementById( "mihoyo_landscape" );
+  
+  if ( thisNode != null && thisNode.parentElement != null ) {
+      thisNode.parentElement.removeChild( thisNode );
+  };
+]=]
+        end
+      end
 
       web.setWebChromeClient(
       LuaWebChrome(
@@ -3114,18 +3336,12 @@ function onCreate()
           local lpm = webprogress.getLayoutParams()
           lpm.width = newProgress * ((floatwm.getDefaultDisplay().getWidth() - dp2px(16 * 2)) / 100)
           webprogress.setLayoutParams(lpm)
-          if 全局主题值 == "Night" or 全局主题值 == "Star" then
-            local v =
-            "var style = document.createElement('style');style.type='text/css';style.id='QQBrowserSDKNightMode';style.innerHTML='html,body{background:none !important;background-color: #1d1e2a !important;}html *{background-color: #1d1e2a !important; color:#888888 !important;border-color:#3e4f61 !important;text-shadow:none !important;box-shadow:none !important;}a,a *{border-color:#4c5b99 !important; color:#2d69b3 !important;text-decoration:none !important;}a:visited,a:visited *{color:#a600a6 !important;}a:active,a:active *{color:#5588AA !important;}input,select,textarea,option,button{background-image:none !important;color:#AAAAAA !important;border-color:#4c5b99 !important;}form,div,button,span{background-color:#1d1e2a !important; border-color:#4c5b99 !important;}img{opacity:0.5}';document.getElementsByTagName('HEAD').item(0).appendChild(style);"
-            web.loadUrl([[
-      javascript:(function()
-        { ]].. darkmode .. [[ })()
-      ]])
-          end
-          web.loadUrl([[
+
+          --[=[web.loadUrl([[
       javascript:(function()
         { ]].. js .. [[ })()
-      ]])
+      ]])]=]
+          web.evaluateJavascript(js,nil)
         end,
         --选择文件上传
         onShowFileChooser = function(view, valueCallbackuri, fileChooserParams)
@@ -3217,50 +3433,13 @@ function onCreate()
       web.setWebViewClient {
         shouldOverrideUrlLoading = function(view, url)
           wurl = url
-          --floaturl.text=wurl
-          --控件隐藏(loaderr)
+          sethoyojs(url)
           loaderror = false
         end,
         onPageStarted = function(view, url, favicon)
           控件可见(webprogress)
           wurl = url
-          if url:find("mihoyo%.com")
-            js =
-            [[var x=document.getElementsByClassName("mhy-bbs-app-header");
-            for (var i = 0; i<x.length;i++) {
-                   x[i].style.display="none";
-                 };
-            
-            var x=document.getElementsByClassName("menu-item menu-item--logout");
-            for (var i = 0; i<x.length;i++) {
-                   x[i].style.display="none";
-                 };
-                 
-            ]]
-            if mukactivity.getData("myscookie_map") ~= nil then
-              CookieSyncManager.createInstance(this)
-              cookieManager = CookieManager.getInstance()
-              cookieManager.setAcceptCookie(true)
-              cookieManager.removeSessionCookie() --移除
-              cookieManager.setCookie(
-              "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
-              mukactivity.getData("myscookie_map")
-              )
-              cookieManager.setCookie(".mihoyo.com", mukactivity.getData("myscookie_map")) --cookies是在HttpClient中获得的cookie
-              CookieSyncManager.getInstance().sync()
-
-              CookieManager.getInstance().setCookie(
-              "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
-              mukactivity.getData("myscookie_map")
-              )
-
-              floatweb.setCookie(".mihoyo.com", mukactivity.getData("myscookie_map"))
-              floatweb.setCookie(
-              "https://webstatic.mihoyo.com/ys/app/interactive-map/index.html",
-              mukactivity.getData("myscookie_map")
-              )
-            end
-          end
+          sethoyojs(url)
           --floaturl.text=wurl
           --控件隐藏(loaderr)
           loaderror = false
@@ -3272,18 +3451,12 @@ function onCreate()
           if loaderror == true then
             return true
           end
-          --[=[if 全局主题值 == "Night" then
-              local v =
-                "var style = document.createElement('style');style.type='text/css';style.id='QQBrowserSDKNightMode';style.innerHTML='html,body{background:none !important;background-color: #1d1e2a !important;}html *{background-color: #1d1e2a !important; color:#888888 !important;border-color:#3e4f61 !important;text-shadow:none !important;box-shadow:none !important;}a,a *{border-color:#4c5b99 !important; color:#2d69b3 !important;text-decoration:none !important;}a:visited,a:visited *{color:#a600a6 !important;}a:active,a:active *{color:#5588AA !important;}input,select,textarea,option,button{background-image:none !important;color:#AAAAAA !important;border-color:#4c5b99 !important;}form,div,button,span{background-color:#1d1e2a !important; border-color:#4c5b99 !important;}img{opacity:0.5}';document.getElementsByTagName('HEAD').item(0).appendChild(style);"
-              web.loadUrl([[
-      javascript:(function()
-        { ]] .. darkmode .. [[ })()
-      ]])
-            end]=]
-          web.loadUrl([[
+          sethoyojs(url)
+          --[=[web.loadUrl([[
       javascript:(function()
         { ]].. js .. [[ })()
-      ]])
+      ]])]=]
+          web.evaluateJavascript(js,nil)
           loaderror = false
         end
         --[[onReceivedError=function(view,errorCode,description,failingUrl)
@@ -3302,18 +3475,6 @@ function onCreate()
 
       function floatload(url, pc)
         if url == "mihoyo" then
-          js =
-          [[var x=document.getElementsByClassName("mhy-bbs-app-header");
-            for (var i = 0; i<x.length;i++) {
-                   x[i].style.display="none";
-                 };
-            
-            var x=document.getElementsByClassName("menu-item menu-item--logout");
-            for (var i = 0; i<x.length;i++) {
-                   x[i].style.display="none";
-                 };
-                 
-            ]]
           --[[floatweb.getSettings().setUserAgentString(
               "Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro Build/RP1A.200720.011; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/99.0.4844.88 Mobile Safari/537.36 miHoYoBBS/2.24.2"
             )]]
@@ -3349,7 +3510,7 @@ function onCreate()
           {["Cookie"] = mukactivity.getData("myscookie_map")}
           )
          elseif url == "gh" then
-          js = [[document.getElementsByTagName('body')[0].style.zoom=1]]
+          js = [[document.getElementsByTagName('body')[0].style.zoom=1;]]
           floatweb.getSettings().setUserAgentString(
           "Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro Build/RKQ1.210518.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.115 Mobile Safari/537.36"
           )
@@ -3357,12 +3518,12 @@ function onCreate()
           map.put("x-requested-with", "com.gh.genshinmap")
           floatweb.loadUrl("https://static-web.ghzs.com/cspage_pro/yuanshenMap.html", map)
          else
-          js = [[document.getElementsByTagName('body')[0].style.zoom=1]]
+          js = [[document.getElementsByTagName('body')[0].style.zoom=1;]]
           floatweb.getSettings().setUserAgentString(
           "Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro Build/RKQ1.210518.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/91.0.4472.120 Mobile Safari/537.36 miHoYoBBS/2.10.1"
           )
           if pc then
-            js = [[document.getElementsByTagName('body')[0].style.zoom=1.2]]
+            js = [[document.getElementsByTagName('body')[0].style.zoom=1.2;]]
             floatweb.getSettings().setUserAgentString(
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36"
             )
@@ -3370,6 +3531,7 @@ function onCreate()
           if url:sub(1, 4) ~= "http" then
             url = "http://" .. url
           end
+          sethoyojs(url)
           floatweb.loadUrl(url)
         end
       end
@@ -3401,6 +3563,7 @@ function onCreate()
       floatadp.add {floatadp_text = "米游社大地图"}
       floatadp.add {floatadp_text = "点击在应急食品内登录米游社"}
       floatadp.add {floatadp_text = "光环全资源互动地图"}
+      floatadp.add {floatadp_text = "搜索"}
       floatadp.add {floatadp_text = "输入网址"}
       floatadp.add {floatadp_text = "刷新"}
       floatadp.add {floatadp_text = "后退"}
@@ -3427,6 +3590,14 @@ function onCreate()
             floatlp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
             floatwm.updateViewLayout(floatroot, floatlp)
           end
+          if s == "搜索" then
+            控件隐藏(floatlist.getParent())
+            floatlist_icon.setColorFilter(转0x(stextc))
+
+            控件可见(floatsearch_card)
+            floatlp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+            floatwm.updateViewLayout(floatroot, floatlp)
+          end
           if s == "刷新" then
             floatweb.reload()
           end
@@ -3442,6 +3613,11 @@ function onCreate()
 
       function 关闭floaturl()
         控件隐藏(floaturl_card)
+        floatlp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        floatwm.updateViewLayout(floatroot, floatlp)
+      end
+      function 关闭floatsearch()
+        控件隐藏(floatsearch_card)
         floatlp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         floatwm.updateViewLayout(floatroot, floatlp)
       end
@@ -5718,7 +5894,7 @@ function onCreate()
 
     function addDaily(t, n, i)
       if n~="all"
-        local i = activity.getLuaDir("res/daily/" .. i)
+        local i = activity.getLuaDir().."/res/daily/" .. i
 
         if t == 1 then
           talentdata[#talentdata+1]={n,i}
@@ -5740,32 +5916,38 @@ function onCreate()
       ["Mon"] = {
         {"繁荣", "s0"},
         {"自由", "s5"},
-        {"浮世", "s6"}
+        {"浮世", "s6"},
+        {"诤言","s9"},
       },
       ["Tue"] = {
         {"勤劳", "s3"},
         {"抗争", "s2"},
-        {"风雅", "s7"}
+        {"风雅", "s7"},
+        {"巧思","s10"},
       },
       ["Wed"] = {
         {"黄金", "s1"},
         {"诗文", "s4"},
-        {"天光", "s8"}
+        {"天光", "s8"},
+        {"笃行","s11"},
       },
       ["Thu"] = {
         {"繁荣", "s0"},
         {"自由", "s5"},
-        {"浮世", "s6"}
+        {"浮世", "s6"},
+        {"诤言","s9"},
       },
       ["Fri"] = {
         {"勤劳", "s3"},
         {"抗争", "s2"},
-        {"风雅", "s7"}
+        {"风雅", "s7"},
+        {"巧思","s10"},
       },
       ["Sat"] = {
         {"黄金", "s1"},
         {"诗文", "s4"},
-        {"天光", "s8"}
+        {"天光", "s8"},
+        {"笃行","s11"},
       },
       ["Sun"] = "全部"
     }
@@ -5787,32 +5969,38 @@ function onCreate()
       ["Mon"] = {
         {"高塔孤王", "w0"},
         {"孤云寒林", "w1"},
-        {"远海夷地", "w6"}
+        {"远海夷地", "w6"},
+        {"谧林涓露","w11"},
       },
       ["Tue"] = {
         {"凛风奔狼", "w2"},
         {"雾海云间", "w5"},
-        {"鸣神御灵", "w7"}
+        {"鸣神御灵", "w7"},
+        {"绿洲花园","w9"},
       },
       ["Wed"] = {
         {"狮牙斗士", "w4"},
         {"漆黑陨铁", "w3"},
-        {"今昔剧画", "w8"}
+        {"今昔剧画", "w8"},
+        {"烈日权威","w10"},
       },
       ["Thu"] = {
         {"高塔孤王", "w0"},
         {"孤云寒林", "w1"},
-        {"远海夷地", "w6"}
+        {"远海夷地", "w6"},
+        {"谧林涓露","w11"},
       },
       ["Fri"] = {
         {"凛风奔狼", "w2"},
         {"雾海云间", "w5"},
-        {"鸣神御灵", "w7"}
+        {"鸣神御灵", "w7"},
+        {"绿洲花园","w9"},
       },
       ["Sat"] = {
         {"狮牙斗士", "w4"},
         {"漆黑陨铁", "w3"},
-        {"今昔剧画", "w8"}
+        {"今昔剧画", "w8"},
+        {"烈日权威","w10"},
       },
       ["Sun"] = "全部"
     }

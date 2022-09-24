@@ -916,6 +916,8 @@ methods={
   "雷电将军",
 }
 
+loadstring([[relic_all = import "artifacts"]])()
+
 function go(entry)
 
   mainPos=""
@@ -944,356 +946,36 @@ function go(entry)
 
   tab={}
 
-  relic_all={
-    {
-      ["chs"]="角斗士的终幕礼",
-      ["eng"]="gladiatorFinale",
-      {"角斗士的酣醉","cup"},
-      {"角斗士的归宿","feather"},
-      {"角斗士的留恋","flower"},
-      {"角斗士的凯旋","head"},
-      {"角斗士的希冀","sand"},
-    },
-    {
-      ["chs"]="千岩牢固",
-      ["eng"]="tenacityOfTheMillelith",
-      {"盟誓金爵","cup"},
-      {"昭武翎羽","feather"},
-      {"勋绩之花","flower"},
-      {"将帅兜鍪","head"},
-      {"金铜时晷","sand"},
-    },
-    {
-      ["chs"]="祭雷之人",
-      ["eng"]="prayersForWisdom",
-      {"","cup"},
-      {"","feather"},
-      {"","flower"},
-      {"祭雷礼冠","head"},
-      {"","sand"},
-    },
-    {
-      ["chs"]="流浪大地的乐团",
-      ["eng"]="wandererTroupe",
-      {"吟游者之壶","cup"},
-      {"琴师的箭羽","feather"},
-      {"乐团的晨光","flower"},
-      {"指挥的礼帽","head"},
-      {"终幕的时计","sand"},
-    },
-    {
-      ["chs"]="武人",
-      ["eng"]="martialArtist",
-      {"武人的酒杯","cup"},
-      {"武人的羽饰","feather"},
-      {"武人的红花","flower"},
-      {"武人的头巾","head"},
-      {"武人的水漏","sand"},
-    },
-    {
-      ["chs"]="赌徒",
-      ["eng"]="gambler",
-      {"赌徒的骰蛊","cup"},
-      {"赌徒的羽饰","feather"},
-      {"赌徒的胸花","flower"},
-      {"赌徒的耳环","head"},
-      {"赌徒的怀表","sand"},
-    },
-    {
-      ["chs"]="祭水之人",
-      ["eng"]="prayersForDestiny",
-      {"","cup"},
-      {"","feather"},
-      {"","flower"},
-      {"祭水礼冠","head"},
-      {"","sand"},
-    },
-    {
-      ["chs"]="昔日宗室之仪",
-      ["eng"]="noblesseOblige",
-      {"宗室银瓮","cup"},
-      {"宗室之翎","feather"},
-      {"宗室之花","flower"},
-      {"宗室面具","head"},
-      {"宗室时计","sand"},
-    },
-    {
-      ["chs"]="祭冰之人",
-      ["eng"]="prayersToSpringtime",
-      {"","cup"},
-      {"","feather"},
-      {"","flower"},
-      {"祭冰礼冠","head"},
-      {"","sand"},
-    },
-    {
-      ["chs"]="幸运儿",
-      ["eng"]="luckyDog",
-      {"幸运儿之杯","cup"},
-      {"幸运儿鹰羽","feather"},
-      {"幸运儿绿花","flower"},
-      {"幸运儿银冠","head"},
-      {"幸运儿沙漏","sand"},
-    },
-    {
-      ["chs"]="渡过烈火的贤人",
-      ["eng"]="lavaWalker",
-      {"渡火者的醒悟","cup"},
-      {"渡火者的解脱","feather"},
-      {"渡火者的决绝","flower"},
-      {"渡火者的智慧","head"},
-      {"渡火者的煎熬","sand"},
-    },
-    {
-      ["chs"]="苍白之火",
-      ["eng"]="paleFlame",
-      {"超越之盏","cup"},
-      {"贤医之羽","feather"},
-      {"无垢之花","flower"},
-      {"嗤笑之面","head"},
-      {"停摆之刻","sand"},
-    },
-    {
-      ["chs"]="染血的骑士道",
-      ["eng"]="bloodstainedChivalry",
-      {"染血骑士之杯","cup"},
-      {"染血的黑之羽","feather"},
-      {"染血的铁之心","flower"},
-      {"染血的铁假面","head"},
-      {"骑士染血之时","sand"},
-    },
-    {
-      ["chs"]="炽烈的炎之魔女",
-      ["eng"]="crimsonWitch",
-      {"魔女的心之火","cup"},
-      {"魔女常燃之羽","feather"},
-      {"魔女的炎之花","flower"},
-      {"焦灼的魔女帽","head"},
-      {"魔女破灭之时","sand"},
-    },
-    {
-      ["chs"]="冰风迷途的勇士",
-      ["eng"]="blizzardStrayer",
-      {"遍结寒霜的傲骨","cup"},
-      {"摧冰而行的执望","feather"},
-      {"历经风雪的思念","flower"},
-      {"破冰踏雪的回音","head"},
-      {"冰雪故园的终期","sand"},
-    },
-    {
-      ["chs"]="教官",
-      ["eng"]="instructor",
-      {"教官的茶杯","cup"},
-      {"教官的羽饰","feather"},
-      {"教官的胸花","flower"},
-      {"教官的帽子","head"},
-      {"教官的怀表","sand"},
-    },
-    {
-      ["chs"]="勇者之心",
-      ["eng"]="braveHeart",
-      {"勇士的壮行","cup"},
-      {"勇士的期许","feather"},
-      {"勇士的勋章","flower"},
-      {"勇士的冠冕","head"},
-      {"勇士的坚毅","sand"},
-    },
-    {
-      ["chs"]="遗馈",
-      ["eng"]="exile",
-      {"流放者之杯","cup"},
-      {"流放者之羽","feather"},
-      {"流放者之花","flower"},
-      {"流放者头冠","head"},
-      {"流放者怀表","sand"},
-    },
-    {
-      ["chs"]="祭火之人",
-      ["eng"]="prayersForIllumination",
-      {"","cup"},
-      {"","feather"},
-      {"","flower"},
-      {"祭火礼冠","head"},
-      {"","sand"},
-    },
-    {
-      ["chs"]="翠绿之影",
-      ["eng"]="viridescentVenerer",
-      {"翠绿猎人的容器","cup"},
-      {"猎人青翠的箭羽","feather"},
-      {"野花记忆的绿野","flower"},
-      {"翠绿的猎人之冠","head"},
-      {"翠绿猎人的笃定","sand"},
-    },
-    {
-      ["chs"]="守护之心",
-      ["eng"]="defenderWill",
-      {"守护之皿","cup"},
-      {"守护徽印","feather"},
-      {"守护之花","flower"},
-      {"守护束带","head"},
-      {"守护座钟","sand"},
-    },
-    {
-      ["chs"]="被怜爱的少女",
-      ["eng"]="maidenBeloved",
-      {"少女片刻的闲暇","cup"},
-      {"少女飘摇的思念","feather"},
-      {"远方的少女的心","flower"},
-      {"少女易逝的芳颜","head"},
-      {"少女苦短的良辰","sand"},
-    },
-    {
-      ["chs"]="行者之心",
-      ["eng"]="resolutionOfSojourner",
-      {"异国之盏","cup"},
-      {"归乡之羽","feather"},
-      {"故人之心","flower"},
-      {"感别之冠","head"},
-      {"逐光之石","sand"},
-    },
-    {
-      ["chs"]="平息鸣雷的尊者",
-      ["eng"]="thunderSmoother",
-      {"平雷之器","cup"},
-      {"平雷之羽","feather"},
-      {"平雷之心","flower"},
-      {"平雷之冠","head"},
-      {"平雷之刻","sand"},
-    },
-    {
-      ["chs"]="冒险家",
-      ["eng"]="adventurer",
-      {"冒险家金杯","cup"},
-      {"冒险家尾羽","feather"},
-      {"冒险家之花","flower"},
-      {"冒险家头带","head"},
-      {"冒险家怀表","sand"},
-    },
-    {
-      ["chs"]="奇迹",
-      ["eng"]="tinyMiracle",
-      {"奇迹之杯","cup"},
-      {"奇迹之羽","feather"},
-      {"奇迹之花","flower"},
-      {"奇迹耳坠","head"},
-      {"奇迹之沙","sand"},
-    },
-    {
-      ["chs"]="如雷的盛怒",
-      ["eng"]="thunderingFury",
-      {"降雷的凶兆","cup"},
-      {"雷灾的孑遗","feather"},
-      {"雷鸟的怜悯","flower"},
-      {"唤雷的头冠","head"},
-      {"雷霆的时计","sand"},
-    },
-    {
-      ["chs"]="悠古的磐岩",
-      ["eng"]="archaicPetra",
-      {"巉岩琢塑之樽","cup"},
-      {"嵯峨群峰之翼","feather"},
-      {"磐陀裂生之花","flower"},
-      {"不动玄石之相","head"},
-      {"星罗圭壁之晷","sand"},
-    },
-    {
-      ["chs"]="血战之人",
-      ["eng"]="berserker",
-      {"战狂的骨杯","cup"},
-      {"战狂的翎羽","feather"},
-      {"战狂的蔷薇","flower"},
-      {"战狂的鬼面","head"},
-      {"战狂的时计","sand"},
-    },
-    {
-      ["chs"]="仁心",
-      ["eng"]="travelingDoctor",
-      {"游医的药壶","cup"},
-      {"游医的枭羽","feather"},
-      {"游医的银莲","flower"},
-      {"游医的方巾","head"},
-      {"游医的怀钟","sand"},
-    },
-    {
-      ["chs"]="学士",
-      ["eng"]="scholar",
-      {"学士的墨杯","cup"},
-      {"学士的羽笔","feather"},
-      {"学士的书签","flower"},
-      {"学士的镜片","head"},
-      {"学士的时钟","sand"},
-    },
-    {
-      ["chs"]="逆飞的流星",
-      ["eng"]="retracingBolide",
-      {"夏祭水玉","cup"},
-      {"夏祭终末","feather"},
-      {"夏祭之花","flower"},
-      {"夏祭之面","head"},
-      {"夏祭之刻","sand"},
-    },
-    {
-      ["chs"]="征涛之人",
-      ["eng"]="heartOfDepth",
-      {"沉波之盏","cup"},
-      {"追忆之风","feather"},
-      {"饰金胸花","flower"},
-      {"酒渍船帽","head"},
-      {"坚铜罗盘","sand"},
-    },
-    {
-      ["chs"]="绝缘之旗印",
-      ["eng"]="绝缘之旗印",
-      {"明威之镡","flower"},
-      {"切落之羽","feather"},
-      {"雷云之笼","sand"},
-      {"绯花之壶","cup"},
-      {"华饰之兜","head"},
-    },
-    {
-      ["chs"]="追忆之注连",
-      ["eng"]="追忆之注连",
-      {"羁缠之花","flower"},
-      {"思忆之矢","feather"},
-      {"朝露之时","sand"},
-      {"祈望之心","cup"},
-      {"无常之面","head"},
-    },
-    {
-      ["chs"]="华馆梦醒形骸记",
-      ["eng"]="huskOfOpulentDreams",
-      {"荣花之期","flower"},
-      {"华馆之羽","feather"},
-      {"众生之谣","sand"},
-      {"梦醒之瓢","cup"},
-      {"形骸之笠","head"},
-    },
-    {
-      ["chs"]="海染砗磲",
-      ["eng"]="oceanHuedClam",
-      {"海染之花","flower"},
-      {"渊宫之羽","feather"},
-      {"离别之贝","sand"},
-      {"真珠之笼","cup"},
-      {"海祇之冠","head"},
-    },
-  }
-
   for v in string.gmatch(entry,"\n(.-)\n") do
     v=v:gsub(" ","")
     if v=="" then
      else
-      for i2,v2 in pairs(relic_all) do
+      for i2,v2 in ipairs(relic_all) do
         for i3,v3 in pairs(v2) do
+          if type(v3) == "table" then
           if v and v3[1] then
+          if type(v3[1]) == "string" then
             if v:find(v3[1]) then
               if v3[1]~="" then
                 name=v3[1]
               end
             end
+            end
+            end
           end
         end
+        --[[for i3,v3 in pairs(v2) do
+          printLog("",i3,dump(v3))
+          if type(v3) == "table" then
+            if v and v3[1] then
+              if v:find(tostring(v3[1])) then
+                if v3[1]~="" then
+                  --name=v3[1]
+                end
+              end
+            end
+          end
+        end]]
       end
       v1=v:match("%+(.+)")
       tab[#tab+1]=v
@@ -1342,11 +1024,11 @@ function go(entry)
        else
         local a,b=v:match("(.+)%+(.+)")
         if a==nil then
-         a=""
-         end
-        if b==nil then 
-        b="" 
-      end
+          a=""
+        end
+        if b==nil then
+          b=""
+        end
         if a=="" and b=="" then
           if v:find("%%") then
             if main==nil or main=="" then
@@ -1582,7 +1264,7 @@ function select(id_,pos)
   dialog_adp=LuaAdapter(activity,list_item)
 
   _gv.setAdapter(dialog_adp)
-  
+
   if pos==0 then
     for i,v in ipairs(entry_main) do
       dialog_adp.add{

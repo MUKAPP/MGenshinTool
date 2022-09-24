@@ -891,19 +891,16 @@ function 静态渐变(a, b, id, fx)
   id.setBackgroundDrawable(drawable)
 end
 
-xpcall(
-function()
+xpcall(function()
   ripple = activity.obtainStyledAttributes({android.R.attr.selectableItemBackgroundBorderless}).getResourceId(0, 0)
   ripples = activity.obtainStyledAttributes({android.R.attr.selectableItemBackground}).getResourceId(0, 0)
-end,
-function()
-end
-)
+end,function()end)
 
 function 波纹(id, lx)
   for i = 1, #id do
-    xpcall(
-    function()
+    local ripple=ripple
+    local ripples=ripples
+    xpcall(function()
       if lx == "圆白" then
         id[i].setBackgroundDrawable(
         activity.Resources.getDrawable(ripple).setColor(ColorStateList(int[0].class {int {}}, int {0x3fffffff}))
@@ -969,9 +966,9 @@ function 波纹(id, lx)
 end
 
 function 波纹2(lx, col)
-  local i, z =
-  xpcall(
-  function()
+  local ripple=ripple
+  local ripples=ripples
+  local i, z = xpcall(function()
     if lx == "圆白" then
       return activity.Resources.getDrawable(ripple).setColor(ColorStateList(int[0].class {int {}}, int {0x3fffffff}))
     end
@@ -1023,11 +1020,9 @@ function 波纹2(lx, col)
       return activity.Resources.getDrawable(ripples).setColor(ColorStateList(int[0].class {int {}}, int {col}))
     end
     printLog(nil, "Ripple 2 no " .. lx)
-  end,
-  function(e)
+    end,function(e)
     printLog(nil, e)
-  end
-  )
+  end)
   return z
 end
 
