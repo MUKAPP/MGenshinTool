@@ -281,7 +281,10 @@ end
 api.getComments=function(article_id,page,order,include,ret,err)
   local map = HashMap()
   map.put("token",mukactivity.getData("tanutai_token"))
-
+  
+  printLog(api.apiurl.."articles/"..article_id.."/comments?page="..page.."&order="..order..
+  "&include="..include)
+  
   Http.get(
   api.apiurl.."articles/"..article_id.."/comments?page="..page.."&order="..order..
   "&include="..include,nil,nil,
@@ -296,5 +299,121 @@ api.getComments=function(article_id,page,order,include,ret,err)
   end)
 end
 
+--获取指定评论的回复
+api.getReplies=function(comment_id,page,order,include,ret,err)
+  local map = HashMap()
+  map.put("token",mukactivity.getData("tanutai_token"))
+
+  Http.get(
+  api.apiurl.."comments/"..comment_id.."/replies?page="..page.."&order="..order..
+  "&include="..include,nil,nil,
+  map,
+  function(code,content)
+    if code==200 then
+      local content=JSON.decode(content)
+      ret(content)
+     else
+      err(code,content)
+    end
+  end)
+end
+
+--评论点赞/踩
+api.commentsVoters=function(article_id,type,ret,err)
+  if type then
+    local map = HashMap()
+    map.put("token",mukactivity.getData("tanutai_token"))
+
+    Http.post(
+    api.apiurl.."comments/"..article_id.."/voters",
+    {
+      "type":type,
+    },nil,nil,
+    map,
+    function(code,content)
+      if code==200 then
+        local content=JSON.decode(content)
+        ret(content)
+       else
+        err(code,content)
+      end
+    end)
+   else
+    local map = HashMap()
+    map.put("token",mukactivity.getData("tanutai_token"))
+
+    Http.delete(
+    api.apiurl.."comments/"..article_id.."/voters",nil,nil,
+    map,
+    function(code,content)
+      if code==200 then
+        local content=JSON.decode(content)
+        ret(content)
+       else
+        err(code,content)
+      end
+    end)
+  end
+end
+
+--收藏/取消
+api.follow=function(article_id,type,ret,err)
+  if type then
+    local map = HashMap()
+    map.put("token",mukactivity.getData("tanutai_token"))
+    
+    Http.post(
+    api.apiurl.."articles/"..article_id.."/followers",
+    JSON.encode{
+      ["article_id"]=article_id,
+    },nil,nil,
+    map,
+    function(code,content)
+      if code==200 then
+        local content=JSON.decode(content)
+        ret(content)
+       else
+        err(code,content)
+      end
+    end)
+   else
+    local map = HashMap()
+    map.put("token",mukactivity.getData("tanutai_token"))
+
+    Http.delete(
+    api.apiurl.."articles/"..article_id.."/followers",nil,nil,
+    map,
+    function(code,content)
+      if code==200 then
+        local content=JSON.decode(content)
+        ret(content)
+       else
+        err(code,content)
+      end
+    end)
+  end
+end
+
+--发表评论
+api.createComment=function(article_id,content_markdown,ret,err)
+  local map = HashMap()
+  map.put("token",mukactivity.getData("tanutai_token"))
+  map.put("Content-Type","application/json")
+
+  Http.post(
+  api.apiurl.."articles/"..article_id.."/comments",
+  JSON.encode{
+    ["content"]=content_markdown,
+  },nil,nil,
+  map,
+  function(code,content)
+    if code==200 then
+      local content=JSON.decode(content)
+      ret(content)
+     else
+      err(code,content)
+    end
+  end)
+end
 
 tanutai=api

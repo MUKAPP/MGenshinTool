@@ -6,8 +6,6 @@ import "android.icu.text.SimpleDateFormat"
 
 activity.Title = "抽卡记录分析"
 
-local json = 读取文件(内置存储文件("gacha_export.tmp"))
-
 if 全局主题值 == "Night" or 全局主题值 == "Star" then
   color_five_star = "#F57C00"
   color_five_star_people = "#F57C00"
@@ -104,34 +102,6 @@ layout = {
         id = "_save"
       }
     },
-    {
-      LinearLayout,
-      layout_width = "32dp",
-      layout_height = "56dp",
-      --background=backgroundc;
-      gravity = "center",
-      layout_marginRight = "12dp",
-      {
-        ImageView,
-        layout_width = "32dp",
-        layout_height = "32dp",
-        padding = "4dp",
-        ColorFilter = primaryc,
-        src = 图标("more_vert"),
-        id = "_more",
-        onClick = function()
-          --pop.showAsDropDown(_more_lay,dp2px(-8-192),dp2px(8))
-          pop.showAsDropDown(_more_lay)
-        end
-      },
-      {
-        TextView,
-        id = "_more_lay",
-        layout_width = "0",
-        layout_height = "0",
-        layout_gravity = "top"
-      }
-    }
   },
   {
     ScrollView,
@@ -196,7 +166,7 @@ layout = {
 
 activity.setContentView(loadlayout(layout))
 
-波纹({fh, _save, _more, _copy}, "圆主题")
+波纹({fh, _save, _copy}, "圆主题")
 
 控件隐藏(iTitle)
 
@@ -219,7 +189,7 @@ _save.onClick = function()
   ti.Period = 200
   ti.onTick = function()
     ti.stop()
-    local filename = os.date("%m-%d_%H-%M-%S") .. ".png"
+    local filename = os.date("%Y-%m-%d_%H-%M-%S") .. ".png"
     保存图片(内置存储("Pictures/MUKGenshinTool/" .. filename), 获取控件图片(main_w))
     提示("已保存到：" .. 内置存储("Pictures/MUKGenshinTool/" .. filename))
     控件隐藏(iTitle)
@@ -474,14 +444,12 @@ if 全局主题值 == "Night" or 全局主题值 == "Star" then
   gray = "#9E9E9E"
 end
 
-ti = Ticker()
-ti.Period = 400
-ti.onTick = function()
+ti=Ticker()
+ti.Period=400
+ti.onTick=function()
   ti.stop()
   thread(
   function(
-    json,
-    JSON,
     keepDecimal,
     primaryc,
     color_five_star,
@@ -494,30 +462,75 @@ ti.onTick = function()
     require "import"
     import "android.icu.text.SimpleDateFormat"
 
+    import "mods.json"
+
     xpcall(
     function()
+      print("正在处理…")
+
+      local json=io.open(activity.getExternalFilesDir("").getAbsolutePath() .. "/user/gacha_export.tmp"):read("*a")
+
+      local gacha_table=JSON.decode(json)
+
+      local newtable=gacha_table.list
+
+      table.sort(newtable,function(a,b)
+        return tonumber(a.id)<tonumber(b.id)
+      end)
+
+      tab={
+        "100"={
+          "name"="新手祈愿",
+          "content"={},
+        },
+        "200"={
+          "name"="常驻祈愿",
+          "content"={},
+        },
+        "301"={
+          "name"="角色活动祈愿",
+          "content"={},
+        },
+        "302"={
+          "name"="武器活动祈愿",
+          "content"={},
+        },
+      }
+
+      for i,v in ipairs(newtable)
+        tab[v.uigf_gacha_type].content[#tab[v.uigf_gacha_type].content+1]=
+        {v.time,v.name,v.item_type,tointeger(v.rank_type)}
+      end
+
+      for i,v in pairs(tab)
+        local all_count=0
+        local afterfive_count=0
+        for i2,v2 in ipairs(v.content)
+          all_count=all_count+1
+          afterfive_count=afterfive_count+1
+
+          tab[i].content[i2][5]=all_count
+          tab[i].content[i2][6]=afterfive_count
+
+          if tab[i].content[i2][4]==5
+            afterfive_count=0
+          end
+        end
+      end
+
       local function customSort(t)
         local temp = {}
-        table.foreach(
-        t,
-        function(k, v)
+        table.foreach(t,function(k, v)
           table.insert(temp, {k, v})
-        end
-        )
+        end)
         table.clear(t)
-        table.foreach(
-        temp,
-        function(k, v)
+        table.foreach(temp,function(k, v)
           table.insert(t, v)
-        end
-        )
+        end)
         table.clear(temp)
-        table.sort(
-        t,
-        function(a, b)
+        table.sort(t,function(a, b)
           return a[2] > b[2]
-        end
-        )
+        end)
         return t
       end
 
@@ -539,12 +552,13 @@ ti.onTick = function()
         },
         {
           ["typ"] = "水",
-          ["con"] = {"莫娜", "达达利亚", "珊瑚宫心海", "神里绫人","夜兰",},
+          ["con"] = {"莫娜", "达达利亚", "珊瑚宫心海", "神里绫人",
+            "夜兰","妮露"},
           ["col"] = "#3F51B5"
         },
         {
           ["typ"] = "雷",
-          ["con"] = {"刻晴", "雷电将军", "八重神子"},
+          ["con"] = {"刻晴", "雷电将军", "八重神子","赛诺"},
           ["col"] = "#673AB7"
         },
         {
@@ -561,7 +575,8 @@ ti.onTick = function()
 
       all_five_star_arm_color = {
         {
-          ["con"] = {"斫峰之刃", "无工之剑", "贯虹之槊", "尘世之锁", "赤角石溃杵"},
+          ["con"] = {"斫峰之刃", "无工之剑", "贯虹之槊", "尘世之锁",
+            "赤角石溃杵","赤沙之杖","圣显之钥"},
           ["col"] = "#FFA000"
         },
         {
@@ -608,7 +623,7 @@ ti.onTick = function()
         all_text = all_text .. "\n" .. n
       end
 
-      local tab = JSON.decode(json)
+      --local tab = JSON.decode(json)
 
       local mode = 0
 
@@ -702,7 +717,7 @@ ti.onTick = function()
                   ntmm,
                   ntmd = time:match("(.-)%-(.-)%-(.-) ")
 
-                  if nname == "迪卢克" or nname == "刻晴" or nname == "莫娜" or nname == "七七" or nname == "琴" then
+                  if nname == "迪卢克" or nname == "莫娜" or nname == "七七" or nname == "琴" then
                     last_iscz = true
                     iscz_zt = '<font color="' .. gray .. '">[歪'
                    elseif nname=="提纳里" then
@@ -711,6 +726,16 @@ ti.onTick = function()
                       <=tointeger(sdf.parse("2022-09-09 17:59:59").getTime() / 1000)
                       and tointeger(sdf.parse(time).getTime() / 1000)
                       >=tointeger(sdf.parse("2022-08-24 11:00:00").getTime() / 1000)
+                      last_iscz = false
+                     else
+                      last_iscz = true
+                    end
+                   elseif nname=="刻晴" then
+                    local sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                    if tointeger(sdf.parse(time).getTime() / 1000)
+                      <=tointeger(sdf.parse("2021-03-02 15:59:59").getTime() / 1000)
+                      and tointeger(sdf.parse(time).getTime() / 1000)
+                      >=tointeger(sdf.parse("2021-02-17 18:00:00").getTime() / 1000)
                       last_iscz = false
                      else
                       last_iscz = true
@@ -962,8 +987,6 @@ ti.onTick = function()
     end
     )
   end,
-  json,
-  JSON,
   keepDecimal,
   primaryc,
   color_five_star,
@@ -976,79 +999,6 @@ ti.onTick = function()
   )
 end
 ti.start()
-
---PopupWindow
-Popup_layout = {
-  LinearLayout,
-  {
-    CardView,
-    CardElevation = "6dp",
-    CardBackgroundColor = ctbackc,
-    Radius = "8dp",
-    layout_width = "-1",
-    layout_height = "-2",
-    layout_margin = "8dp",
-    {
-      GridView,
-      layout_height = "-1",
-      layout_width = "-1",
-      NumColumns = 1,
-      id = "Popup_list"
-    }
-  }
-}
-
-pop = PopupWindow(activity)
-pop.setContentView(loadlayout(Popup_layout))
-pop.setWidth(dp2px(192))
-pop.setHeight(-2)
-
-pop.setOutsideTouchable(true)
-pop.setBackgroundDrawable(ColorDrawable(0x00000000))
-
-Popup_list_item = {
-  LinearLayout,
-  layout_width = "-1",
-  layout_height = "48dp",
-  {
-    TextView,
-    id = "popadp_text",
-    textColor = textc,
-    layout_width = "-1",
-    layout_height = "-1",
-    textSize = "14sp",
-    gravity = "left|center",
-    paddingLeft = "16dp",
-    Typeface = AppFont.标准
-  }
-}
-
-popadp = LuaAdapter(activity, Popup_list_item)
-
-Popup_list.setAdapter(popadp)
-
-popadp.add {popadp_text = "致谢"}
-
-Popup_list.setOnItemClickListener(
-AdapterView.OnItemClickListener {
-  onItemClick = function(parent, v, pos, id)
-    pop.dismiss()
-    local s = v.Tag.popadp_text.Text
-    if s == "致谢" then
-      提示("特别感谢 @sunfkny 开源的 原神抽卡记录导出JS版")
-    end
-  end
-}
-)
-
-function onKeyDown(code, event)
-  if string.find(tostring(event), "KEYCODE_BACK") ~= nil then
-    if pop.isShowing() then
-      pop.dismiss()
-      return true
-    end
-  end
-end
 
 function 分屏()
   local function setWidth(v, n)

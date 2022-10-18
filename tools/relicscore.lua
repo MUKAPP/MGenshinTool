@@ -1,6 +1,8 @@
 require "import"
 import "mods.muk"
 
+import "mods.chooser"
+
 activity.Title="圣遗物评分"
 
 layout={

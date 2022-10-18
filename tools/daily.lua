@@ -12,7 +12,6 @@ import "com.pretend.recyclerview.lua.adapter.LuaRecyclerViewAdapter"
 import "com.pretend.recyclerview.LuaSpanSizeLookup"
 import "com.pretend.recyclerview.LuaSpanSizeLookup$luaSpanSizeLookup"
 
-
 activity.Title="每日素材"
 
 layout={
@@ -763,6 +762,9 @@ all_person={
   ["Tighnari"]={"提纳里",5},
   ["Collei"]={"柯莱",4},
   ["Dori"]={"多莉",4},
+  ["Cyno"]={"赛诺",5},
+  ["Nilou"]={"妮露",5},
+  ["Candace"]={"坎蒂丝",4},
 }
 
 繁荣={"Qiqi","Keqing","Xiao","Shenhe","Yelan","Ningguang"}
@@ -777,9 +779,9 @@ all_person={
 风雅={"Ayaka","Itto","Ayato","Sara","Shinobu",}
 天光={"Shougun","Yae","Gorou","Sayu",}
 
-诤言={"Tighnari",}
+诤言={"Tighnari","Cyno","Candace"}
 巧思={"Dori",}
-笃行={"Collei",}
+笃行={"Nilou","Collei",}
 
 talenttab={
   ["Mon"]={
@@ -882,6 +884,7 @@ all_weapon={
     {"祭礼弓","SacrificialBow","bow","4","Fossil"},
     {"决斗之枪","Deathmatch","stick",4,"Gladiator"},
     {"龙脊长枪","DragonspineSpear","stick",4,"Everfrost"},
+    {"风信之锋","MissiveWindspear","stick",4,"Windvane"},
 
     {"黎明神剑","HarbingerOfDawn","sword",3,"Dawn"},
     {"沐浴龙血的剑","BloodstainedGreatsword","sword2","3","Siegfry"},
@@ -992,16 +995,23 @@ all_weapon={
     {"断浪长鳍","WavebreakersFin","stick",4,"Maria"},
   },
   谧林涓露={
+    {"圣显之钥","KeyOfKhajNisut","sword",5,"Deshret"},
+    
+    {"西福斯的月光","XiphosMoonlight","sword",4,"Pleroma"},
     {"原木刀","SapwoodBlade","sword",4,"Arakalari"},
     {"森林王器","ForestRegalia","sword2",4,"Arakalari"},
   },
   绿洲花园={
+    {"赤沙之杖", "StaffOfTheScarletSands", "stick", 5,"Deshret"},
+    
+    {"流浪的晚星","WanderingEvenstar","book",4,"Pleroma"},
     {"盈满之实","FruitOfFulfillment","book",4,"Arakalari"},
     {"贯月矢","Moonpiercer","stick",4,"Arakalari"},
   },
   烈日权威={
     {"猎人之径","HuntersPath","bow",5,"Ayus"},
     
+    {"玛海菈的水色","MakhairaAquamarine","sword2",4,"Pleroma"},
     {"王下近侍","KingsSquire","bow",4,"Arakalari"},
     {"竭泽","Trawler","bow",4,"Fin"},
   },

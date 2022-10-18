@@ -8,7 +8,7 @@ local _debug_last_name="openapp"
 local function _debug_clock(name)
   if 开发者模式 == "true" then
     local ch=string.format("%.6f",os.clock()-_debug_last_clock).."s"
-    printLog("_debug_clock",_debug_last_name.." → "..name,ch)
+    --printLog("_debug_clock",_debug_last_name.." → "..name,ch)
     _debug_last_clock=os.clock()
     _debug_last_name=name
   end
@@ -1197,7 +1197,7 @@ function onCreate()
                       }
                     }
 
-                    --[[{
+                    --[=[{
                     RelativeLayout;
                     layout_height="48dp";
                     layout_width="-1";
@@ -1265,7 +1265,7 @@ function onCreate()
                         layout_width="48dp";
                       };
                     };
-                  };]]
+                  };]=]
                   },
                   {
                     LinearLayout,
@@ -1291,30 +1291,43 @@ function onCreate()
                         layout_width = "-1",
                         id = "floatbutton_newarticle_lay",
                         gravity = "center",
-                        paddingLeft = "12dp",
-                        paddingRight = "24dp",
+                        --paddingLeft = "12dp",
+                        --paddingRight = "24dp",
                         onClick = function()
                           activity.newActivity("tanutai/newarticle")
                         end,
                         {
+                          TextView,
+                          layout_width = "4dp",
+                        },
+                        {
                           ImageView,
                           layout_width = "32dp",
                           layout_height = "32dp",
+                          layout_marginLeft="8dp",
                           padding = "4dp",
                           ColorFilter = primaryc,
-                          src = 图标("add")
+                          src = 图标("add"),
                         },
                         {
                           TextView,
                           text = "写文章",
                           textColor = primaryc,
                           textSize = "16sp",
-                          layout_width = "-1",
+                          layout_width = "-2",
                           gravity = "center|left",
                           paddingLeft = "2dp",
-                          layout_weight = "1",
+                          --layout_weight = "1",
                           Typeface = AppFont.粗体
-                        }
+                        },
+                        {
+                          TextView,
+                          layout_width = "8dp",
+                        },
+                        {
+                          TextView,
+                          layout_width = "16dp",
+                        },
                       }
                     }
                   },
@@ -2170,6 +2183,8 @@ function onCreate()
     memo_in.getParent().setLayoutTransition(transitioner)
     talogin.getParent().setLayoutTransition(transitioner)
     dym2.getParent().setLayoutTransition(transitioner)
+    floatbutton_newarticle_lay.setLayoutTransition(transitioner)
+    floatbutton_newarticle.getParent().setLayoutTransition(transitioner)
 
     _debug_clock("设置一些乱七八糟")
 
@@ -3702,34 +3717,30 @@ function onCreate()
     end
 
     function mys_signIn()
-      local datas = {}
+      local all_uid={}--所有游戏角色
+      local cookies
+      local cookies_format={}--所有cookie
 
-      signin_table_2={}
-      xpcall(
-      function()
-        datas = JSON.decode(mukactivity.getData("myscookies"))
+      local gotuid=0--已经获取过uid
+      local signed=0--签到过的
+
+      local act_id
+
+      local sign_results={}--签到结果
+
+      xpcall(function()
+        cookies = JSON.decode(mukactivity.getData("myscookies"))
       end,
       function(e)
         mukactivity.setData("myscookies", JSON.encode({}))
-        datas = JSON.decode(mukactivity.getData("myscookies"))
+        cookies = JSON.decode(mukactivity.getData("myscookies"))
+      end)
+
+      for i,v in pairs(cookies)
+        cookies_format[#cookies_format+1]={i,v}
       end
-      )
 
-      local allsign = 0
-      for i, v in pairs(datas) do
-        allsign = allsign + 1
-      end
-      local signres = ""
-      local signed = 0
-      local haserror = false
-      local sign_has_capacha = false
-
-      local act_id=""
-
-      local capacha_gt=""
-      local capacha_challenge=""
-
-      if allsign == 0 then
+      if #cookies_format == 0 then
         提示("请先登录米游社账号")
         return true
       end
@@ -3738,204 +3749,157 @@ function onCreate()
         return true
       end
       issigning = true
-      --sendNotification("正在签到…", "已完成：" .. signed .. "/" .. allsign, "3", "签到提示", Intent(), false, false, true)
-      加载对话框("正在签到…", "已完成：" .. signed .. "/" .. allsign, 0)
+      加载对话框("正在签到…", "正在获取签到信息")
 
-      local function 签到加文字(n)
-        if signres == "" then
-          signres = n
-         else
-          signres = signres .. "\n\n" .. n
-        end
-        signed = signed + 1
-        --sendNotification("正在签到…", "已完成：" .. signed .. "/" .. allsign, "3", "签到提示", Intent(), false, false, true)
-        加载对话框内容("已完成：" .. signed .. "/" .. allsign)
-        if signed >= allsign then
-          --关闭对话框()
-          signres = signres .. "\n\n若出现429错误码为短时间内请求过多，可以稍后再试\n"
-          mukactivity.setData("signresult", JSON.encode(signin_table_2))
-          mukactivity.setData("sign_act_id", act_id)
-          --[[sendNotification(
-              "签到结果",
-              "点击查看更多\n" .. signres,
-              "3",
-              "签到提示",
-              Intent(this, luajava.bindClass("com.androlua.LuaActivity")).setData(
-                Uri.parse("file://" .. this.getLuaDir() .. "/tools/signreturn.lua")
-              ),
-              false,
-              true,
-              true
-            )]]
-          关闭对话框()
-          --[[单按钮对话框(
-          "签到",
-          signres,
-          "关闭",
-          function()
-            关闭对话框()
+      function signIn()
+        signed=signed+1
+        加载对话框内容("正在签到: "..signed.."/"..#all_uid)
+
+        local nickname,uid,region,region_name,nam,cookie=
+        all_uid[signed][1],all_uid[signed][2],
+        all_uid[signed][3],all_uid[signed][4],
+        all_uid[signed][5],all_uid[signed][6]
+
+        local function next()
+          local nextTicker=Ticker()
+          nextTicker.Period=1000
+          nextTicker.onTick=function()
+            nextTicker.stop()
+            if signed+1<=#all_uid
+              signIn()
+             else
+              printLog("signIn",sign_results)
+              mukactivity.setData("signresult", JSON.encode(sign_results))
+              mukactivity.setData("sign_act_id", act_id)
+              关闭对话框()
+              issigning = false
+              activity.newActivity("tools/signreturn")
+            end
           end
-          )]]
-          activity.newActivity("tools/signreturn")
-          issigning = false
-          --[[if sign_has_capacha==true
-            提示("请手动签到")
-            
-            local url="https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon"
-            
-              activity.newActivity("web",{
-                url,
-                nil,
-                nil,
-                nil,
-                "hoyobbscapacha"
-              })
-          end]]
+          nextTicker.start()
         end
-        --print(signed,allsign)
-      end
 
-      local allsigntab = {}
-      local allsign_ti = 0
+        Http.get("https://api-takumi.mihoyo.com/event/bbs_sign_reward/info?region=" ..
+        region .. "&act_id=" .. act_id .. "&uid=" .. uid,
+        cookie,nil,nil,function(code, content)
+          local content = JSON.decode(content)
+          printLog("BBS Sign","get sign info",code, content)
+          --[[data={
+                ["message"] = "OK" ;
+                ["data"] = {
+                  ["total_sign_day"] = 3 ;
+                  ["month_first"] = false ;
+                  ["first_bind"] = false ;
+                  ["is_sign"] = true ;
+                  ["is_sub"] = false ;
+                  ["today"] = "2021-08-03" ;
+                } ;
+                ["retcode"] = 0 ;
+              };]]
+          xpcall(function()
+            local data = content.data
 
-      for nam, cookie in pairs(datas) do
-        allsigntab[#allsigntab + 1] = {nam, cookie}
-      end
+            local calendar = Calendar.getInstance()
+            local month = calendar.get(Calendar.MONTH) + 1
+            local day = calendar.get(Calendar.DAY_OF_MONTH)
 
-      加载对话框内容("正在获取签到信息")
-      Http.get(
-      "https://bbs-api.mihoyo.com/apihub/api/home/new?cpu=mt6785v/cc&device=Xiaomi%20Redmi%20Note%208%20Pro&gids=2",
-      function(code, content)
-        --printLog("BBS Sign","get info",code, content)
-        if code ~= 200 then
-          signin_table_2[#signin_table_2+1]={"全部签到失败","获取签到信息失败，错误码："..code}
-          签到加文字("请求失败，错误码：" .. code)
-          issigning = false
-          return true
-        end
-        local content = JSON.decode(content)
-        for i, v in ipairs(content.data.navigator) do
-          if v.name == "签到福利" then
-            local data = mukutils.split(v.app_path:match("%?(.+)"), "&")
-            for i, v in pairs(data) do
-              if v:find("act_id") then
-                act_id = v:match("=(.+)")
+            local is_sign=content.data.is_sign
+            local sign_cnt_missed=content.data.sign_cnt_missed
 
-                加载对话框内容("已完成：" .. signed .. "/" .. allsign)
-                signticker = Ticker()
-                signticker.Period = 1000
-                signticker.onTick = function()
-                  allsign_ti = allsign_ti + 1
-                  if allsigntab[allsign_ti] then
-                    local nam,
-                    cookie = allsigntab[allsign_ti][1], allsigntab[allsign_ti][2]
+            local total_sign_day
 
-                    Http.get(
-                    "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn",
-                    cookie,
-                    nil,
-                    nil,
-                    function(code, content)
-                      if code ~= 200 then
-                        signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","获取账号信息失败，错误码："..code,cookie}
-                        签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
-                        return true
-                      end
+            if is_sign
+              total_sign_day = data.total_sign_day
+             else
+              total_sign_day = data.total_sign_day+1
+            end
 
-                      local content = JSON.decode(content)
+            Http.get(
+            "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home?act_id=" .. act_id,
+            cookie,nil,nil,function(code, all_sign_content)
+              --printLog("BBS Sign","get final",code, content)
+              if code ~= 200 then
+                sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
+                next()
+                return true
+              end
+              all_sign_content = JSON.decode(all_sign_content)
 
-                      if content.data == nil then
-                        signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败",content.message,cookie}
-                        签到加文字("账号 " .. nam .. " 签到失败：\n" .. content.message)
-                        return true
-                      end
-                      allsign = allsign + (#content.data.list - 1)
-                      for i0, v0 in ipairs(content.data.list) do
-                        local data = content.data.list[i0]
-                        local nickname = data.nickname
-                        local uid = data.game_uid
-                        local region = data.region
-                        local region_name = data.region_name
-                        --[[data={
-            ["level"] = 55 ;
-            ["is_official"] = true ;
-            ["region_name"] = "天空岛" ;
-            ["is_chosen"] = false ;
-            ["game_uid"] = "114640851" ;
-            ["nickname"] = "喵嗷呜汪qwq" ;
-            ["game_biz"] = "hk4e_cn" ;
-            ["region"] = "cn_gf01" ;
-          }]]
-
-
-                        Http.get(
-                        "https://api-takumi.mihoyo.com/event/bbs_sign_reward/info?region=" ..
-                        region .. "&act_id=" .. act_id .. "&uid=" .. uid,
-                        cookie,
-                        nil,
-                        nil,
-                        function(code, content)
-                          local content = JSON.decode(content)
-                          printLog("BBS Sign","get sign info",code, content)
-                          --[[data={
-                          ["message"] = "OK" ;
-                          ["data"] = {
-                            ["total_sign_day"] = 3 ;
-                            ["month_first"] = false ;
-                            ["first_bind"] = false ;
-                            ["is_sign"] = true ;
-                            ["is_sub"] = false ;
-                            ["today"] = "2021-08-03" ;
-                          } ;
-                          ["retcode"] = 0 ;
-                        } ;
-                        ]]
-                          xpcall(function()
-                            local data = content.data
-                            local total_sign_day = data.total_sign_day
-
-                            local calendar = Calendar.getInstance()
-                            local month = calendar.get(Calendar.MONTH) + 1
-                            local day = calendar.get(Calendar.DAY_OF_MONTH)
-
-                            local is_sign=content.data.is_sign
-                            local sign_cnt_missed=content.data.sign_cnt_missed
-
-                            Http.get(
-                            "https://api-takumi.mihoyo.com/event/bbs_sign_reward/home?act_id=" .. act_id,
-                            cookie,
-                            nil,
-                            nil,
-                            function(code, all_sign_content)
-                              --printLog("BBS Sign","get final",code, content)
-                              if code ~= 200 then
-                                signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
-                                签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
-                                issigning = false
-                                return true
-                              end
-                              issigning = false
-                              local all_sign_content = JSON.decode(all_sign_content)
-
-                              if is_sign==true
-                                signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid .." (".. region_name..")",[[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                                  all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+              if is_sign==true
+                sign_results[#sign_results+1]={nickname .. "  UID: " .. uid .." (".. region_name..")",[[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                  all_sign_content.data.awards[total_sign_day].cnt .. [[ 
 本月累签: ]].. total_sign_day .. [[ 天
 本月漏签: ]].. sign_cnt_missed .. [[ 天
 签到结果: ]].. "今天已经签到过啦",cookie}
-                                签到加文字(
-                                [[ 🔅]] .. nickname .. "  UID: " .. uid.." (".. region_name..")" ..
-                                [[ 
-今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                                all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+                --printLog("BBS Sign",signin_table_2)
+                printLog("BBS Sign",nickname .. "  UID: " .. uid,"重复签到")
+                next()
+               else
+                local ds = getDS()
+
+                --print(ds)
+
+                local map = HashMap()
+                map.put("Origin", "https://webstatic.mihoyo.com")
+                map.put("x-rpc-app_version", mihoyobbs_Version)
+                map.put(
+                "User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
+                )
+                map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
+                map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
+                map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+                map.put("X-Requested-With", "com.mihoyo.hyperion")
+                map.put("Content-Type", "application/json")
+
+                map.put("DS", ds)
+
+                Http.post("https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
+                JSON.encode({
+                  ["act_id"] = act_id,
+                  ["uid"] = uid,
+                  ["region"] = region
+                  }),cookie,nil,map,function(code, content)
+                  printLog("BBS Sign","sign",code)
+                  if code ~= 200 then
+                    sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
+                    next()
+                    return true
+                  end
+                  local content = JSON.decode(content)
+                  printLog("BBS Sign","sign_dump",code, dump(content))
+                  local message = content.message
+                  local data=content.data
+                  if data
+                    if content.retcode == 0 and data.success==0 then
+                      message = "签到成功"
+                      printLog("BBS Sign",nickname .. "  UID: " .. uid,"签到成功")
+                      sign_results[#sign_results+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                        all_sign_content.data.awards[total_sign_day].cnt .. [[ 
 本月累签: ]].. total_sign_day .. [[ 天
 本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. "今天已经签到过啦")
-                                --printLog("BBS Sign",signin_table_2)
-                                printLog("BBS Sign",nickname .. "  UID: " .. uid,"重复签到")
-                               else
+签到结果: ]].. message,cookie}
+                      next()
+                     else
+                      if data.success == 1
+                        capacha_challenge=data.challenge
+                        capacha_gt=data.gt
+                        message = "通过验证码失败，可以尝试重新签到"
+                        printLog("BBS Sign",nickname .. "  UID: " .. uid,"需要验证码")
+                        --处理验证码
 
-                                local ds = getDS()
+                        加载对话框内容("正在签到: "..signed.."/"..#all_uid
+                        .."\n需要验证码，正在尝试通过")
+                        if capacha_challenge and capacha_gt
+                          Http.get("https://api.geetest.com/ajax.php?gt="..capacha_gt.."&challenge="..capacha_challenge.."&lang=zh-cn&pt=3&client_type=web_mobile&callback=geetest_1663984420850",
+                          function(code,content)
+                            if code==200
+                              local content=content:match("%((.-)%)")
+                              local content = JSON.decode(content)
+                              printLog("Capacha",content)
+                              local validate=content.data.validate
+                              if validate
+                              printLog("Capacha","start")
+                                local ds = getDS()--验证码请求 start
 
                                 --print(ds)
 
@@ -3943,8 +3907,7 @@ function onCreate()
                                 map.put("Origin", "https://webstatic.mihoyo.com")
                                 map.put("x-rpc-app_version", mihoyobbs_Version)
                                 map.put(
-                                "User-Agent",
-                                getUA().." miHoYoBBS/"..mihoyobbs_Version
+                                "User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
                                 )
                                 map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
                                 map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
@@ -3952,26 +3915,22 @@ function onCreate()
                                 map.put("X-Requested-With", "com.mihoyo.hyperion")
                                 map.put("Content-Type", "application/json")
 
+                                map.put("x-rpc-validate", validate)
+                                map.put("x-rpc-challenge", capacha_challenge)
+                                map.put("x-rpc-seccode", validate.."%7Cjordan")
+
                                 map.put("DS", ds)
 
-                                Http.post(
-                                "https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
-                                JSON.encode(
-                                {
+                                Http.post("https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign",
+                                JSON.encode({
                                   ["act_id"] = act_id,
                                   ["uid"] = uid,
                                   ["region"] = region
-                                }
-                                ),
-                                cookie,
-                                nil,
-                                map,
-                                function(code, content)
+                                  }),cookie,nil,map,function(code, content)
                                   printLog("BBS Sign","sign",code)
                                   if code ~= 200 then
-                                    signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
-                                    签到加文字("账号 " .. nam .. " 签到失败，错误码：" .. code)
-                                    issigning = false
+                                    sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
+                                    next()
                                     return true
                                   end
                                   local content = JSON.decode(content)
@@ -3982,52 +3941,144 @@ function onCreate()
                                     if content.retcode == 0 and data.success==0 then
                                       message = "签到成功"
                                       printLog("BBS Sign",nickname .. "  UID: " .. uid,"签到成功")
+                                      sign_results[#sign_results+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                                        all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+本月累签: ]].. total_sign_day .. [[ 天
+本月漏签: ]].. sign_cnt_missed .. [[ 天
+签到结果: ]].. message,cookie}
+                                      next()
                                      else
                                       if data.success == 1
                                         capacha_challenge=data.challenge
                                         capacha_gt=data.gt
-                                        message = "需要验证码，暂时没有解决方法，请手动签到"
-                                        printLog("BBS Sign",nickname .. "  UID: " .. uid,"需要验证码")
-                                        sign_has_capacha=true
+                                        message = "通过验证码失败，可以尝试重新签到"
+                                        printLog("BBS Sign",nickname .. "  UID: " .. uid,"通过验证码失败")
+
+                                        sign_results[#sign_results+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                                          all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+本月累签: ]].. total_sign_day-1 .. [[ 天
+本月漏签: ]].. sign_cnt_missed .. [[ 天
+签到结果: ]].. message,cookie}
+                                        next()
                                       end
                                     end
                                   end
 
-                                  signin_table_2[#signin_table_2+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                                    all_sign_content.data.awards[total_sign_day].cnt .. [[ 
-本月累签: ]].. total_sign_day .. [[ 天
+                                end)--验证码请求 end
+
+                               else
+                                sign_results[#sign_results+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                                  all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+本月累签: ]].. total_sign_day-1 .. [[ 天
 本月漏签: ]].. sign_cnt_missed .. [[ 天
 签到结果: ]].. message,cookie}
-                                  签到加文字([[ 🔅]] .. nickname .. "  UID: " .. uid.." (".. region_name..")" .. [[ 
-今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                                  all_sign_content.data.awards[total_sign_day].cnt .. [[ 
-本月累签: ]].. total_sign_day .. [[ 天
-本月漏签: ]].. sign_cnt_missed .. [[ 天
-签到结果: ]].. message)
-                                end
-                                )
-
+                                next()
                               end
-                            end)
-
-                            end,function(e)
-                            signin_table_2[#signin_table_2+1]={"账号 " .. nam .. " 签到失败","请求失败，未知错误："..dump(content),cookie}
-                            签到加文字("账号 " .. nam .. " 签到失败，未知错误："..dump(content))
-                            issigning = false
-                            return true
+                             else
+                              sign_results[#sign_results+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
+                                all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+本月累签: ]].. total_sign_day-1 .. [[ 天
+本月漏签: ]].. sign_cnt_missed .. [[ 天
+签到结果: ]].. message,cookie}
+                              next()
+                            end
                           end)
-                        end)
-
-
+                          return true
+                        end
                       end
-                    end)
-                   else
-                    signticker.stop()
+                    end
                   end
-                end
-                signticker.start()
 
+                end)
 
+              end
+            end)
+
+            end,function(e)
+            sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","请求失败，未知错误："..dump(content),cookie}
+            next()
+            return true
+          end)
+        end)
+      end
+
+      function getUids()
+        gotuid=gotuid+1
+        加载对话框内容("正在获取UID: "..gotuid.."/"..#cookies_format)
+
+        local nam,cookie = cookies_format[gotuid][1], cookies_format[gotuid][2]
+
+        local function next()
+          local nextTicker=Ticker()
+          nextTicker.Period=200
+          nextTicker.onTick=function()
+            nextTicker.stop()
+            if gotuid+1<=#cookies_format
+              getUids()
+             else
+              printLog("getUids",all_uid)
+              signIn()
+            end
+          end
+          nextTicker.start()
+        end
+
+        Http.get("https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn",
+        cookie,nil,nil,function(code, content)
+          if code ~= 200 then
+            sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","获取账号信息失败，错误码："..code,cookie}
+            next()
+            return true
+          end
+          local content = JSON.decode(content)
+
+          if content.data == nil then
+            sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败",content.message,cookie}
+            next()
+            return true
+          end
+          for i0, v0 in ipairs(content.data.list) do
+            local data = content.data.list[i0]
+            local nickname = data.nickname
+            local uid = data.game_uid
+            local region = data.region
+            local region_name = data.region_name
+            --[[data={
+                  ["level"] = 55 ;
+                  ["is_official"] = true ;
+                  ["region_name"] = "天空岛" ;
+                  ["is_chosen"] = false ;
+                  ["game_uid"] = "114640851" ;
+                  ["nickname"] = "喵嗷呜汪qwq" ;
+                  ["game_biz"] = "hk4e_cn" ;
+                  ["region"] = "cn_gf01" ;
+                }]]
+            all_uid[#all_uid+1]={nickname,uid,region,region_name,nam,cookie}
+          end
+          next()
+        end)
+      end
+
+      Http.get("https://bbs-api.mihoyo.com/apihub/api/home/new?cpu=mt6785v/cc&device=Xiaomi%20Redmi%20Note%208%20Pro&gids=2",
+      function(code, content)
+        if code ~= 200 then
+          sign_results[#sign_results+1]={"全部签到失败","获取签到信息失败，错误码："..code}
+          issigning = false
+          mukactivity.setData("signresult", JSON.encode(sign_results))
+          mukactivity.setData("sign_act_id", act_id)
+          关闭对话框()
+          activity.newActivity("tools/signreturn")
+          return true
+        end
+        local content = JSON.decode(content)
+        for i, v in ipairs(content.data.navigator) do
+          if v.name == "签到福利" then
+            local data = mukutils.split(v.app_path:match("%?(.+)"), "&")
+            for i, v in pairs(data) do
+              if v:find("act_id") then
+                act_id = v:match("=(.+)")
+                --act_id 获取成功
+                getUids()
               end
             end
           end
@@ -6932,6 +6983,15 @@ function onCreate()
 
           view.comment_count.getParent().setBackground(波纹2("方自适应"))
           view.comment_count.getParent().onClick = function()
+            activity.newActivity("tanutai/articles", {ta_article_data[position],true})
+            function articleInfoChanged(up, down, voting,follower,is_following)
+              ta_article_data[position].vote_up_count = up
+              ta_article_data[position].vote_down_count = down
+              ta_article_data[position].relationships.voting = voting
+              ta_article_data[position].follower_count=follower
+              ta_article_data[position].relationships.is_following=is_following
+              ta_article_adp.notifyItemChanged(position)
+            end
           end
 
           view.vote_up_count.getParent().setBackground(波纹2("方自适应"))
@@ -7100,10 +7160,12 @@ function onCreate()
           view.go.setBackground(波纹2("方自适应"))
           view.go.onClick = function()
             activity.newActivity("tanutai/articles", {ta_article_data[position]})
-            function articleInfoChanged(up, down, voting)
+            function articleInfoChanged(up, down, voting,follower,is_following)
               ta_article_data[position].vote_up_count = up
               ta_article_data[position].vote_down_count = down
               ta_article_data[position].relationships.voting = voting
+              ta_article_data[position].follower_count=follower
+              ta_article_data[position].relationships.is_following=is_following
               ta_article_adp.notifyItemChanged(position)
             end
           end
@@ -7147,9 +7209,10 @@ function onCreate()
         if tarv1_lPos ~= tarv1_glm.findLastVisibleItemPosition() + 1 then
           tarv1_lPos = tarv1_glm.findLastVisibleItemPosition() + 1
           if (tarv1_lPos == ta_article_adp.getItemCount()) and tarv1_lPos ~= 3 then
-            tarefresh1.setProgressViewOffset(true, 状态栏高度 + dp2px(56 - 8), screenY - 导航栏高度 - dp2px(56 + 64))
+            tarefresh1.setProgressViewOffset(true, 状态栏高度 + dp2px(56 - 8), screenY - 导航栏高度 - dp2px(56 + 64 + 16))
             获取文章()
-           elseif tarefresh1.setProgressViewOffset(true, 状态栏高度 + dp2px(56 - 8), 状态栏高度 + dp2px(56 - 8 + 48)) then
+           else
+            tarefresh1.setProgressViewOffset(true, 状态栏高度 + dp2px(56 - 8), 状态栏高度 + dp2px(56 - 8 + 48))
           end
         end
       end,
@@ -7166,7 +7229,10 @@ function onCreate()
           translationUp.setDuration(256)
           translationUp.start()
 
-          MFBshow(floatbutton_newarticle)
+          --MFBshow(floatbutton_newarticle)
+          控件可见(floatbutton_newarticle_lay.getChildAt(0))
+          控件可见(floatbutton_newarticle_lay.getChildAt(2))
+          控件可见(floatbutton_newarticle_lay.getChildAt(4))
          elseif (scrollState == ScrollState.UP) then
           if tarv1_lst >= 5 then
             --print("向上滚动");
@@ -7175,7 +7241,10 @@ function onCreate()
             translationUp.setDuration(256)
             translationUp.start()
 
-            MFBhide(floatbutton_newarticle)
+            --MFBhide(floatbutton_newarticle)
+            控件隐藏(floatbutton_newarticle_lay.getChildAt(0))
+            控件隐藏(floatbutton_newarticle_lay.getChildAt(2))
+            控件隐藏(floatbutton_newarticle_lay.getChildAt(4))
            else
             --print("向下滚动2");
             translationUp = ObjectAnimator.ofFloat(tatopbar, "Y", {tatopbar.getY(), 0})
@@ -7183,7 +7252,10 @@ function onCreate()
             translationUp.setDuration(256)
             translationUp.start()
 
-            MFBshow(floatbutton_newarticle)
+            --MFBshow(floatbutton_newarticle)
+            控件可见(floatbutton_newarticle_lay.getChildAt(0))
+            控件可见(floatbutton_newarticle_lay.getChildAt(2))
+            控件可见(floatbutton_newarticle_lay.getChildAt(4))
           end
          else
           --print("停止滚动");
@@ -7380,7 +7452,7 @@ function onCreate()
         tanutai.articles(
         ta_article_page,
         "-update_time",
-        "user,voting,topics",
+        "user,voting,topics,is_following",
         function(content)
           if ta_article_page == 1 then
             ta_article_data = {}
@@ -7634,7 +7706,7 @@ function onCreate()
       获取用户信息()
       ta_article_page = 1
       获取文章()
-    end--]]
+    end]]
 
     --[[page1.onLongClick=function()
       activity.newActivity("tools/scan")

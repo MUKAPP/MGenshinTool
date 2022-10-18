@@ -226,6 +226,7 @@ function onCreate()
   实时便笺通知不可清除=mukactivity.getData("Note_Notification_Ongoing")
   自动签到=mukactivity.getData("Note_Auto_Sign")
   进入软件时自动签到=mukactivity.getData("Note_Auto_Sign2")
+  更深的夜间模式背景=mukactivity.getData("Setting_Deeper_Night_Mode")
 
   data={}
   adp=LuaMultiAdapter(activity,data,setting)
@@ -242,6 +243,7 @@ function onCreate()
   adp.add{__type=1,title="界面"}
   adp.add{__type=4,subtitle="跟随系统夜间模式",message="若开启此项不跟随系统夜间模式，则您的系统不支持原生夜间模式API",status={Checked=Boolean.valueOf(跟随系统夜间模式)}}
   adp.add{__type=4,subtitle="夜间模式",message="“跟随系统夜间模式”启用时该项不生效",status={Checked=Boolean.valueOf(夜间模式) }}
+  adp.add{__type=4,subtitle="更深的夜间模式背景",message="为夜间模式更换更深的背景色",status={Checked=Boolean.valueOf(更深的夜间模式背景) }}
   adp.add{__type=2,subtitle="主题",message="夜间模式开启时主题不生效"}
   adp.add{__type=4,subtitle="主页垫高导航栏",message="部分系统开启全面屏手势之后仍然会给软件提供导航栏高度，主页就会出现导航栏位置空一片的情况，关闭此项以解决该问题",status={Checked=Boolean.valueOf(垫高导航栏) }}
   adp.add{__type=2,subtitle="校准屏幕大小",message="如果你的悬浮浏览器等功能的尺寸不正常，请退出小窗等状态、正常打开该页面并将屏幕竖置，点击此项来校准屏幕大小"}
@@ -258,7 +260,7 @@ function onCreate()
   --adp.add{__type=1,title="内置浏览器"}
   --adp.add{__type=4,subtitle="上传文件类型改为全部",message="若上传文件时文件显示但无法选择文件，开启此项以选择全部类型文件",status={Checked=Boolean.valueOf(内置浏览器上传文件类型改为全部)}}
   adp.add{__type=1,title="开发者模式"}
-  adp.add{__type=4,subtitle="开启开发者模式",message="便于调试代码",status={Checked=Boolean.valueOf(开发者模式) }}
+  adp.add{__type=4,subtitle="开启开发者模式",message="便于调试代码（可能会拖慢性能）",status={Checked=Boolean.valueOf(开发者模式) }}
   --adp.add{__type=5,subtitle="页面加载时间显示",status={Checked=Boolean.valueOf(页面加载时间显示)}}
   --adp.add{__type=1,title="未开放功能"}
   --adp.add{__type=5,subtitle="自动备份开关",status={Checked=自动备份}}
@@ -631,6 +633,9 @@ function onCreate()
         if v.Tag.subtitle.Text=="进入软件时自动签到" then
           进入软件时自动签到=data[one].status["Checked"]
         end
+        if v.Tag.subtitle.Text=="更深的夜间模式背景" then
+          更深的夜间模式背景=data[one].status["Checked"]
+        end
       end
       adp.notifyDataSetChanged()
     end
@@ -653,6 +658,7 @@ function 退出()
     mukactivity.setData("Note_Notification_Ongoing",tostring(实时便笺通知不可清除))
     mukactivity.setData("Note_Auto_Sign",tostring(自动签到))
     mukactivity.setData("Note_Auto_Sign2",tostring(进入软件时自动签到))
+    mukactivity.setData("Setting_Deeper_Night_Mode",tostring(更深的夜间模式背景))
     activity.result({})
    else
     关闭页面()

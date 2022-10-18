@@ -1,6 +1,7 @@
 require "import"
 import "mods.muk"
 import "mods.tanutai"
+import "mods.chooser"
 
 import "okhttp3.OkHttpClient"
 import "okhttp3.Request"

@@ -1,6 +1,8 @@
 require "import"
 import "mods.muk"
 
+relogin=...
+
 function onCreate()
   layout={
     RelativeLayout;
@@ -541,7 +543,11 @@ function onCreate()
         if web.getCookie():find("account_id") and
           web.getCookie():find("cookie_token") then
           提示("登录成功")
-          activity.result({web.getCookie()})
+          if relogin
+            activity.result({web.getCookie(),true})
+           else
+            activity.result({web.getCookie()})
+          end
          else
           提示("登录失败，Cookie内未找到必要参数，请尝试重新登录")
           activity.result({})

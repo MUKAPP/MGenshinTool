@@ -1,5 +1,5 @@
 require "import"
-import "mods.chooser"
+--import "mods.chooser"
 Toast = nil
 --import "android.widget.*"
 import "mods.imports"
@@ -319,7 +319,7 @@ function 获取文件修改时间(path)
 end
 
 function 写入文件(路径, 内容, n)
-  printLog("File", "写入文件", 路径, 内容, n)
+  printLog("File", "写入文件", 路径, n)
   if n then
     local f = File(tostring(File(tostring(路径)).getParentFile())).mkdirs()
     io.open(tostring(路径), "w"):write(tostring(内容)):close()
@@ -641,35 +641,58 @@ function 主题(str)
     end
     )
    elseif 全局主题值 == "Night" then
+    if mukactivity.getData("Setting_Deeper_Night_Mode")=="true"
+      backgroundc = "#FF0D0E0F"
+      barbackgroundc = "#aF0D0E0F"
+      ctbackc = "#FF26272B"
+      cardbackc = "#10ffffff"
+      viewshaderc = "#7f000000"
+      状态栏颜色(0xFF0D0E0F)
+      导航栏颜色(0xFF0D0E0F)
+      导航栏设置 = [[return 0xFF0D0E0F]]
+      pcall(
+      function()
+        local _window = activity.getWindow()
+        _window.setBackgroundDrawable(ColorDrawable(0xFF0D0E0F))
+        local _wlp = _window.getAttributes()
+        _wlp.gravity = Gravity.BOTTOM
+        _wlp.width = WindowManager.LayoutParams.MATCH_PARENT
+        _wlp.height = WindowManager.LayoutParams.MATCH_PARENT --WRAP_CONTENT
+        _window.setAttributes(_wlp)
+        activity.setTheme(android.R.style.Theme_Material_NoActionBar)
+      end
+      )
+     else
+      backgroundc = "#FF202125"
+      barbackgroundc = "#aF202125"
+      ctbackc = "#FF36373B"
+      cardbackc = "#14ffffff"
+      viewshaderc = "#5f000000"
+      状态栏颜色(0xff202125)
+      导航栏颜色(0xff202125)
+      导航栏设置 = [[return 0xff202125]]
+      pcall(
+      function()
+        local _window = activity.getWindow()
+        _window.setBackgroundDrawable(ColorDrawable(0xff202125))
+        local _wlp = _window.getAttributes()
+        _wlp.gravity = Gravity.BOTTOM
+        _wlp.width = WindowManager.LayoutParams.MATCH_PARENT
+        _wlp.height = WindowManager.LayoutParams.MATCH_PARENT --WRAP_CONTENT
+        _window.setAttributes(_wlp)
+        activity.setTheme(android.R.style.Theme_Material_NoActionBar)
+      end
+      )
+    end
     primaryc = "#88A8E8"
     secondaryc = "#51326c"
     textc = "#E0E0E0"
     stextc = "#9E9E9E"
-    backgroundc = "#FF202125"
-    ctbackc = "#FF36373B"
-    barbackgroundc = "#aF202125"
-    cardbackc = "#14ffffff"
-    viewshaderc = "#5f000000"
     grayc = "#191919"
     notenablec = "#9E9E9E"
     themebackground = "res/night.jpg"
     themebackgroundlight = "light"
     bwz = 0x3f000000
-    状态栏颜色(0xff202125)
-    导航栏颜色(0xff202125)
-    导航栏设置 = [[return 0xff202125]]
-    pcall(
-    function()
-      local _window = activity.getWindow()
-      _window.setBackgroundDrawable(ColorDrawable(0xff202125))
-      local _wlp = _window.getAttributes()
-      _wlp.gravity = Gravity.BOTTOM
-      _wlp.width = WindowManager.LayoutParams.MATCH_PARENT
-      _wlp.height = WindowManager.LayoutParams.MATCH_PARENT --WRAP_CONTENT
-      _window.setAttributes(_wlp)
-      activity.setTheme(android.R.style.Theme_Material_NoActionBar)
-    end
-    )
    elseif 全局主题值 == "Star" then
     primaryc = "#FFA0B0C0"
     secondaryc = "#FF101818"
@@ -754,6 +777,8 @@ mukactivity.setDataR("Setting_Auto_Update", "true")
 mukactivity.setDataR("Setting_Theme", "Sea")
 mukactivity.setDataR("Starred_Tools", JSON.encode({}))
 mukactivity.setDataR("Setting_Developer_Mode", "false")
+mukactivity.setDataR("Setting_Deeper_Night_Mode","false")
+mukactivity.setDataR("myscookies",JSON.encode({}))
 
 if Boolean.valueOf(mukactivity.getData("Setting_Auto_Night_Mode")) == true then
   if 获取系统夜间模式() then
