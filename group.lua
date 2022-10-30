@@ -153,14 +153,14 @@ function onCreate()
                 };
                 {
                   TextView;
-                  text="应急食品食用群7群";
+                  text="应急食品食用群6群";
                   textSize="14sp";
                   textColor=textc;
                   paddingLeft="8dp";
                   Typeface=AppFont.标准;
                 };
               };
-              {
+              --[[{
                 LinearLayout;
                 layout_height="-2";
                 layout_width="-1";
@@ -192,7 +192,7 @@ function onCreate()
                   paddingLeft="8dp";
                   Typeface=AppFont.标准;
                 };
-              };
+              };]]
               {
                 LinearLayout;
                 layout_height="-2";

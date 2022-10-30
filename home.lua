@@ -3551,7 +3551,9 @@ function onCreate()
         end
       end
 
-      floatload("mihoyo")
+
+      mukactivity.setDataR("Setting_FloatWeb_Home","mihoyo")
+      floatload(mukactivity.getData("Setting_FloatWeb_Home"))
 
       float_list_item = {
         LinearLayout,
@@ -3898,7 +3900,7 @@ function onCreate()
                               printLog("Capacha",content)
                               local validate=content.data.validate
                               if validate
-                              printLog("Capacha","start")
+                                printLog("Capacha","start")
                                 local ds = getDS()--验证码请求 start
 
                                 --print(ds)
@@ -5113,7 +5115,7 @@ function onCreate()
       {"米游社签到", "signin"},
       {"悬浮浏览器", "floatweb"},
       {"查询账号信息","getinfo"},
-      --{"深渊数据库","abyss"},
+      {"深渊数据库","abyss"},
       --{"查询深渊信息","getabyssinfo"},
     }
 
@@ -6078,6 +6080,7 @@ function onCreate()
     控件隐藏(switch_memo)
 
     mukactivity.setDataR("memo_num", 1)
+    mukactivity.setDataR("Note_Notification_Simple",tostring(false))
 
     function dailyNote()
       local cookie = mukactivity.getData("myscookie")

@@ -464,44 +464,81 @@ xpcall(function()
             end
           end
 
-          add("原粹树脂 "..data.current_resin.."/"..data.max_resin)
-          if data.resin_recovery_time=="0" then
-            add(" - 树脂溢出了呜呜呜")
-           else
-            add(" - 将于 "..secondtostring(tointeger(data.resin_recovery_time)).." 全部恢复")
-          end
-          add("每日委托 "..data.finished_task_num.."/"..data.total_task_num)
-          add("探索派遣 "..data.current_expedition_num.."/"..data.max_expedition_num)
-
-          local expedition_stime=0
-
-          for i,v in pairs(data.expeditions) do
-            if tointeger(v.remained_time)>expedition_stime then
-              expedition_stime=tointeger(v.remained_time)
-            end
-          end
-
-          if expedition_stime==0 then
-            add(" - 派遣已经全部完成了")
-           else
-            add(" - 将于 "..secondtostring(tointeger(expedition_stime)).." 全部完成")
-          end
-          add("洞天宝钱 "..data.current_home_coin.."/"..data.max_home_coin)
-          add("周本减半 "..data.remain_resin_discount_num.."/"..data.resin_discount_num_limit)
-
-          if data.transformer.obtained
-            if data.transformer.recovery_time.reached
-              add("参量质变仪 可使用")
+          if this.getSharedData("Note_Notification_Simple")=="false"
+            add("原粹树脂 "..data.current_resin.."/"..data.max_resin)
+            if data.resin_recovery_time=="0" then
+              add(" - 树脂溢出了呜呜呜")
              else
-              add("参量质变仪 冷却中")
-              local transformertime=data.transformer.recovery_time
-              add(" - 将在 "..transformertime.Day.."天 后恢复")
+              add(" - 将于 "..secondtostring(tointeger(data.resin_recovery_time)).." 全部恢复")
             end
-           else
-            add("参量质变仪 未获得")
-          end
+            add("每日委托 "..data.finished_task_num.."/"..data.total_task_num)
+            add("探索派遣 "..data.current_expedition_num.."/"..data.max_expedition_num)
 
-          add("（每"..tostring(this.getSharedData("Note_Time")).."分钟刷新一次）")
+            local expedition_stime=0
+
+            for i,v in pairs(data.expeditions) do
+              if tointeger(v.remained_time)>expedition_stime then
+                expedition_stime=tointeger(v.remained_time)
+              end
+            end
+
+            if expedition_stime==0 then
+              add(" - 派遣已经全部完成了")
+             else
+              add(" - 将于 "..secondtostring(tointeger(expedition_stime)).." 全部完成")
+            end
+            add("洞天宝钱 "..data.current_home_coin.."/"..data.max_home_coin)
+            add("周本减半 "..data.remain_resin_discount_num.."/"..data.resin_discount_num_limit)
+
+            if data.transformer.obtained
+              if data.transformer.recovery_time.reached
+                add("参量质变仪 可使用")
+               else
+                add("参量质变仪 冷却中")
+                local transformertime=data.transformer.recovery_time
+                add(" - 将在 "..transformertime.Day.."天 后恢复")
+              end
+             else
+              add("参量质变仪 未获得")
+            end
+
+            add("（每"..tostring(this.getSharedData("Note_Time")).."分钟刷新一次）")
+           else
+            if data.resin_recovery_time=="0" then
+              add("树脂 "..data.current_resin.."/"..data.max_resin.." - 已回满")
+             else
+              add("树脂 "..data.current_resin.."/"..data.max_resin.." - "..secondtostring(tointeger(data.resin_recovery_time)).." 回满")
+            end
+
+            local expedition_stime=0
+            for i,v in pairs(data.expeditions) do
+              if tointeger(v.remained_time)>expedition_stime then
+                expedition_stime=tointeger(v.remained_time)
+              end
+            end
+            if expedition_stime==0 then
+              add("派遣 "..data.current_expedition_num.."/"..data.max_expedition_num.." - 已完成")
+             else
+              add("派遣 "..data.current_expedition_num.."/"..data.max_expedition_num.." - "..secondtostring(tointeger(expedition_stime)).." 完成")
+            end
+
+            add("委托 "..data.finished_task_num.."/"..data.total_task_num)
+            add("宝钱 "..data.current_home_coin.."/"..data.max_home_coin)
+            add("周本 "..(3-data.remain_resin_discount_num).."/"..data.resin_discount_num_limit)
+
+            if data.transformer.obtained
+              if data.transformer.recovery_time.reached
+                add("质变仪 - 可使用")
+               else
+                local transformertime=data.transformer.recovery_time
+                add("质变仪 - "..transformertime.Day.."天 后恢复")
+              end
+             else
+            end
+
+            add("")
+            add("（每"..tostring(this.getSharedData("Note_Time")).."分钟刷新一次）")
+          end
 
           if tointeger(data.current_resin)<lastresin then
             lastresin=0
@@ -868,7 +905,7 @@ xpcall(function()
       cookies = JSON.decode(this.getSharedData("myscookies"))
     end,
     function(e)
-      mukactivity.setData("myscookies", JSON.encode({}))
+      this.setSharedData("myscookies", JSON.encode({}))
       cookies = JSON.decode(this.getSharedData("myscookies"))
     end)
 

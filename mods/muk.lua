@@ -64,8 +64,7 @@ CrashUtils.init({
 })
 ]]
 
-状态栏高度 =
-activity.getResources().getDimensionPixelSize(luajava.bindClass("com.android.internal.R$dimen")().status_bar_height)
+状态栏高度 = activity.getResources().getDimensionPixelSize(luajava.bindClass("com.android.internal.R$dimen")().status_bar_height)
 --导航栏高度=activity.getResources().getDimensionPixelSize(luajava.bindClass("com.android.internal.R$dimen")().navigation_bar_height)
 
 function getNavigationBarHeight(context)
@@ -111,15 +110,13 @@ SDK版本 = tonumber(Build.VERSION.SDK)
 安卓版本 = Build.VERSION.RELEASE
 ROM类型 = string.upper(Build.MANUFACTURER)
 内部存储路径 = Environment.getExternalStorageDirectory().toString() .. "/"
-xpcall(
-function()
+xpcall(function()
   import "android.provider.Settings$Secure"
   安卓ID = Secure.getString(activity.getContentResolver(), Secure.ANDROID_ID)
 end,
 function(e)
   安卓ID = ""
-end
-)
+end)
 
 import "com.blankj.utilcode.util.*"
 ImageUtils = nil
@@ -138,8 +135,36 @@ mukvar = {
   textColorMode = {}
 }
 
-printLog(
-"Phone Info",
+darkmodejs=[[function loadJS( url, callback ){
+    var script = document.createElement('script'),
+        fn = callback || function(){};
+    script.type = 'text/javascript';
+
+    //IE
+    if(script.readyState){
+        script.onreadystatechange = function(){
+            if( script.readyState == 'loaded' || script.readyState == 'complete' ){
+                script.onreadystatechange = null;
+                fn();
+            }
+        };
+    }else{
+        //其他浏览器
+        script.onload = function(){
+            fn();
+        };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+loadJS('https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js',function(){
+    const darkmode =  new Darkmode();
+    darkmode.toggle();
+});]]
+
+printLog("Phone Info",
 "BRAND: " .. 厂商,
 "MODEL: " .. 型号,
 "SDK: " .. SDK版本,
@@ -147,8 +172,7 @@ printLog(
 "MANUFACTURER: " .. ROM类型,
 "ROMINFO: " .. ROM信息,
 "ANDROID_ID: " .. 安卓ID,
-"ISPHONE: " .. tostring(是否是手机)
-)
+"ISPHONE: " .. tostring(是否是手机))
 
 function 状态栏颜色(n, n1, n2, n3)
   pcall(
@@ -343,6 +367,18 @@ function 读取文件(路径)
    else
     return ""
   end
+end
+
+function 读取文件夹(路径)
+  printLog("File", "读取文件夹", 路径)
+  local _,ret=xpcall(function()
+    return luajava.astable(File(路径).listFiles())
+  end,
+  function()
+    提示("读取文件夹 " .. 路径 .. " 失败")
+    return {}
+  end)
+  return ret
 end
 
 import "com.androlua.LuaUtil"

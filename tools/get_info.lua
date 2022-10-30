@@ -457,6 +457,25 @@ layout={
                     TextView,
                     layout_width="-2",
                     layout_height="-2",
+                    Text=tostring(data.stats.dendroculus_number),
+                    TextColor=textc,
+                    paddingTop="4dp",
+                    Typeface=AppFont.粗体;
+                    textSize="18sp";
+                  },
+                  {
+                    TextView,
+                    layout_width="-2",
+                    layout_height="-2",
+                    Text="草神瞳",
+                    TextColor=textc,
+                    Typeface=AppFont.标准;
+                    textSize="14sp";
+                  },
+                  {
+                    TextView,
+                    layout_width="-2",
+                    layout_height="-2",
                     Text=tostring(data.stats.spiral_abyss),
                     TextColor=textc,
                     paddingTop="4dp",

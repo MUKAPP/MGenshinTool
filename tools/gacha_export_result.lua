@@ -104,63 +104,96 @@ layout = {
     },
   },
   {
-    ScrollView,
+    RelativeLayout,
     layout_width = "-1",
     layout_height = "-1",
     {
-      CardView,
-      CardElevation = "0dp",
-      CardBackgroundColor = backgroundc,
-      Radius = "16dp",
+      ScrollView,
       layout_width = "-1",
       layout_height = "-1",
-      id = "main_w",
       {
-        LinearLayout,
-        layout_height = "-1",
+        CardView,
+        CardElevation = "0dp",
+        CardBackgroundColor = backgroundc,
+        Radius = "16dp",
         layout_width = "-1",
-        orientation = "vertical",
-        paddingBottom = "8dp",
-        id = "main",
+        layout_height = "-1",
+        id = "main_w",
         {
-          CardView,
-          CardElevation = "0dp",
-          background = primaryc,
-          Radius = "8dp",
-          layout_width = "-1",
+          LinearLayout,
           layout_height = "-1",
-          layout_margin = "16dp",
-          layout_marginBottom = "8dp",
-          id = "iTitle",
+          layout_width = "-1",
+          orientation = "vertical",
+          paddingBottom = "8dp",
+          id = "main",
           {
-            LinearLayout,
-            layout_height = "56dp",
+            CardView,
+            CardElevation = "0dp",
+            background = primaryc,
+            Radius = "8dp",
             layout_width = "-1",
-            orientation = "vertical",
-            gravity = "left|center",
-            paddingLeft = "16dp",
+            layout_height = "-1",
+            layout_margin = "16dp",
+            layout_marginBottom = "8dp",
+            id = "iTitle",
             {
-              TextView,
-              text = "原神抽卡记录分析",
-              textColor = backgroundc,
-              textSize = "18sp",
-              Typeface = AppFont.特粗,
-              layout_height = "-2",
-              layout_width = "-2"
-            },
-            {
-              TextView,
-              text = "by 应急食品",
-              textColor = backgroundc,
-              textSize = "12sp",
-              Typeface = AppFont.标准,
-              layout_height = "-2",
-              layout_width = "-2"
+              LinearLayout,
+              layout_height = "56dp",
+              layout_width = "-1",
+              orientation = "vertical",
+              gravity = "left|center",
+              paddingLeft = "16dp",
+              {
+                TextView,
+                text = "原神抽卡记录分析",
+                textColor = backgroundc,
+                textSize = "18sp",
+                Typeface = AppFont.特粗,
+                layout_height = "-2",
+                layout_width = "-2"
+              },
+              {
+                TextView,
+                text = "by 应急食品",
+                textColor = backgroundc,
+                textSize = "12sp",
+                Typeface = AppFont.标准,
+                layout_height = "-2",
+                layout_width = "-2"
+              }
             }
           }
         }
       }
-    }
+    },
+
+    {
+      LinearLayout,
+      layout_height = "-1",
+      layout_width = "-1",
+      gravity="bottom",
+      {
+        CardView,
+        CardElevation = "12dp",
+        background = backgroundc,
+        Radius = "24dp",
+        layout_width = "-1",
+        layout_height = "-2",
+        layout_margin = "16dp",
+        id = "loading",
+        {
+          TextView,
+          text = "",
+          textColor = textc,
+          textSize = "14sp",
+          Typeface = AppFont.标准,
+          layout_height = "-2",
+          layout_width = "-1",
+          id="loading_text",
+          padding="24dp",
+        },
+      },
+    },
   }
 }
 
@@ -169,8 +202,33 @@ activity.setContentView(loadlayout(layout))
 波纹({fh, _save, _copy}, "圆主题")
 
 控件隐藏(iTitle)
+控件隐藏(loading)
+
+transitioner = LayoutTransition()
+loading.setLayoutTransition(transitioner)
+loading.getParent().setLayoutTransition(transitioner)
 
 --print(dump(tab))
+
+function loadingText(n)
+  if n=="start"
+    控件可见(loading)
+   elseif n=="stop"
+    local stopti=Ticker()
+    stopti.Period=1000
+    stopti.onTick=function()
+      stopti.stop()
+      控件隐藏(loading)
+    end
+    stopti.start()
+   else
+    if loading_text.Text==""
+      loading_text.Text=n
+     else
+      loading_text.Text=loading_text.Text.."\n"..n
+    end
+  end
+end
 
 function 获取控件图片(view)
   bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888)
@@ -466,13 +524,24 @@ ti.onTick=function()
 
     xpcall(
     function()
-      print("正在处理…")
+      call("loadingText","start")
+      call("loadingText","正在处理…")
 
       local json=io.open(activity.getExternalFilesDir("").getAbsolutePath() .. "/user/gacha_export.tmp"):read("*a")
 
       local gacha_table=JSON.decode(json)
 
       local newtable=gacha_table.list
+
+      --[[local noid=0
+      for i=1,#newtable
+        if #newtable>=2
+          if newtable[i].id==nil
+            noid=noid+1
+            newtable[i].id=tostring(noid)
+          end
+        end
+      end]]
 
       table.sort(newtable,function(a,b)
         return tonumber(a.id)<tonumber(b.id)
@@ -661,7 +730,7 @@ ti.onTick=function()
 
         local last_iscz = false
 
-        print("正在统计 " .. name)
+        call("loadingText","正在统计 " .. name)
 
         if total_c ~= 0 then
           local time_start = content[1][1]
@@ -729,6 +798,7 @@ ti.onTick=function()
                       last_iscz = false
                      else
                       last_iscz = true
+                      iscz_zt = '<font color="' .. gray .. '">[歪'
                     end
                    elseif nname=="刻晴" then
                     local sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -739,6 +809,7 @@ ti.onTick=function()
                       last_iscz = false
                      else
                       last_iscz = true
+                      iscz_zt = '<font color="' .. gray .. '">[歪'
                     end
                    else
                     last_iscz = false
@@ -949,13 +1020,14 @@ ti.onTick=function()
           --addText("五星人物："..five_star:gsub("<br>","\n"):gsub("<(.-)>",""))
           addText("————")
          else
-          print(name .. " 无数据")
+          call("loadingText",name .. " 无数据")
         end
         --print(rank5,rank5_people)
         --print(name,"总计:",total_c,"五星:",rank5,"四星:",rank4,"三星:",rank3,"五星记录:",five_star,"已多少抽未出五星:",no_rank5)
       end
 
-      print("统计完成")
+      call("loadingText","统计完成")
+      call("loadingText","stop")
       addText("by 应急食品")
       all_text = (all_text:gsub("————\nby", "——————\nby"))
       call("setCopy", all_text)

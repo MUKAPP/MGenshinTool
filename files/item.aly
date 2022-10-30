@@ -1,0 +1,61 @@
+{
+  LinearLayout;
+  Gravity="left|center";
+  paddingTop="8dp";
+  layout_width="-1";
+  paddingRight="16dp";
+  layout_height="-2";
+  paddingBottom="8dp";
+  paddingLeft="16dp";
+  {
+    ImageView;
+    src="files/res/file.png";
+    layout_width="24dp";
+    layout_height="24dp";
+    colorFilter=require'files.color'.text;
+    id="img";
+  };
+  {
+    TextView;
+    textColor=require'files.color'.text;
+    layout_marginLeft="16dp";
+    layout_weight="1";
+    layout_width="-1";
+    layout_height="-2";
+    id="name";
+    Text="sdcard";
+    textSize="14sp";
+    paddingRight="16dp";
+  };
+
+  {
+    CheckBox;
+    id="m";
+    focusable=false;
+    visibility="gone";
+    onClick=function(v)
+      local tag=v.tag
+      local self=tag[1]
+      local t=self.list1[tag[2]]
+      t.m.checked=v.checked
+      self.adp.notifyDataSetChanged()
+    end
+  };
+  {
+    RadioButton;
+    id="s";
+    visibility="gone";
+    focusable=false;
+    onClick=function(v)
+      local tag=v.tag
+      local self=tag[1]
+      if self.slast
+        self.slast.s.checked=false
+      end
+      self.slast=self.list1[tag[2]]
+      local t=self.slast
+      t.s.checked=true
+      self.adp.notifyDataSetChanged()
+    end
+  };
+};

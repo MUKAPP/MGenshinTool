@@ -3,6 +3,10 @@ require "import"
 import "mods.muk"
 
 import "com.blankj.utilcode.util.ShellUtils"
+import "org.jsoup.*"
+import "com.blankj.utilcode.util.Utils$Consumer"
+
+uigf_version="v2.2"
 
 activity.Title = "抽卡记录分析"
 layout = {
@@ -165,6 +169,9 @@ layout = {
               layout_marginRight = "16dp",
               layout_marginTop = "8dp",
               layout_marginBottom = "8dp",
+              onClick=function()
+                activity.newActivity("tools/gacha_logs_local")
+              end,
               {
                 TextView,
                 layout_width = "-1",
@@ -560,6 +567,7 @@ layout = {
   }
 }
 
+
 设置视图(layout)
 
 波纹({back, _more}, "圆主题")
@@ -574,8 +582,6 @@ web_w.setLayoutTransition(transitioner)
 web_w.getParent().setLayoutTransition(transitioner)
 
 控件隐藏(info)
-
-import "org.jsoup.*"
 
 function querySplit(query)
   local queryTable={}
@@ -645,7 +651,7 @@ function getGachaLogs(url)
       ["lang"] = "zh-cn",
       ["export_app"] = "MUKGenshinTool",
       ["export_app_version"] = tostring(应用版本),
-      ["uigf_version"] = "v2.2"
+      ["uigf_version"] = uigf_version
     }
   }
 
@@ -867,13 +873,51 @@ TranslationClick.setOnTouchListener(
 --Glide.with(activity).load(activity.getLuaDir("res/exam/gacha1.jpg")).skipMemoryCache(true).into(img1)
 --Glide.with(activity).load(activity.getLuaDir("res/exam/gacha2.jpg")).skipMemoryCache(true).into(img2)
 
+function addUIDLogs(data)
+  local filePath=新内置存储文件("GachaLogs/"..data.info.uid..".json")
+  if not 文件是否存在(filePath) then
+    创建文件(filePath)
+    data.info={
+      ["uid"] = data.info.uid,
+      ["lang"] = "zh-cn",
+      ["export_app"] = "MUKGenshinTool",
+      ["export_app_version"] = tostring(应用版本),
+      ["uigf_version"] = uigf_version
+    }
+    写入文件(filePath,JSON.encode(data))
+   else
+    local alldata=json.decode(读取文件(filePath))
+    alldata.info={
+      ["uid"] = data.info.uid,
+      ["lang"] = "zh-cn",
+      ["export_app"] = "MUKGenshinTool",
+      ["export_app_version"] = tostring(应用版本),
+      ["uigf_version"] = uigf_version
+    }
+    local alldatatext=json.encode(alldata.list)
+    for i,v in ipairs(data.list)
+      if alldatatext:find(v.id)
+       else
+        alldata.list[#alldata.list+1]=v
+      end
+    end
+    写入文件(filePath,JSON.encode(alldata))
+  end
+end
+
 btn1.onClick = function()
+  if gacha_table.info.uid==nil
+    or gacha_table.info.uid==""
+    提示("获取UID失败，该账号可能无6个月内的抽卡记录")
+    return true
+  end
   if 文件是否存在(内置存储文件("gacha_export.tmp")) then
     删除文件(内置存储文件("gacha_export.tmp"))
   end
   创建文件(内置存储文件("gacha_export.tmp"))
   写入文件(内置存储文件("gacha_export.tmp"),JSON.encode(gacha_table))
   activity.newActivity("tools/gacha_export_result")
+  addUIDLogs(gacha_table)
 end
 btn2.onClick = function()
   web.loadUrl(getBase64StringFromBlobUrl(returnUrl))
@@ -1034,8 +1078,6 @@ btn3.onClick = function()
   end
 end
 
-import "com.blankj.utilcode.util.Utils$Consumer"
-
 function exec2(n, fun)
   ShellUtils.execCmdAsync(
   n,
@@ -1110,16 +1152,21 @@ local fs=files.open(新内置存储文件(),'f')
       end
       写入文件(内置存储文件("gacha_export.tmp"),content)
       activity.newActivity("tools/gacha_export_result")
+      addUIDLogs(content2)
      else
       提示("读取失败，文件内容可能有误（Android/data内的文件可能无法读取）")
     end
     end,function(e)
-    提示("读取失败，文件内容可能有误（Android/data内的文件可能无法读取）")
+    提示("读取失败，文件内容可能有误（Android/data内的文件可能无法读取）\n"..e)
   end)
 end)
 
 btn5.onClick=function()
   fs:show()
+end
+
+if not 文件是否存在(新内置存储文件("GachaLogs"))
+  创建文件夹(新内置存储文件("GachaLogs"))
 end
 
 function onDestroy()

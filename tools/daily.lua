@@ -701,7 +701,7 @@ layout={
 
 activity.setContentView(loadlayout(layout))
 
-波纹({fh,jc1,jc2,jc3,jc7,
+波纹({fh,_more,jc1,jc2,jc3,jc7,
   page1_1,page1_2,page2_1,page2_2,page3_1,page3_2,
   page7_1,page7_2,},"圆主题")
 

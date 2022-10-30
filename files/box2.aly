@@ -1,0 +1,31 @@
+{
+  LinearLayout;
+  layout_height="fill";
+  orientation="vertical";
+  layout_width="fill";
+  {
+    TextView;
+    text="过滤";
+    textSize="12dp";
+  };
+  {
+    EditText;
+    focusable=true;
+    hint="内容";
+    textSize="15dp";
+    singleLine=true;
+    layout_width="match_parent";
+    id="filter1";
+  };
+  {
+    CheckBox;
+    id="filter2";
+    text="区分大小写";
+    checked=true;
+  };
+  {
+    CheckBox;
+    id="filter3";
+    text="正则表达式";
+  };
+};
