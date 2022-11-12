@@ -299,7 +299,7 @@ function onCreate()
   activity.setContentView(loadlayout(layout))
 
   波纹({fh,jc1,jc2,jc3,_save,_more},"圆主题")
-  
+
   page_num=1
 
   function jcpage(z)--主页
@@ -888,6 +888,9 @@ function onCreate()
       adp1.notifyDataSetChanged()
       ok=ok+1
       closeDialog()
+      end,function()
+      ok=ok+1
+      closeDialog()
     end)
     hutaoapi.statistics.avatar_attendanceRate(function(data)
       --上场率
@@ -913,6 +916,9 @@ function onCreate()
         return a.rate>b.rate
       end)
       --adp2.notifyDataSetChanged()
+      ok=ok+1
+      closeDialog()
+      end,function()
       ok=ok+1
       closeDialog()
     end)
@@ -957,8 +963,13 @@ function onCreate()
       --adp3.notifyDataSetChanged()
       ok=ok+1
       closeDialog()
+      end,function()
+      ok=ok+1
+      closeDialog()
     end)
 
+    end,function()
+    关闭对话框()
   end)
 
   function 获取控件图片(view)
