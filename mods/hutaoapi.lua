@@ -45,7 +45,7 @@ end
 
 hutaoapi.statistics={}
 
-hutaoapi.statistics.overview=function(func)
+hutaoapi.statistics.overview=function(func,err)
   --获取总览数据
   local map = HashMap()
   --map.put("content-type", "text/json; charset=utf-8")
@@ -62,14 +62,16 @@ hutaoapi.statistics.overview=function(func)
         func(data)
        else
         提示("获取失败："..data.message)
+        err()
       end
      else
       提示("获取失败："..code)
+      err()
     end
   end)
 end
 
-hutaoapi.statistics.avatar_attendanceRate=function(func)
+hutaoapi.statistics.avatar_attendanceRate=function(func,err)
   --获取角色出场率
   local map = HashMap()
   --map.put("content-type", "text/json; charset=utf-8")
@@ -86,14 +88,16 @@ hutaoapi.statistics.avatar_attendanceRate=function(func)
         func(data)
        else
         提示("获取失败："..data.message)
+        err()
       end
      else
       提示("获取失败："..code)
+      err()
     end
   end)
 end
 
-hutaoapi.statistics.avatar_utilizationRate=function(func)
+hutaoapi.statistics.avatar_utilizationRate=function(func,err)
   --获取角色使用率
   local map = HashMap()
   --map.put("content-type", "text/json; charset=utf-8")
@@ -110,14 +114,16 @@ hutaoapi.statistics.avatar_utilizationRate=function(func)
         func(data)
        else
         提示("获取失败："..data.message)
+        err()
       end
      else
       提示("获取失败："..code)
+      err()
     end
   end)
 end
 
-hutaoapi.statistics.avatar_holdingRate=function(func)
+hutaoapi.statistics.avatar_holdingRate=function(func,err)
   --获取角色持有率
   local map = HashMap()
   --map.put("content-type", "text/json; charset=utf-8")
@@ -133,9 +139,11 @@ hutaoapi.statistics.avatar_holdingRate=function(func)
         func(data)
        else
         提示("获取失败："..data.message)
+        err()
       end
      else
       提示("获取失败："..code)
+      err()
     end
   end)
 end

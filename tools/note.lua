@@ -402,7 +402,7 @@ function addt(name,cookie)
   cookie,nil,nil,
   function(code,content)
     if code~=200 then
-      data_[#data_+1]={"error","获取失败："..code}
+      data_[#data_+1]={"error","获取失败："..code,name}
       更新adp()
       return true
     end
@@ -410,7 +410,7 @@ function addt(name,cookie)
     local content=JSON.decode(content)
 
     if content.message~="OK" then
-      data_[#data_+1]={"error","获取失败："..content.message}
+      data_[#data_+1]={"error","获取失败："..content.message,name}
       更新adp()
       return true
     end
@@ -430,7 +430,7 @@ function addt(name,cookie)
       map.put("DS",ds)
       map.put("Origin","https://webstatic.mihoyo.com")
       map.put("x-rpc-app_version","2.11.1")
-      map.put("User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1")
+      map.put("User-Agent",hoyo_ua2)
       map.put("x-rpc-client_type","5")
       map.put("Referer","https://webstatic.mihoyo.com/")
       --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
@@ -439,6 +439,7 @@ function addt(name,cookie)
       Http.get("https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/dailyNote?server="..serverid.."&role_id="..uid,
       cookie,nil,map,
       function(code,content,_,header)
+        printLog("dailyNote",code,content)
         if code~=200 then
           --("请求失败，错误码："..code)
           data_[#data_+1]={"error","获取失败："..code}
@@ -447,8 +448,7 @@ function addt(name,cookie)
 
         local content=JSON.decode(content)
 
-        if content.message=="OK" then
-
+        if content.retcode == 0 then
           local data=content.data
 
           local strength_num="原粹树脂 "..data.current_resin.."/"..data.max_resin
@@ -511,26 +511,17 @@ function addt(name,cookie)
           }
           更新adp()
          else
-          data_[#data_+1]={
-            "原粹树脂",
-            "恢复时间",
-            "每日委托",
-            "探索派遣",
-            "剩余时间",
-            "洞天宝钱",
-            "周本减半",
-            "获取失败",
-            "参量质变仪",
-            "剩余时间",
-            View.GONE,
-          }
-
-          if content.message:find("not public") then
-            data_[#data_+1]={"error","获取失败："..content.message.."\n请到米游社内找到 我的-我的角色-实时便笺 开启实时便笺功能"}
+          if content.message:find("not public") or content.message:find("Data not") then
+            data_[#data_+1]={"error","获取失败："..content.message.."\n请到米游社内找到 我的-我的角色-实时便笺 开启实时便笺功能",nickname.."  UID: "..uid.." (".. region_name..")"}
             更新adp()
             return true
           end
-          data_[#data_+1]={"error","获取失败："..content.message}
+          if content.retcode == 1034 then
+            data_[#data_+1]={"error","获取失败：请到米游社内查看实时便笺过验证",nickname.."  UID: "..uid.." (".. region_name..")"}
+          更新adp()
+            return true
+          end
+          data_[#data_+1]={"error","获取失败：错误码 "..content.retcode.."；错误信息 "..content.message,nickname.."  UID: "..uid.." (".. region_name..")"}
           更新adp()
         end
       end)
@@ -580,6 +571,7 @@ adp=LuaRecyclerViewAdapter(LuaAdapterCreator({
       控件隐藏(view.memo_in)
       控件可见(view.memo)
       view.memo.Text=adata[2]
+      view.uid.Text=adata[3]
      else
       控件可见(view.memo_in)
       控件隐藏(view.memo)

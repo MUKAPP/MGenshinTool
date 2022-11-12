@@ -134,13 +134,7 @@ function onCreate()
                 gravity="left|center";
                 id="item7";
                 onClick=function()
-                  双按钮对话框("加群须知","应急食品所有群内均不接受晒卡晒圣遗物等行为，若无法接受请勿加群",
-                  "行行行不晒","不能晒👴不加了",function()
-                    QQ群("273506148")
-                    关闭对话框()
-                    end,function()
-                    关闭对话框()
-                  end)
+                  QQ群("273506148")
                 end;
                 {
                   ImageView;
@@ -200,13 +194,7 @@ function onCreate()
                 gravity="left|center";
                 id="item5";
                 onClick=function()
-                  双按钮对话框("加群须知","应急食品所有群内均不接受晒卡晒圣遗物等行为，若无法接受请勿加群",
-                  "行行行不晒","不能晒👴不加了",function()
-                    QQ群("1011357138")
-                    关闭对话框()
-                    end,function()
-                    关闭对话框()
-                  end)
+                  QQ群("1011357138")
                 end;
                 {
                   ImageView;
@@ -233,13 +221,7 @@ function onCreate()
                 gravity="left|center";
                 id="item4";
                 onClick=function()
-                  双按钮对话框("加群须知","应急食品所有群内均不接受晒卡晒圣遗物等行为，若无法接受请勿加群",
-                  "行行行不晒","不能晒👴不加了",function()
-                    QQ群("779355287")
-                    关闭对话框()
-                    end,function()
-                    关闭对话框()
-                  end)
+                  QQ群("779355287")
                 end;
                 {
                   ImageView;
@@ -266,13 +248,7 @@ function onCreate()
                 gravity="left|center";
                 id="item3";
                 onClick=function()
-                  双按钮对话框("加群须知","应急食品所有群内均不接受晒卡晒圣遗物等行为，若无法接受请勿加群",
-                  "行行行不晒","不能晒👴不加了",function()
-                    QQ群("660566701")
-                    关闭对话框()
-                    end,function()
-                    关闭对话框()
-                  end)
+                  QQ群("660566701")
                 end;
                 {
                   ImageView;
@@ -299,13 +275,7 @@ function onCreate()
                 gravity="left|center";
                 id="item2";
                 onClick=function()
-                  双按钮对话框("加群须知","应急食品所有群内均不接受晒卡晒圣遗物等行为，若无法接受请勿加群",
-                  "行行行不晒","不能晒👴不加了",function()
-                    QQ群("930823147")
-                    关闭对话框()
-                    end,function()
-                    关闭对话框()
-                  end)
+                  QQ群("930823147")
                 end;
                 {
                   ImageView;
@@ -332,13 +302,7 @@ function onCreate()
                 gravity="left|center";
                 id="item1";
                 onClick=function()
-                  双按钮对话框("加群须知","应急食品所有群内均不接受晒卡晒圣遗物等行为，若无法接受请勿加群",
-                  "行行行不晒","不能晒👴不加了",function()
-                    QQ群("695705323")
-                    关闭对话框()
-                    end,function()
-                    关闭对话框()
-                  end)
+                  QQ群("695705323")
                 end;
                 {
                   ImageView;

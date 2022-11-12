@@ -3786,18 +3786,6 @@ function onCreate()
         cookie,nil,nil,function(code, content)
           local content = JSON.decode(content)
           printLog("BBS Sign","get sign info",code, content)
-          --[[data={
-                ["message"] = "OK" ;
-                ["data"] = {
-                  ["total_sign_day"] = 3 ;
-                  ["month_first"] = false ;
-                  ["first_bind"] = false ;
-                  ["is_sign"] = true ;
-                  ["is_sub"] = false ;
-                  ["today"] = "2021-08-03" ;
-                } ;
-                ["retcode"] = 0 ;
-              };]]
           xpcall(function()
             local data = content.data
 
@@ -3821,6 +3809,11 @@ function onCreate()
             cookie,nil,nil,function(code, all_sign_content)
               --printLog("BBS Sign","get final",code, content)
               if code ~= 200 then
+                if code == 427 then
+                  sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","请求失败，短时间内请求过多，请稍后再试",cookie}
+                  next()
+                  return true
+                end
                 sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","请求失败，错误码：" .. code,cookie}
                 next()
                 return true
@@ -3845,8 +3838,7 @@ function onCreate()
                 map.put("Origin", "https://webstatic.mihoyo.com")
                 map.put("x-rpc-app_version", mihoyobbs_Version)
                 map.put(
-                "User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
-                )
+                "User-Agent",hoyo_ua1)
                 map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
                 map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
                 map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
@@ -3885,7 +3877,7 @@ function onCreate()
                       if data.success == 1
                         capacha_challenge=data.challenge
                         capacha_gt=data.gt
-                        message = "通过验证码失败，可以尝试重新签到"
+                        message = "通过验证码失败，若重新签到还一直失败就去米游社手动签吧"
                         printLog("BBS Sign",nickname .. "  UID: " .. uid,"需要验证码")
                         --处理验证码
 
@@ -3908,9 +3900,7 @@ function onCreate()
                                 local map = HashMap()
                                 map.put("Origin", "https://webstatic.mihoyo.com")
                                 map.put("x-rpc-app_version", mihoyobbs_Version)
-                                map.put(
-                                "User-Agent","Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
-                                )
+                                map.put("User-Agent",hoyo_ua1)
                                 map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
                                 map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
                                 map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
@@ -3953,7 +3943,7 @@ function onCreate()
                                       if data.success == 1
                                         capacha_challenge=data.challenge
                                         capacha_gt=data.gt
-                                        message = "通过验证码失败，可以尝试重新签到"
+                                        message = "通过验证码失败，若重新签到还一直失败就去米游社手动签吧"
                                         printLog("BBS Sign",nickname .. "  UID: " .. uid,"通过验证码失败")
 
                                         sign_results[#sign_results+1]={nickname .. "  UID: " .. uid.." (".. region_name..")", [[今日奖励: ]].. all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
@@ -3997,6 +3987,16 @@ function onCreate()
             end)
 
             end,function(e)
+            if content.retcode == -100 then
+              sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","登录状态失效(签到的状态检测更加严格)，请重新登录",cookie}
+              next()
+              return true
+            end
+            if content.retcode == -1004 then
+              sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","触发签到速度限制，请稍后再试",cookie}
+              next()
+              return true
+            end
             sign_results[#sign_results+1]={"账号 " .. nam .. " 签到失败","请求失败，未知错误："..dump(content),cookie}
             next()
             return true
@@ -4141,10 +4141,7 @@ function onCreate()
               map.put("DS", ds)
               map.put("Origin", "https://webstatic.mihoyo.com")
               map.put("x-rpc-app_version", "2.11.1")
-              map.put(
-              "User-Agent",
-              "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1"
-              )
+              map.put("User-Agent",hoyo_ua2)
               map.put("x-rpc-client_type", "5")
               map.put("Referer", "https://webstatic.mihoyo.com/")
               --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
@@ -4569,6 +4566,353 @@ function onCreate()
 
           return true
         end
+
+
+
+
+        if n == "getabyssinfo" then
+          local datas = {}
+          xpcall(
+          function()
+            for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+              datas[#datas + 1] = cookie
+            end
+          end,
+          function(e)
+            mukactivity.setData("myscookies", JSON.encode({}))
+            for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+              datas[#datas + 1] = cookie
+            end
+          end
+          )
+          if #datas == 0 then
+            提示("请先登录至少一个米游社账号")
+            return true
+          end
+
+          function getinfo(uid)
+            加载对话框("正在获取","正在匹配账号信息",0)
+            local serverid = "cn_gf01"
+            if uid:sub(1, 1) == "5" then
+              serverid = "cn_qd01"
+             else
+            end
+            local playerInfo=""
+
+            local function getPlayerInfo(correct_cookie)
+              加载对话框内容("正在获取角色信息")
+              if correct_cookie==""
+                correct_cookie=datas[1]
+              end
+              local ds = getNewDS("role_id=" .. uid .. "&server=" .. serverid)
+
+              --print(ds)
+
+              local map = HashMap()
+              map.put("DS", ds)
+              map.put("Origin", "https://webstatic.mihoyo.com")
+              map.put("x-rpc-app_version", "2.11.1")
+              map.put("User-Agent",hoyo_ua2)
+              map.put("x-rpc-client_type", "5")
+              map.put("Referer", "https://webstatic.mihoyo.com/")
+              --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+              map.put("X-Requested-With", "com.mihoyo.hyperion")
+
+              Http.get(
+              "https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/index?server=" ..
+              serverid .. "&role_id=" .. uid,
+              correct_cookie,
+              nil,
+              map,
+              function(code, content)
+                if code ~= 200 then
+                  提示("请求失败，错误码：" .. code)
+                  return true
+                end
+                if JSON.decode(content).message ~= "OK" then
+                  提示("获取失败：" .. JSON.decode(content).message)
+                  return true
+                end
+                playerInfo=content
+                getAbyssInfo(correct_cookie)
+              end
+              )
+            end
+
+            function getAbyssInfo(correct_cookie)
+              加载对话框内容("正在获取深渊信息")
+              if correct_cookie==""
+                correct_cookie=datas[1]
+              end
+              local ds = getNewDS("role_id=" .. uid .. "&schedule_type=1&server=" .. serverid)
+              local url="https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/spiralAbyss?schedule_type=1&role_id=" .. uid.."&server=" ..
+              serverid
+
+              local map = HashMap()
+              map.put("DS", ds)
+              map.put("Host", "api-takumi-record.mihoyo.com")
+              map.put("Accept", "application/json, text/plain, */*")
+              map.put("x-rpc-app_version", mihoyobbs_Version)
+              --map.put("x-rpc-page", "3.1.3_#/ys/deep")
+              map.put("User-Agent", hoyo_ua1)
+              map.put("x-rpc-client_type", "5")
+              --map.put("x-rpc-device_id", "7722dca3-385a-3fc0-bf03-2f8fb891cc74")
+              map.put("Origin", "https://webstatic.mihoyo.com")
+              map.put("X-Requested-With", "com.mihoyo.hyperion")
+              map.put("Referer", "https://webstatic.mihoyo.com/")
+
+              Http.get(url ,
+              correct_cookie,nil,map,
+              function(code, content)
+                关闭对话框()
+                if code ~= 200 then
+                  提示("请求失败，错误码：" .. code)
+                  return true
+                end
+                if JSON.decode(content).message ~= "OK" then
+                  提示("获取失败：" .. JSON.decode(content).message)
+                  return true
+                end
+                activity.newActivity("tools/getabyssinfo", {playerInfo,content,uid})
+              end)
+            end
+
+            local uid_already=0
+            local correct_cookie=""
+
+            for i=1,#datas do
+              Http.get(
+              "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn",
+              datas[i],
+              nil,
+              nil,
+              function(code, content)
+                uid_already=uid_already+1
+                if code ~= 200 then
+                  提示("请求失败，错误码：" .. code)
+                  if uid_already==#datas
+                    getPlayerInfo()
+                  end
+                  return true
+                end
+
+                local content = JSON.decode(content)
+
+                if content.data == nil then
+                  提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
+                  if uid_already==#datas
+                    getPlayerInfo()
+                  end
+                  return true
+                end
+                for i0, v0 in ipairs(content.data.list) do
+                  local uidn = content.data.list[i0].game_uid
+
+                  printLog(nil,content.data.list,datas[i],1,uidn,2,uid)
+                  if tointeger(uidn)==tointeger(uid)
+                    correct_cookie=datas[i]
+                  end
+
+                end
+                if uid_already==#datas
+                  getPlayerInfo(correct_cookie)
+                end
+              end)
+            end
+
+            提示("正在查询")
+          end
+
+          function suiddialog(suiddata)
+            local bwz
+            if 全局主题值 ~= "Night" and 全局主题值 ~= "Star" then
+              bwz = 0x3f000000
+             else
+              bwz = 0x3fffffff
+            end
+            local dannsuid = {
+              LinearLayout,
+              layout_width = "-1",
+              layout_height = "-1",
+              {
+                LinearLayout,
+                orientation = "vertical",
+                layout_width = "-1",
+                layout_height = "-2",
+                id = "ztbj",
+                {
+                  TextView,
+                  layout_width = "-1",
+                  layout_height = "-2",
+                  textSize = "20sp",
+                  layout_marginTop = "24dp",
+                  layout_marginLeft = "24dp",
+                  layout_marginRight = "24dp",
+                  Text = "选择UID",
+                  Typeface = AppFont.特粗,
+                  textColor = primaryc,
+                },
+                {
+                  GridView,
+                  layout_width = "-1",
+                  layout_height = "-1",
+                  layout_weight = "1",
+                  id = "suidgv",
+                  paddingTop = "8dp",
+                  paddingBottom = "8dp"
+                },
+                {
+                  LinearLayout,
+                  orientation = "horizontal",
+                  layout_width = "-1",
+                  layout_height = "-2",
+                  gravity = "right|center",
+                  {
+                    CardView,
+                    layout_width = "-2",
+                    layout_height = "-2",
+                    radius = "4dp",
+                    background = primaryc,
+                    layout_marginTop = "8dp",
+                    layout_marginLeft = "8dp",
+                    layout_marginRight = "24dp",
+                    layout_marginBottom = "24dp",
+                    Elevation = "1dp",
+                    onClick = function()
+                      关闭对话框(ansuid)
+                    end,
+                    {
+                      TextView,
+                      layout_width = "-1",
+                      layout_height = "-2",
+                      textSize = "16sp",
+                      paddingRight = "16dp",
+                      paddingLeft = "16dp",
+                      Typeface = AppFont.特粗,
+                      paddingTop = "8dp",
+                      paddingBottom = "8dp",
+                      Text = "关闭",
+                      textColor = backgroundc,
+                      BackgroundDrawable = activity.Resources.getDrawable(ripples).setColor(
+                      ColorStateList(int[0].class {int {}}, int {bwz})
+                      )
+                    }
+                  },
+                }
+              }
+            }
+
+            dlsuid = BottomDialog(activity)
+            dlsuid.setView(loadlayout(dannsuid))
+            dlsuid.setGravity(Gravity.BOTTOM)
+            dlsuid.setHeight(WindowManager.LayoutParams.WRAP_CONTENT)
+            dlsuid.setMinHeight(0)
+            dlsuid.setWidth(WindowManager.LayoutParams.MATCH_PARENT)
+            --设置圆角
+            dlsuid.setRadius(dp2px(16), 转0x(backgroundc))
+            dlsuid.setCancelable(true)
+            dlsuid.setCanceledOnTouchOutside(true)
+            ansuid = dlsuid.show()
+
+            local suiditem = {
+              LinearLayout,
+              layout_width = "-1",
+              layout_height = "48dp",
+              onClick = function()
+              end,
+              {
+                RelativeLayout,
+                layout_width = "-1",
+                layout_height = "-1",
+                {
+                  TextView,
+                  id = "tladp_text",
+                  textColor = textc,
+                  textSize = "14sp",
+                  gravity = "center|left",
+                  Typeface = AppFont.粗体,
+                  layout_width = "-1",
+                  layout_height = "-1",
+                  paddingLeft = "24dp"
+                },
+                {
+                  TextView,
+                  id = "tladp_activity",
+                  layout_width = "-1",
+                  layout_height = "-1",
+                  onClick = function(v)
+                    getinfo(v.text)
+                    关闭对话框(ansuid)
+                  end,
+                  textColor = "#00000000"
+                }
+              }
+            }
+
+            local suidadp
+            suidadp = LuaAdapter(activity, suiditem)
+            for i=1,#suiddata do
+              suidadp.add {
+                tladp_text = suiddata[i],
+                tladp_activity = {
+                  text = suiddata[i],
+                  BackgroundDrawable = 波纹2("方自适应")
+                }
+              }
+            end
+
+            suidgv.setAdapter(suidadp)
+          end
+
+          local suiddata={}
+
+          local uid_already=0
+          local all_uid=#datas
+          for i=1,all_uid do
+            Http.get(
+            "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn",
+            datas[i],
+            nil,
+            nil,
+            function(code, content)
+              if code ~= 200 then
+                uid_already=uid_already+1
+                提示("请求失败，错误码：" .. code)
+                if uid_already==all_uid
+                  suiddialog(suiddata)
+                end
+                return true
+              end
+
+              local content = JSON.decode(content)
+              all_uid = all_uid + (#content.data.list - 1)
+
+              if content.data == nil then
+                uid_already=uid_already+1
+                提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
+                if uid_already==all_uid
+                  suiddialog(suiddata)
+                end
+                return true
+              end
+              for i0, v0 in ipairs(content.data.list) do
+                uid_already=uid_already+1
+                local uidn = content.data.list[i0].game_uid
+
+                suiddata[#suiddata+1]=tostring(uidn)
+                if uid_already==all_uid
+                  suiddialog(suiddata)
+                end
+              end
+            end)
+          end
+
+          return true
+        end
+
+
+
+
         if n == "relicscore_player" then
           local datas = {}
           xpcall(
@@ -6343,10 +6687,7 @@ function onCreate()
         map.put("DS", ds)
         map.put("Origin", "https://webstatic.mihoyo.com")
         map.put("x-rpc-app_version", "2.11.1")
-        map.put(
-        "User-Agent",
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1"
-        )
+        map.put("User-Agent",hoyo_ua2)
         map.put("x-rpc-client_type", "5")
         map.put("Referer", "https://webstatic.mihoyo.com/")
         --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
@@ -6369,65 +6710,7 @@ function onCreate()
 
           local content = JSON.decode(content)
 
-          if content.message == "OK" then
-            --[[
-          current_resin--当前树脂
-          max_resin--最大树脂
-          resin_recovery_time--树脂 时间
-
-          current_home_coin--当前 洞天宝钱
-          max_home_coin--最大 洞天宝钱
-          home_coin_recovery_time--洞天宝钱 剩余时间（秒）
-
-          total_task_num--总 委托
-          finished_task_num--完成 委托
-          is_extra_task_reward_received--是否完成委托？
-
-          current_expedition_num--完成 派遣
-          max_expedition_num--最大 派遣
-          expeditions--探索派遣 table
-  ["expeditions"]	= {
-      [1]	= {
-          ["status"]	= "Ongoing" ;
-          ["remained_time"]	= "68562" ;
-          ["avatar_side_icon"]	= "https://upload-bbs.mihoyo.com/game_record/genshin/character_side_icon/UI_AvatarIcon_Side_Ambor.png" ;
-          } ;
-      } ;
-
-          remain_resin_discount_num--值得铭记的强敌 减半次数
-          resin_discount_num_limit--值得铭记的强敌 最大次数
-          
-          transformer--参量质变仪 table
-{
-  ["transformer"]	= {
-      ["noticed"]	= false ;
-      ["obtained"]	= true ;
-      ["recovery_time"]	= {
-          ["Day"]	= 0 ;
-          ["Second"]	= 0 ;
-          ["Minute"]	= 0 ;
-          ["reached"]	= true ;
-          ["Hour"]	= 0 ;
-          } ;
-      ["latest_job_id"]	= "0" ;
-      } ;
-  } ;
-
-["transformer"]	= {
-      ["obtained"]	= true ;
-      ["wiki"]	= "https://bbs.mihoyo.com/ys/obc/content/1562/detail?bbs_presentation_style=no_header" ;
-      ["latest_job_id"]	= "0" ;
-      ["noticed"]	= false ;
-      ["recovery_time"]	= {
-          ["Day"]	= 6 ;
-          ["reached"]	= false ;
-          ["Second"]	= 0 ;
-          ["Minute"]	= 0 ;
-          ["Hour"]	= 0 ;
-          } ;
-      } ;
-
-          ]]
+          if content.retcode == 0 then
             控件隐藏(memo)
             控件可见(memo_in)
 
@@ -6484,11 +6767,36 @@ function onCreate()
             transformer_time.Text = "剩余时间"
             控件可见(memo)
             控件隐藏(memo_in)
-            if content.message:find("not public") then
+            if content.message:find("not public") or content.message:find("Data not") then
               memo.Text = "获取失败：" .. content.message .. "\n请到米游社内找到 我的-我的角色-实时便笺 开启实时便笺功能"
               return true
             end
-            memo.Text = "获取失败：" .. content.message
+            if content.retcode == 1034 then
+              --("请求失败，错误码："..code)
+              控件可见(memo)
+              控件隐藏(memo_in)
+              memo.Text = "获取失败：请到米游社内查看实时便笺过验证"
+              --[[local ds = getDS2("game_id=2")
+
+              local map = HashMap()
+              map.put("DS", ds)
+              map.put("x-rpc-app_version", mihoyobbs_Version)
+              map.put("x-rpc-channel", "miyousheluodi")
+              map.put(
+              "User-Agent",
+              "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/"..mihoyobbs_Version
+              )
+              map.put("x-rpc-client_type", mihoyobbs_Client_type)
+              map.put("Referer", "https://app.mihoyo.com")
+
+              Http.get("https://api-takumi-record.mihoyo.com/game_record/app/card/api/getWidgetData?game_id=2",
+              cookie,nil,map,
+              function(code, content)
+                print(code,content)
+              end)]]
+              return true
+            end
+            memo.Text = "获取失败：错误码 "..content.retcode.."；错误信息 "..content.message
           end
         end
         )

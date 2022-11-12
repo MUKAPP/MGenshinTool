@@ -481,13 +481,7 @@ function onCreate()
                 gravity="left|center";
                 id="item4_1";
                 onClick=function()
-                  双按钮对话框("加群须知","应急食品所有群内均不接受晒卡晒圣遗物等行为，若无法接受请勿加群",
-                  "行行行不晒","不能晒👴不加了",function()
-                    QQ群("660566701")
-                    关闭对话框()
-                    end,function()
-                    关闭对话框()
-                  end)
+                  QQ群("660566701")
                 end;
                 {
                   ImageView;

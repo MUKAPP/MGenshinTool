@@ -287,6 +287,7 @@ layout={
                 page_scroll1.setX(wd+w*a)
               end,
               onPageSelected=function(vi,v)
+                page1_num=v+1
                 local x=primaryc
                 local c=stextc
                 local c1=c
@@ -410,6 +411,7 @@ layout={
                 page_scroll2.setX(wd+w*a)
               end,
               onPageSelected=function(vi,v)
+                page2_num=v+1
                 local x=primaryc
                 local c=stextc
                 local c1=c
@@ -533,6 +535,7 @@ layout={
                 page_scroll3.setX(wd+w*a)
               end,
               onPageSelected=function(vi,v)
+                page3_num=v+1
                 local x=primaryc
                 local c=stextc
                 local c1=c
@@ -656,6 +659,7 @@ layout={
                 page_scroll7.setX(wd+w*a)
               end,
               onPageSelected=function(vi,v)
+                page4_num=v+1
                 local x=primaryc
                 local c=stextc
                 local c1=c
@@ -705,8 +709,11 @@ activity.setContentView(loadlayout(layout))
   page1_1,page1_2,page2_1,page2_2,page3_1,page3_2,
   page7_1,page7_2,},"圆主题")
 
-
---瀑布流,子控件的高度不能写死
+page_num=1
+page1_num=1
+page2_num=1
+page3_num=1
+page4_num=1
 
 all_person={
   ["Albedo"]={"阿贝多",5},
@@ -765,6 +772,8 @@ all_person={
   ["Cyno"]={"赛诺",5},
   ["Nilou"]={"妮露",5},
   ["Candace"]={"坎蒂丝",4},
+  ["Nahida"]={"纳西妲",5},
+  ["Layla"]={"莱依拉",4},
 }
 
 繁荣={"Qiqi","Keqing","Xiao","Shenhe","Yelan","Ningguang"}
@@ -780,7 +789,7 @@ all_person={
 天光={"Shougun","Yae","Gorou","Sayu",}
 
 诤言={"Tighnari","Cyno","Candace"}
-巧思={"Dori",}
+巧思={"Nahida","Dori","Layla",}
 笃行={"Nilou","Collei",}
 
 talenttab={
@@ -996,21 +1005,22 @@ all_weapon={
   },
   谧林涓露={
     {"圣显之钥","KeyOfKhajNisut","sword",5,"Deshret"},
-    
+
     {"西福斯的月光","XiphosMoonlight","sword",4,"Pleroma"},
     {"原木刀","SapwoodBlade","sword",4,"Arakalari"},
     {"森林王器","ForestRegalia","sword2",4,"Arakalari"},
   },
   绿洲花园={
+    {"千夜浮梦", "", "book", 5,"Ayus"},
     {"赤沙之杖", "StaffOfTheScarletSands", "stick", 5,"Deshret"},
-    
+
     {"流浪的晚星","WanderingEvenstar","book",4,"Pleroma"},
     {"盈满之实","FruitOfFulfillment","book",4,"Arakalari"},
     {"贯月矢","Moonpiercer","stick",4,"Arakalari"},
   },
   烈日权威={
     {"猎人之径","HuntersPath","bow",5,"Ayus"},
-    
+
     {"玛海菈的水色","MakhairaAquamarine","sword2",4,"Pleroma"},
     {"王下近侍","KingsSquire","bow",4,"Arakalari"},
     {"竭泽","Trawler","bow",4,"Fin"},
@@ -1333,29 +1343,37 @@ local adp1=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.stitle.Text=data1[position+1][1]
       Glide.with(this)
       .load(File(activity.getLuaDir(data1[position+1][2])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_1);
       Glide.with(this)
       .load(File(activity.getLuaDir(data1[position+1][3])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_2);
       Glide.with(this)
       .load(File(activity.getLuaDir(data1[position+1][4])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_3);
 
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background4.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg1);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background3.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg2);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background2.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg3);
      elseif adapter1.getItemViewType(position)==3 then
       Glide.with(this)
       .load(data1[position+1][1])
+      .override(dp2px(48), dp2px(48))
       .into(view.img);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/"..data1[position+1][3]..".png")))
+      .override(dp2px(48), dp2px(48))
       .into(view.imgb)
       view.name.Text=data1[position+1][2]
     end
@@ -1378,29 +1396,37 @@ local adp1b=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.stitle.Text=data1b[position+1][1]
       Glide.with(this)
       .load(File(activity.getLuaDir(data1b[position+1][2])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_1);
       Glide.with(this)
       .load(File(activity.getLuaDir(data1b[position+1][3])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_2);
       Glide.with(this)
       .load(File(activity.getLuaDir(data1b[position+1][4])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_3);
 
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background5.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg1);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background4.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg2);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background3.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg3);
      elseif adapter1b.getItemViewType(position)==3 then
       Glide.with(this)
       .load(data1b[position+1][1])
+      .override(dp2px(48), dp2px(48))
       .into(view.img);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/"..data1b[position+1][3]..".png")))
+      .override(dp2px(48), dp2px(48))
       .into(view.imgb)
       view.name.Text=data1b[position+1][2]
     end
@@ -1423,29 +1449,37 @@ local adp2=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.stitle.Text=data2[position+1][1]
       Glide.with(this)
       .load(File(activity.getLuaDir(data2[position+1][2])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_1);
       Glide.with(this)
       .load(File(activity.getLuaDir(data2[position+1][3])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_2);
       Glide.with(this)
       .load(File(activity.getLuaDir(data2[position+1][4])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_3);
 
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background4.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg1);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background3.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg2);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background2.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg3);
      elseif adapter2.getItemViewType(position)==3 then
       Glide.with(this)
       .load(data2[position+1][1])
+      .override(dp2px(48), dp2px(48))
       .into(view.img);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/"..data2[position+1][3]..".png")))
+      .override(dp2px(48), dp2px(48))
       .into(view.imgb)
       view.name.Text=data2[position+1][2]
     end
@@ -1468,29 +1502,37 @@ local adp2b=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.stitle.Text=data2b[position+1][1]
       Glide.with(this)
       .load(File(activity.getLuaDir(data2b[position+1][2])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_1);
       Glide.with(this)
       .load(File(activity.getLuaDir(data2b[position+1][3])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_2);
       Glide.with(this)
       .load(File(activity.getLuaDir(data2b[position+1][4])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_3);
 
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background5.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg1);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background4.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg2);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background3.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg3);
      elseif adapter2b.getItemViewType(position)==3 then
       Glide.with(this)
       .load(data2b[position+1][1])
+      .override(dp2px(48), dp2px(48))
       .into(view.img);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/"..data2b[position+1][3]..".png")))
+      .override(dp2px(48), dp2px(48))
       .into(view.imgb)
       view.name.Text=data2b[position+1][2]
     end
@@ -1513,29 +1555,37 @@ local adp3=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.stitle.Text=data3[position+1][1]
       Glide.with(this)
       .load(File(activity.getLuaDir(data3[position+1][2])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_1);
       Glide.with(this)
       .load(File(activity.getLuaDir(data3[position+1][3])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_2);
       Glide.with(this)
       .load(File(activity.getLuaDir(data3[position+1][4])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_3);
 
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background4.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg1);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background3.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg2);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background2.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg3);
      elseif adapter3.getItemViewType(position)==3 then
       Glide.with(this)
       .load(data3[position+1][1])
+      .override(dp2px(48), dp2px(48))
       .into(view.img);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/"..data3[position+1][3]..".png")))
+      .override(dp2px(48), dp2px(48))
       .into(view.imgb)
       view.name.Text=data3[position+1][2]
     end
@@ -1558,29 +1608,37 @@ local adp3b=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.stitle.Text=data3b[position+1][1]
       Glide.with(this)
       .load(File(activity.getLuaDir(data3b[position+1][2])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_1);
       Glide.with(this)
       .load(File(activity.getLuaDir(data3b[position+1][3])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_2);
       Glide.with(this)
       .load(File(activity.getLuaDir(data3b[position+1][4])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_3);
 
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background5.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg1);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background4.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg2);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background3.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg3);
      elseif adapter3b.getItemViewType(position)==3 then
       Glide.with(this)
       .load(data3b[position+1][1])
+      .override(dp2px(48), dp2px(48))
       .into(view.img);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/"..data3b[position+1][3]..".png")))
+      .override(dp2px(48), dp2px(48))
       .into(view.imgb)
       view.name.Text=data3b[position+1][2]
     end
@@ -1603,29 +1661,37 @@ local adp7=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.stitle.Text=data7[position+1][1]
       Glide.with(this)
       .load(File(activity.getLuaDir(data7[position+1][2])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_1);
       Glide.with(this)
       .load(File(activity.getLuaDir(data7[position+1][3])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_2);
       Glide.with(this)
       .load(File(activity.getLuaDir(data7[position+1][4])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_3);
 
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background4.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg1);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background3.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg2);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background2.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg3);
      elseif adapter7.getItemViewType(position)==3 then
       Glide.with(this)
       .load(data7[position+1][1])
+      .override(dp2px(48), dp2px(48))
       .into(view.img);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/"..data7[position+1][3]..".png")))
+      .override(dp2px(48), dp2px(48))
       .into(view.imgb)
       view.name.Text=data7[position+1][2]
     end
@@ -1648,29 +1714,37 @@ local adp7b=LuaRecyclerViewAdapter(LuaAdapterCreator({
       view.stitle.Text=data7b[position+1][1]
       Glide.with(this)
       .load(File(activity.getLuaDir(data7b[position+1][2])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_1);
       Glide.with(this)
       .load(File(activity.getLuaDir(data7b[position+1][3])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_2);
       Glide.with(this)
       .load(File(activity.getLuaDir(data7b[position+1][4])))
+      .override(dp2px(24), dp2px(24))
       .into(view.stimg_3);
 
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background5.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg1);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background4.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg2);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/background3.png")))
+      .override(dp2px(24), dp2px(24))
       .into(view.simg3);
      elseif adapter7b.getItemViewType(position)==3 then
       Glide.with(this)
       .load(data7b[position+1][1])
+      .override(dp2px(48), dp2px(48))
       .into(view.img);
       Glide.with(this)
       .load(File(activity.getLuaDir("res/"..data7b[position+1][3]..".png")))
+      .override(dp2px(48), dp2px(48))
       .into(view.imgb)
       view.name.Text=data7b[position+1][2]
     end
@@ -1865,14 +1939,12 @@ jc.setOnPageChangeListener(PageView.OnPageChangeListener{
     page_scroll.setX(wd+w*a)
   end,
   onPageSelected=function(v)
+    page_num=v+1
     local x=primaryc
     local c=stextc
     local c1=c
     local c2=c
     local c3=c
-    local c4=c
-    local c5=c
-    local c6=c
     local c7=c
     if v==0 then
       c1=x
@@ -2009,6 +2081,11 @@ function 分屏()
   setWidth(page_scroll2,activity.getWidth()/2)
   setWidth(page_scroll3,activity.getWidth()/2)
   setWidth(page_scroll7,activity.getWidth()/2)
+  page_scroll.setX((page_num-1)*(activity.getWidth()/4))
+  page_scroll1.setX((page1_num-1)*(activity.getWidth()/2))
+  page_scroll2.setX((page2_num-1)*(activity.getWidth()/2))
+  page_scroll3.setX((page3_num-1)*(activity.getWidth()/2))
+  page_scroll7.setX((page4_num-1)*(activity.getWidth()/2))
 
   local giwidth=tointeger(activity.width/dp2px(120))
 

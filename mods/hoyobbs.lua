@@ -1,14 +1,21 @@
 --# 米游社的Salt
-mihoyobbs_Salt = "PVeGWIZACpxXZ1ibMVJPi9inCY4Nd4y2"
-mihoyobbs_Salt2 = "t0qEgfub6cvueAPgR5m9aQWWVciEer7v"
-mihoyobbs_Salt_web = "yUZ3s0Sna1IrSNfk29Vo6vRapdOyqyhB"
+mihoyobbs_Salt = "t0qEgfub6cvueAPgR5m9aQWWVciEer7v"
+mihoyobbs_Salt2 = "fdv0fY9My9eA7MR0NpjGP9RjueFvjUSQ"
+mihoyobbs_Salt_web = "jEpJb9rRARU2rXDA9qYbZ3selxkuct9a"
 --# 米游社的版本
-mihoyobbs_Version = "2.38.1"--  # Salt和Version相互对应
+mihoyobbs_Version = "2.40.1" --# Salt和Version相互对应
 --# 米游社的客户端类型
-mihoyobbs_Client_type = "2"--  # 1为ios 2为安卓
-mihoyobbs_Client_type_web = "5"--  # 4为pc web 5为mobile web
+mihoyobbs_Client_type = "2" --# 1为ios 2为安卓
+mihoyobbs_Client_type_web = "5" --# 4为pc web 5为mobile web
 --# 云原神版本
 cloudgenshin_Version = "3.0.0"
+
+hoyo_ua1="Mozilla/5.0 (Linux; Android "..Build.VERSION.RELEASE.."; "..Build.MODEL.." Build/"..Build.DISPLAY.."; wv) "
+.."AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/107.0.5304.91 Mobile Safari/537.36"
+.." miHoYoBBS/"..mihoyobbs_Version
+hoyo_ua2="Mozilla/5.0 (Linux; Android "..Build.VERSION.RELEASE.."; "..Build.MODEL.." Build/"..Build.DISPLAY.."; wv) "
+.."AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/107.0.5304.91 Mobile Safari/537.36"
+.." miHoYoBBS/2.11.1"
 
 function getDS()
   local i = tostring(tointeger(os.time()))
@@ -76,6 +83,19 @@ function getNewDS(q, b)
   return i .. "," .. r .. "," .. c
 end
 
+function getDS2(q, b)
+  local b = b or ""
+  local q = q or ""
+
+  local i = tostring(tointeger(os.time()))
+
+  local r = tostring(math.random(100000, 200000))
+
+  local c =
+  string.lower(MD5("salt="..mihoyobbs_Salt.."&t=" .. i .. "&r=" .. r .. "&b=" .. b .. "&q=" .. q))
+  return i .. "," .. r .. "," .. c
+end
+
 SOURCE = "webstatic.mihoyo.com"
 BBSAPI = "https://bbs-api.mihoyo.com"
 SDKAPI = "https://api-sdk.mihoyo.com"
@@ -94,13 +114,13 @@ function checkMobileRegistered(phoneNumber,ret)
       if json.code==0 then
         if json.data.is_registrable then
           ret(true)
-        else
+         else
           ret(false)
         end
-      else
+       else
         ret(nil,json.msg)
       end
-    else
+     else
       ret(nil,"网络错误")
     end
   end)
