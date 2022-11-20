@@ -3841,7 +3841,7 @@ function onCreate()
                 "User-Agent",hoyo_ua1)
                 map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
                 map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
-                map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+                map.put("x-rpc-device_id",device_id)
                 map.put("X-Requested-With", "com.mihoyo.hyperion")
                 map.put("Content-Type", "application/json")
 
@@ -3903,7 +3903,7 @@ function onCreate()
                                 map.put("User-Agent",hoyo_ua1)
                                 map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
                                 map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
-                                map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+                                map.put("x-rpc-device_id",device_id)
                                 map.put("X-Requested-With", "com.mihoyo.hyperion")
                                 map.put("Content-Type", "application/json")
 
@@ -4140,11 +4140,12 @@ function onCreate()
               local map = HashMap()
               map.put("DS", ds)
               map.put("Origin", "https://webstatic.mihoyo.com")
-              map.put("x-rpc-app_version", "2.11.1")
+              map.put("x-rpc-app_version", mihoyobbs_Version)
+              map.put("x-rpc-page", "3.1.3_#/ys/deep")
               map.put("User-Agent",hoyo_ua2)
               map.put("x-rpc-client_type", "5")
               map.put("Referer", "https://webstatic.mihoyo.com/")
-              --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+              map.put("x-rpc-device_id",device_id)
               map.put("X-Requested-With", "com.mihoyo.hyperion")
 
               Http.get(
@@ -4604,39 +4605,45 @@ function onCreate()
               if correct_cookie==""
                 correct_cookie=datas[1]
               end
-              local ds = getNewDS("role_id=" .. uid .. "&server=" .. serverid)
-
+              local ds = getNewDS(nil,JSON.encode{
+                "role_id"= uid,
+                "server"= serverid,
+              })
+            
               --print(ds)
 
               local map = HashMap()
               map.put("DS", ds)
+              map.put("Content-Type", "application/json;charset=UTF-8")
               map.put("Origin", "https://webstatic.mihoyo.com")
-              map.put("x-rpc-app_version", "2.11.1")
-              map.put("User-Agent",hoyo_ua2)
+              map.put("x-rpc-app_version", mihoyobbs_Version)
+              map.put("x-rpc-page", "3.1.3_#/ys/deep")
+              map.put("User-Agent",hoyo_ua1)
               map.put("x-rpc-client_type", "5")
               map.put("Referer", "https://webstatic.mihoyo.com/")
-              --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+              map.put("x-rpc-device_id",device_id)
               map.put("X-Requested-With", "com.mihoyo.hyperion")
 
-              Http.get(
-              "https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/index?server=" ..
-              serverid .. "&role_id=" .. uid,
-              correct_cookie,
-              nil,
-              map,
+              Http.post("https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/character",
+              JSON.encode{
+                "role_id"= uid,
+                "server"= serverid,
+              },
+              correct_cookie,nil,map,
               function(code, content)
                 if code ~= 200 then
                   提示("请求失败，错误码：" .. code)
+                  关闭对话框()
                   return true
                 end
                 if JSON.decode(content).message ~= "OK" then
                   提示("获取失败：" .. JSON.decode(content).message)
+                  关闭对话框()
                   return true
                 end
                 playerInfo=content
                 getAbyssInfo(correct_cookie)
-              end
-              )
+              end)
             end
 
             function getAbyssInfo(correct_cookie)
@@ -4653,10 +4660,10 @@ function onCreate()
               map.put("Host", "api-takumi-record.mihoyo.com")
               map.put("Accept", "application/json, text/plain, */*")
               map.put("x-rpc-app_version", mihoyobbs_Version)
-              --map.put("x-rpc-page", "3.1.3_#/ys/deep")
+              map.put("x-rpc-page", "3.1.3_#/ys/deep")
               map.put("User-Agent", hoyo_ua1)
               map.put("x-rpc-client_type", "5")
-              --map.put("x-rpc-device_id", "7722dca3-385a-3fc0-bf03-2f8fb891cc74")
+              map.put("x-rpc-device_id",device_id)
               map.put("Origin", "https://webstatic.mihoyo.com")
               map.put("X-Requested-With", "com.mihoyo.hyperion")
               map.put("Referer", "https://webstatic.mihoyo.com/")
@@ -4667,10 +4674,12 @@ function onCreate()
                 关闭对话框()
                 if code ~= 200 then
                   提示("请求失败，错误码：" .. code)
+                  关闭对话框()
                   return true
                 end
                 if JSON.decode(content).message ~= "OK" then
                   提示("获取失败：" .. JSON.decode(content).message)
+                  关闭对话框()
                   return true
                 end
                 activity.newActivity("tools/getabyssinfo", {playerInfo,content,uid})
@@ -5460,7 +5469,7 @@ function onCreate()
       {"悬浮浏览器", "floatweb"},
       {"查询账号信息","getinfo"},
       {"深渊数据库","abyss"},
-      --{"查询深渊信息","getabyssinfo"},
+      {"查询深渊信息","getabyssinfo"},
     }
 
     for i, v in ipairs(tooltab) do
@@ -6686,11 +6695,11 @@ function onCreate()
         local map = HashMap()
         map.put("DS", ds)
         map.put("Origin", "https://webstatic.mihoyo.com")
-        map.put("x-rpc-app_version", "2.11.1")
+        map.put("x-rpc-app_version", mihoyobbs_Version)
         map.put("User-Agent",hoyo_ua2)
         map.put("x-rpc-client_type", "5")
         map.put("Referer", "https://webstatic.mihoyo.com/")
-        --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+        map.put("x-rpc-device_id",device_id)
         map.put("X-Requested-With", "com.mihoyo.hyperion")
 
         Http.get(

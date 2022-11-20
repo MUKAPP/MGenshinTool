@@ -18,14 +18,14 @@ import "com.michael.*"
 
 import "com.bumptech.glide.request.RequestOptions"
 
-local playerInfo,abyssInfo
+local avatarInfo,abyssInfo
 
-playerInfo,abyssInfo,uid=...
+avatarInfo,abyssInfo,uid=...
 
-playerInfo=JSON.decode(playerInfo).data
+avatarInfo=JSON.decode(avatarInfo).data
 abyssInfo=JSON.decode(abyssInfo).data
 
-printLog(nil,data)
+--printLog(nil,uid,avatarInfo,abyssInfo)
 
 activity.Title="查询深渊信息"
 

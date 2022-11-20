@@ -201,7 +201,7 @@ adp=LuaRecyclerViewAdapter(LuaAdapterCreator({
           })
         end
       end
-      --[[if data[position+1][2]:find("验证码") then
+      if data[position+1][2]:find("验证码") then
         控件可见(view.button.getParent())
         view.button.text="验证码"
        elseif tointeger(data[position+1][2]:match("漏签: (.-) 天"))
@@ -209,7 +209,7 @@ adp=LuaRecyclerViewAdapter(LuaAdapterCreator({
           控件可见(view.button.getParent())
           view.button.text="手动补签"
         end
-      end]]
+      end
     end
   end,
 }))

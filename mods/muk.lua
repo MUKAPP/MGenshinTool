@@ -4276,3 +4276,25 @@ function getUA()
   web=nil
   return userAgentString
 end
+
+--hoyosettings
+if not 文件是否存在(新内置存储文件("Settings"))
+  创建文件夹(新内置存储文件("Settings"))
+end
+if not 文件是否存在(新内置存储文件("Settings/device_id"))
+  创建文件(新内置存储文件("Settings/device_id"))
+  写入文件(新内置存储文件("Settings/device_id"),string.lower(tostring(UUID.randomUUID())))
+end
+if not 文件是否存在(新内置存储文件("Settings/readme.txt"))
+  创建文件(新内置存储文件("Settings/readme.txt"))
+end
+写入文件(新内置存储文件("Settings/readme.txt"),[[Settings文件夹内的文件不建议改
+不过为了以防万一我还是说明一下每个文件的作用
+
+device_id:
+ - 保存用于请求米游社API的设备id，可能对防止风控有效？
+ - 如果你可以获取到米游社请求的device_id，可以更改该文件的内容，其他时候不建议更改
+ - 删除该文件可以重置内容
+]])
+
+device_id=读取文件(新内置存储文件("Settings/device_id"))

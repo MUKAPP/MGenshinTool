@@ -429,11 +429,12 @@ function addt(name,cookie)
       local map = HashMap()
       map.put("DS",ds)
       map.put("Origin","https://webstatic.mihoyo.com")
-      map.put("x-rpc-app_version","2.11.1")
+      map.put("x-rpc-app_version",mihoyobbs_Version)
       map.put("User-Agent",hoyo_ua2)
       map.put("x-rpc-client_type","5")
+      map.put("x-rpc-page", "3.1.3_#/ys/deep")
       map.put("Referer","https://webstatic.mihoyo.com/")
-      --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+      map.put("x-rpc-device_id",device_id)
       map.put("X-Requested-With","com.mihoyo.hyperion")
 
       Http.get("https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/dailyNote?server="..serverid.."&role_id="..uid,
@@ -518,7 +519,7 @@ function addt(name,cookie)
           end
           if content.retcode == 1034 then
             data_[#data_+1]={"error","获取失败：请到米游社内查看实时便笺过验证",nickname.."  UID: "..uid.." (".. region_name..")"}
-          更新adp()
+            更新adp()
             return true
           end
           data_[#data_+1]={"error","获取失败：错误码 "..content.retcode.."；错误信息 "..content.message,nickname.."  UID: "..uid.." (".. region_name..")"}

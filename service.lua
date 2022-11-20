@@ -12,11 +12,45 @@ import "androidx.core.app.NotificationCompat"
 import "com.androlua.*"
 import "java.lang.Thread"
 import "java.net.URL"
+import "java.io.File"
+import "android.os.Environment"
 
 --import "mods.mukmod"
 import "mods.hoyobbs"
 
 loadstring([[JSON=import "mods.json"]])()
+
+function 文件是否存在(file)
+  if file:find("noad")
+   else
+  end
+  return File(file).exists()
+end
+
+function 读取文件(路径)
+  if 文件是否存在(路径) then
+    return io.open(路径):read("*a")
+   else
+    return ""
+  end
+end
+function 内置存储(path)
+  if path then
+    return Environment.getExternalStorageDirectory().toString() .. "/" .. path
+   else
+    return Environment.getExternalStorageDirectory().toString()
+  end
+end
+
+function 新内置存储文件(u)
+  if u == "" or u == nil then
+    return 内置存储("Download/MUKGenshinTool")
+   else
+    return 内置存储("Download/MUKGenshinTool/" .. u)
+  end
+end
+
+device_id=读取文件(新内置存储文件("Settings/device_id"))
 
 xpcall(function()
   function split(s, delim)
@@ -433,11 +467,12 @@ xpcall(function()
       local map = HashMap()
       map.put("DS",ds)
       map.put("Origin","https://webstatic.mihoyo.com")
-      map.put("x-rpc-app_version","2.11.1")
+      map.put("x-rpc-app_version",mihoyobbs_Version)
       map.put("User-Agent",hoyo_ua2)
       map.put("x-rpc-client_type","5")
+      map.put("x-rpc-page", "3.1.3_#/ys/deep")
       map.put("Referer","https://webstatic.mihoyo.com/")
-      --map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+      map.put("x-rpc-device_id",device_id)
       map.put("X-Requested-With","com.mihoyo.hyperion")
 
       Http.get("https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/dailyNote?server="..serverid.."&role_id="..uid,
@@ -740,7 +775,7 @@ xpcall(function()
               map.put("User-Agent",hoyo_ua1)
               map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
               map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
-              map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+              map.put("x-rpc-device_id",device_id)
               map.put("X-Requested-With", "com.mihoyo.hyperion")
               map.put("Content-Type", "application/json")
 
@@ -804,7 +839,7 @@ xpcall(function()
                               map.put("User-Agent",hoyo_ua1)
                               map.put("x-rpc-client_type", mihoyobbs_Client_type_web)
                               map.put("Referer", "https://webstatic.mihoyo.com/bbs/event/signin-ys/index.html?bbs_auth_required=true&act_id="..act_id.."&utm_source=bbs&utm_medium=mys&utm_campaign=icon")
-                              map.put("x-rpc-device_id",string.upper(tostring(UUID.randomUUID()):gsub("%-","")))
+                              map.put("x-rpc-device_id",device_id)
                               map.put("X-Requested-With", "com.mihoyo.hyperion")
                               map.put("Content-Type", "application/json")
 
