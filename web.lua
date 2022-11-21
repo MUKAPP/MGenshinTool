@@ -342,9 +342,10 @@ function onCreate()
     import "org.jsoup.*"
 
     ------------
-    pageurl = activity.getLuaDir("res/JSBridgeUnitTest.html")
+    pageurl = "file://" .. activity.getLuaDir("res/JSBridgeUnitTest.html")
+    --print(pageurl)
 
-    if type_ == "hoyobbscapacha" then
+    if type_ == "hoyobbs" then
         import "mods.hoyobbs"
         web.clearCache(true)
 
@@ -355,27 +356,32 @@ function onCreate()
         map.put("upgrade-insecure-requests", "1")
         map.put("cache-control", "max-age=0")
         web.getSettings().setUserAgentString(hoyo_ua1)
+
+        CookieManager.getInstance().removeAllCookies(nil)
+        CookieManager.getInstance().flush()
+
         CookieSyncManager.createInstance(this)
         cookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
         cookieManager.removeSessionCookie() --移除
-        --[[cookieManager.setCookie(
-    pageurl,
-    cookie
-    )
-    cookieManager.setCookie(".mihoyo.com", cookie) --cookies是在HttpClient中获得的cookie]]
+        cookieManager.setCookie(
+            pageurl,
+            cookie
+        )
+        cookieManager.setCookie(".mihoyo.com", cookie) --cookies是在HttpClient中获得的cookie
         CookieSyncManager.getInstance().sync()
 
-        --[[CookieManager.getInstance().setCookie(
-    pageurl,
-    cookie
-    )]]
+        CookieManager.getInstance().setCookie(
+            pageurl,
+            cookie
+        )
 
         web.setCookie(".mihoyo.com", cookie)
-        --[[web.setCookie(
-    pageurl,
-    cookie
-    )]]
+        web.setCookie(
+            pageurl,
+            cookie
+        )
+
         web.loadUrl(pageurl, map)
     else
         web.loadUrl(pageurl)
@@ -487,18 +493,6 @@ function onCreate()
             activity.runOnUiThread(function()
                 if etype == "postMessage" then
                     if jscon_.method == "showAlertDialog" then
-                        --[[{
-              "method":"showAlertDialog",
-              "payload":{
-                "title":"喵喵喵？",
-                "message":"呜呜呜？",
-                "buttons":[
-                {"title":"确定","style":"primary"},
-                {"title":"取消","style":"cancel"}
-                ]
-              },
-              "callback":"showAlertDialogCallback"
-            }]]
                         双按钮对话框(jscon_.payload.title, jscon_.payload.message,
                             jscon_.payload.buttons[1].title, jscon_.payload.buttons[2].title,
                             function()
@@ -516,6 +510,41 @@ function onCreate()
                                 .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                             关闭对话框()
                         end)
+                    elseif jscon_.method == "startRealPersonValidation" then
+                        单按钮对话框("请前往米游社进行实名认证后重试", "",
+                            "确定",
+                            function()
+                                关闭对话框()
+                            end)
+                    elseif jscon_.method == "closePage" then
+                        提示("关闭页面")
+                    elseif jscon_.method == "getDS" then
+                        local resultData = jsResult({
+                            DS = getDS3(),
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                    elseif jscon_.method == "getDS2" then
+                        local resultData = jsResult({
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                    elseif jscon_.method == "getStatusBarHeight" then
+                        local resultData = jsResult({
+                            statusBarHeight = 0,
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                    elseif jscon_.method == "getUserInfo" then
+                        local resultData = jsResult({
+                            id, --TODO: need APP Login
+                            gender,
+                            nickname,
+                            introduce,
+                            avatar_url,
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     end
                 end
             end)
@@ -711,7 +740,7 @@ function onCreate()
 
             activity.Title = web.getTitle()
 
-            if type_ == "hoyobbscapacha" then
+            if type_ == "hoyobbs" then
                 web.getSettings().setAppCacheEnabled(false)
             end
 
