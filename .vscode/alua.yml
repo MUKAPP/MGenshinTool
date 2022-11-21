@@ -1,0 +1,13 @@
+debugApk: #底包配置
+    packagName: "com.androlua" #底包包名
+    openActivity: "com.androlua.LuaActivity" #启动Activity
+    debugPath: "/sdcard/AndroLua/test" #目标路径
+    
+exec: #执行终端
+    - "adb -d" #使用adb执行 -e模拟器 -d真机 
+    
+command: #执行命令
+    - "am start"
+    - "-a android.intent.action.VIEW"
+    - "-d {%debugPath}/main.lua"
+    - "-W {%packagName}/{%openActivity}"
