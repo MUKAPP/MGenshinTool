@@ -319,8 +319,32 @@ function onCreate()
   
   url=[[https://user.mihoyo.com/login-platform/mobile.html?game_biz=bbs_cn&app_id=bll8iq97cem8&token_type=4&app_version=2.40.1&environment=production&redirect_url=https%253A%252F%252Fm.bbs.mihoyo.com%252Fys%252F%2523%252Fhome%252F0&sync_login_status=1&platform=5&st=https%253A%252F%252Fm.bbs.mihoyo.com%252Fys%252F%2523%252Fhome%252F0#/login/captcha]]
 
+  CookieManager.getInstance().removeAllCookies(nil)
+  CookieManager.getInstance().flush()
+
+  CookieSyncManager.createInstance(this)
+  cookieManager = CookieManager.getInstance()
+  cookieManager.setAcceptCookie(true)
+  cookieManager.removeSessionCookie() --移除
+  cookieManager.setCookie(
+  url,
+  ""
+  )
+  cookieManager.setCookie(".mihoyo.com", "") --cookies是在HttpClient中获得的cookie
+  CookieSyncManager.getInstance().sync()
+
+  CookieManager.getInstance().setCookie(
+  url,
+  ""
+  )
+
+  web.setCookie(".mihoyo.com", "")
+  web.setCookie(
+  url,
+  ""
+  )
+
   local map = HashMap()
-  map.put( "x-requested-with" , "com.mihoyo.hyperion" )
   web.loadUrl(url,map)
 
   --PopupWindow
@@ -541,10 +565,9 @@ function onCreate()
       end
       activity.Title=web.getTitle()
 
-      if wurl:find("ys/#/home") or wurl:find("bindMobile") then
+      if wurl:find("ys/#/home/0") or wurl:find("bindMobile") then
         print(web.getCookie())
-        if web.getCookie():find("ltoken") and
-          web.getCookie():find("cookie_token") then
+        if web.getCookie():find("token") then
           提示("登录成功")
           if relogin
             activity.result({web.getCookie(),true})

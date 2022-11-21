@@ -397,7 +397,6 @@ function secondtostring(n)
 end
 
 function addt(name,cookie)
-
   Http.get("https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn",
   cookie,nil,nil,
   function(code,content)
@@ -432,7 +431,7 @@ function addt(name,cookie)
       map.put("x-rpc-app_version",mihoyobbs_Version)
       map.put("User-Agent",hoyo_ua2)
       map.put("x-rpc-client_type","5")
-      map.put("x-rpc-page", "3.1.3_#/ys/deep")
+      --map.put("x-rpc-page", "3.1.3_#/ys/deep")
       map.put("Referer","https://webstatic.mihoyo.com/")
       map.put("x-rpc-device_id",device_id)
       map.put("X-Requested-With","com.mihoyo.hyperion")

@@ -341,6 +341,9 @@ function onCreate()
 
   import "org.jsoup.*"
 
+  ------------
+  pageurl=activity.getLuaDir("res/JSBridgeUnitTest.html")
+
   if type_=="hoyobbscapacha"
     import "mods.hoyobbs"
     web.clearCache(true)
@@ -467,6 +470,63 @@ function onCreate()
 
   js = ""
 
+  -------MiHoYoJSInterface-------
+  function jsResult(data_)
+    return {
+      retcode=0,
+      message="",
+      data=data_,
+    }
+  end
+  jsinterface={
+    execute=function(s)
+      local etype,jscon=s:match("(.+)> (.+)")
+      print(etype,jscon)
+      jscon_=JSON.decode(jscon)
+      activity.runOnUiThread(function()
+        if etype=="postMessage"
+          if jscon_.method=="showAlertDialog"
+            --[[{
+              "method":"showAlertDialog",
+              "payload":{
+                "title":"喵喵喵？",
+                "message":"呜呜呜？",
+                "buttons":[
+                {"title":"确定","style":"primary"},
+                {"title":"取消","style":"cancel"}
+                ]
+              },
+              "callback":"showAlertDialogCallback"
+            }]]
+            双按钮对话框(jscon_.payload.title,jscon_.payload.message,
+            jscon_.payload.buttons[1].title,jscon_.payload.buttons[2].title,
+            function()
+              local resultData=jsResult({
+                buttonIndex=0,
+              })
+              web.evaluateJavascript("javascript:mhyWebBridge(\""..jscon_.callback.."\","
+              ..JSON.encode(resultData)..")",{onReceiveValue = function(result)end})
+              关闭对话框()
+              end,function()
+              local resultData=jsResult({
+                buttonIndex=1,
+              })
+              web.evaluateJavascript("javascript:mhyWebBridge(\""..jscon_.callback.."\","
+              ..JSON.encode(resultData)..")",{onReceiveValue = function(result)end})
+              关闭对话框()
+            end)
+          end
+        end
+      end)
+      return con
+    end,
+  }
+  web.addJSInterface(jsinterface,"LuaBridge")
+  web.addJSInterface({
+    execute=function(s)
+  end},"MiHoYoJSInterface")
+  -------------------------------
+
   web.setWebChromeClient(
   LuaWebChrome(
   LuaWebChrome.IWebChrine {
@@ -486,30 +546,7 @@ function onCreate()
       javascript:(function()
         { ]].. js .. [[ })()
       ]])
-
-      web.evaluateJavascript(
-      [[let c = {};
-c.postMessage = (str) =>
-  chrome.webview.hostObjects.MiHoYoWebBridge.OnMessage(str);
-c.closePage = () => c.postMessage('{"method":"closePage"}');
-window.MiHoYoJSInterface = c;]],{
-        onReceiveValue = function(result)
-          --print(result)
-        end
-      })
     end,
-    --[[onShowFileChooser=function(webView,filePathCallback, fileChooserParams)
-      uploadMessageAboveL=nil
-      uploadMessageAboveL = filePathCallback
-      ChooseFile("*/*",function(path,uri)
-        local uris = Uri[1]
-        uris[0] = uri
-        uploadMessageAboveL.onReceiveValue(uris)
-        uploadMessageAboveL=nil
-      end)
-      --return true;
-    end]]
-    --选择文件上传
     onShowFileChooser = function(view, valueCallbackuri, fileChooserParams)
       uploadMessageAboveL = valueCallbackuri
       local intet = Intent(Intent.ACTION_GET_CONTENT)
@@ -672,6 +709,29 @@ window.MiHoYoJSInterface = c;]],{
 
       activity.Title = web.getTitle()
 
+      if type_=="hoyobbscapacha"
+        web.getSettings().setAppCacheEnabled(false)
+      end
+
+      -------MiHoYoJSInterface 替换-------
+      web.evaluateJavascript([[let c = {};
+c.postMessage = (str) =>
+  chrome.webview.hostObjects.MiHoYoWebBridge.OnMessage(str);
+c.closePage = () => c.postMessage('{"method":"closePage"}');
+window.MiHoYoJSInterface = c;]],{
+        onReceiveValue = function(result)
+        end
+      })
+      web.evaluateJavascript([[window.MiHoYoJSInterface.postMessage_ = window.MiHoYoJSInterface.postMessage;
+window.MiHoYoJSInterface.postMessage = function(val){
+    return window.LuaBridge.execute("postMessage> "+val);
+};
+]],{
+        onReceiveValue = function(result)
+        end
+      })
+      -------------------------------
+
       loaderror = false
       if afterload then
         loadstring(afterload)()
@@ -704,26 +764,6 @@ window.MiHoYoJSInterface = c;]],{
   web.getSettings().setDomStorageEnabled(true)
   web.getSettings().setDatabaseEnabled(true)
   web.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE)
-
-  if type_=="hoyobbscapacha"
-    web.getSettings().setAppCacheEnabled(false)
-
-    MiHoYoWebBridge={
-      OnMessage=function(s)
-        print(s)
-      end,
-      postMessage=function(s)
-        print(s)
-      end,
-      closePage=function(s)
-        print(s)
-      end,
-    }
-
-    web.addJSInterface(MiHoYoWebBridge,"MiHoYoWebBridge")
-    web.addJSInterface(MiHoYoWebBridge,"mhyWebBridge")
-    web.addJSInterface(MiHoYoWebBridge,"MiHoYoJSInterface")
-  end
 
   function webinfo()
     头 = wurl:match("(.+)://")
