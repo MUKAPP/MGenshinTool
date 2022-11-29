@@ -4513,6 +4513,7 @@ function onCreate()
                                         end
 
                                         local content = JSON.decode(content)
+                                        --BUG: 判断登陆状态 -100 登录失效
                                         all_uid = all_uid + (#content.data.list - 1)
 
                                         if content.data == nil then

@@ -4,6 +4,8 @@ import "mods.muk"
 pageurl, shouldload, beforeload, afterload, type_, cookie = ...
 --print(...)
 
+printLog("Cookie", cookie)
+
 function onCreate()
     layout = {
         RelativeLayout,
@@ -342,7 +344,7 @@ function onCreate()
     import "org.jsoup.*"
 
     ------------
-    pageurl = "file://" .. activity.getLuaDir("res/JSBridgeUnitTest.html")
+    --pageurl = "file://" .. activity.getLuaDir("res/JSBridgeUnitTest.html")
     --print(pageurl)
 
     if type_ == "hoyobbs" then
@@ -383,6 +385,31 @@ function onCreate()
         )
 
         web.loadUrl(pageurl, map)
+
+        function cookieSplit(cookie)
+            cookie = cookie:gsub(" ", "")
+            local cookieTable = {}
+            local cookieTableBefore = mukutils.split(cookie, ";")
+            for i, v in ipairs(cookieTableBefore) do
+                cookieTable[v:match("^(.-)%=")] = v:match("%=(.+)")
+            end
+            return cookieTable
+        end
+
+        function mergeSplit(cookieTable)
+            local cookie = ""
+            for i, v in pairs(cookieTable) do
+                if cookie ~= "" then
+                    cookie = cookie .. ";" .. i .. "=" .. v
+                else
+                    cookie = i .. "=" .. v
+                end
+            end
+            return cookie
+        end
+
+        cookieTable = cookieSplit(cookie)
+        printLog("cookieTable", cookieSplit(cookie))
     else
         web.loadUrl(pageurl)
     end
@@ -488,7 +515,7 @@ function onCreate()
     jsinterface = {
         execute = function(s)
             local etype, jscon = s:match("(.+)> (.+)")
-            print(etype, jscon)
+            printLog("JSBridge", etype, jscon)
             jscon_ = JSON.decode(jscon)
             activity.runOnUiThread(function()
                 if etype == "postMessage" then
@@ -536,12 +563,58 @@ function onCreate()
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "getUserInfo" then
+                        --TODO: getUserInfo
                         local resultData = jsResult({
-                            id, --TODO: need APP Login
+                            id,
                             gender,
                             nickname,
                             introduce,
                             avatar_url,
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                    elseif jscon_.method == "getActionTicket" then
+                        --TODO: getActionTicket
+                        --Http.get(TAKUMI_AUTH_API.."/getActionTicketBySToken?action_type=",
+                        local resultData = jsResult({
+                            action_type = "",
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                    elseif jscon_.method == "getCookieToken" then
+                        local resultData = jsResult({
+                            cookie_token = cookieTable.cookie_token_v2,
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                    elseif jscon_.method == "getHTTPRequestHeaders" then
+                        local resultData = jsResult({
+                            ["x-rpc-client_type"] = mihoyobbs_Client_type,
+                            ["x-rpc-app_version"] = mihoyobbs_Version,
+                            ["x-rpc-sys_version"] = Build.VERSION.RELEASE,
+                            ["x-rpc-channel"] = "miyousheluodi",
+                            ["x-rpc-device_id"] = device_id,
+                            ["x-rpc-device_name"] = Build.VERSION.RELEASE,
+                            ["x-rpc-device_model"] = Build.MODEL,
+                            ["Referer"] = "https://app.mihoyo.com",
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                    elseif jscon_.method == "pushPage" then
+                    elseif jscon_.method == "openSystemBrowser" then
+                    elseif jscon_.method == "getCookieInfo" then
+                        local resultData = jsResult({
+                            ["ltuid"] = "",
+                            ["ltoken"] = cookieTable.ltoken_v2,
+                            ["login_ticket"] = cookieTable.login_ticket,
+                        })
+                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                    elseif jscon_.method == "saveLoginTicket" then
+                        print(var2)
+                    elseif jscon_.method == "getNotificationSettings" then
+                        local resultData = jsResult({
+                            ["authorized"] = true,
                         })
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
