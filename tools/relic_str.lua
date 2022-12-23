@@ -435,6 +435,7 @@ all = {
 }
 
 local relic_all = import "artifacts"
+local relic_id = JSON.decode(读取文件(activity.getLuaDir("res/metadata/Simple/ReliquarySet.json")))
 
 local deleteNo4Star = 0
 for i = 1, #relic_all do
@@ -542,7 +543,7 @@ function 新圣遗物()
 
     aPos.text = mainPosName
 
-    imgUrl = "https://pan.mukapp.top/genshin_artifact-main/src/images/artifacts"
+    imgUrl = "https://upload-bbs.mihoyo.com/game_record/genshin/equip"
 
     local relicm = relic_all[math.random(1, #relic_all)]
 
@@ -550,15 +551,28 @@ function 新圣遗物()
         if type(v) == "table" then
             if v[2] == mainPos then
                 local pos_
-                if v[2] == "cup" then
-                    pos_ = "goblet"
-                else
-                    pos_ = v[2]
+                if v[2] == "flower" then
+                    pos_ = "4"
+                elseif v[2] == "feather" then
+                    pos_ = "2"
+                elseif v[2] == "sand" then
+                    pos_ = "5"
+                elseif v[2] == "cup" then
+                    pos_ = "1"
+                elseif v[2] == "head" then
+                    pos_ = "3"
                 end
                 aname.Text = v[1]
-                Glide.with(activity).load(imgUrl .. "/" .. relicm["name2"] .. "_" .. pos_ .. ".png").transition(
-                    DrawableTransitionOptions.with(DrawableCrossFadeFactory.Builder(328).setCrossFadeEnabled(true).build())
-                ).--.asBitmap()
+                local id
+                for i, v in ipairs(relic_id) do
+                    if v.Name == relicm["chs"] then
+                        id = tointeger(v.Id - 200000)
+                    end
+                end
+                Glide.with(activity).load(imgUrl .. "/UI_RelicIcon_" .. id .. "_" .. pos_ .. ".png")
+                    .transition(
+                        DrawableTransitionOptions.with(DrawableCrossFadeFactory.Builder(328).setCrossFadeEnabled(true).build())
+                    ).--.asBitmap()
                     --.skipMemoryCache(true)
                     into(img)
             end

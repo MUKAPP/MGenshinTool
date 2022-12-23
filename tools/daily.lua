@@ -1098,7 +1098,7 @@ if tointeger(os.date("%H"))<4 then
 end
 jcpage(daytab[week])
 
-imgUrl="https://pan.mukapp.top/onedrive/genshin_artifact-main/src/images/characters/"
+imgUrl="https://api.mukapp.top/genshin_artifact-main/src/images/characters/"
 imgUrl2="https://upload-bbs.mihoyo.com/game_record/genshin/equip/UI_EquipIcon_"
 imgUrl3="https://upload-bbs.mihoyo.com/game_record/genshin/character_icon/UI_AvatarIcon_"
 

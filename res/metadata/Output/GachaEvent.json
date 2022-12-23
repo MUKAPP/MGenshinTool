@@ -718,7 +718,7 @@
   {
     "Name": "深秘之息",
     "Version": "2.3",
-    "Banner": "https://upload-bbs.mihoyo.com/upload/2021/11/22/75276539/0ab29581ea15452002abccf59c41359f_2943098344986593317.jpg",
+    "Banner": "https://upload-bbs.mihoyo.com/upload/2021/11/22/75276539/561fd999c964dbe083792413d19cba9f_7019830319213578722.jpg",
     "From": "2021-11-24T06:00:00+08:00",
     "To": "2021-12-14T17:59:59+08:00",
     "Type": 301,
@@ -734,7 +734,7 @@
   {
     "Name": "浪涌之瞬",
     "Version": "2.3",
-    "Banner": "https://upload-bbs.mihoyo.com/upload/2021/11/22/75276539/561fd999c964dbe083792413d19cba9f_7019830319213578722.jpg",
+    "Banner": "https://upload-bbs.mihoyo.com/upload/2021/11/22/75276539/0ab29581ea15452002abccf59c41359f_2943098344986593317.jpg",
     "From": "2021-11-24T06:00:00+08:00",
     "To": "2021-12-14T17:59:59+08:00",
     "Type": 400,
@@ -1499,6 +1499,159 @@
       "流浪乐章",
       "祭礼大剑",
       "弓藏",
+      "西风长枪"
+    ]
+  },
+  {
+    "Name": "华紫樱绯",
+    "Version": "3.2",
+    "Banner": "https://upload-bbs.mihoyo.com/upload/2022/11/14/75276539/bb82ed25f817318641a1dc1bb904dfaa_8197331366260922626.jpg",
+    "From": "2022-11-18T18:00:00+08:00",
+    "To": "2022-12-06T14:59:59+08:00",
+    "Type": 301,
+    "UpOrangeList": [
+      "八重神子"
+    ],
+    "UpPurpleList": [
+      "莱依拉",
+      "托马",
+      "鹿野院平藏"
+    ]
+  },
+  {
+    "Name": "暂别冬都",
+    "Version": "3.2",
+    "Banner": "https://upload-bbs.mihoyo.com/upload/2022/11/14/75276539/f315c063e2bb97bc7a62c9bb28bcbde7_6647071877413651364.jpg",
+    "From": "2022-11-18T18:00:00+08:00",
+    "To": "2022-12-06T14:59:59+08:00",
+    "Type": 400,
+    "UpOrangeList": [
+      "达达利亚"
+    ],
+    "UpPurpleList": [
+      "莱依拉",
+      "托马",
+      "鹿野院平藏"
+    ]
+  },
+  {
+    "Name": "神铸赋形",
+    "Version": "3.2",
+    "Banner": "https://upload-bbs.mihoyo.com/upload/2022/11/14/75276539/367bdd944eb3f0e63cf7364710d05210_4988150181253091247.jpg",
+    "From": "2022-11-18T18:00:00+08:00",
+    "To": "2022-12-06T14:59:59+08:00",
+    "Type": 302,
+    "UpOrangeList": [
+      "神乐之真意",
+      "冬极白星"
+    ],
+    "UpPurpleList": [
+      "西风剑",
+      "西风秘典",
+      "钟剑",
+      "绝弦",
+      "匣里灭辰"
+    ]
+  },
+  {
+    "Name": "余火变相",
+    "Version": "3.3",
+    "Banner": "https://upload-bbs.miyoushe.com/upload/2022/12/03/75276539/af4b887e1b389cc340814f77ae698e3c_2177076150869613166.jpg",
+    "From": "2022-12-07T06:00:00+08:00",
+    "To": "2022-12-27T17:59:59+08:00",
+    "Type": 301,
+    "UpOrangeList": [
+      "流浪者"
+    ],
+    "UpPurpleList": [
+      "珐露珊",
+      "五郎",
+      "烟绯"
+    ]
+  },
+  {
+    "Name": "鬼门斗宴",
+    "Version": "3.3",
+    "Banner": "https://upload-bbs.miyoushe.com/upload/2022/12/03/75276539/455207c28113b5201d20dee6bc197e75_1790690252600215486.jpg",
+    "From": "2022-12-07T06:00:00+08:00",
+    "To": "2022-12-27T17:59:59+08:00",
+    "Type": 400,
+    "UpOrangeList": [
+      "荒泷一斗"
+    ],
+    "UpPurpleList": [
+      "珐露珊",
+      "五郎",
+      "烟绯"
+    ]
+  },
+  {
+    "Name": "神铸赋形",
+    "Version": "3.3",
+    "Banner": "https://upload-bbs.miyoushe.com/upload/2022/12/03/75276539/2fba7b9b63635bf7bf08c4285ebe50ab_3073688490510066332.jpg",
+    "From": "2022-12-07T06:00:00+08:00",
+    "To": "2022-12-27T17:59:59+08:00",
+    "Type": 302,
+    "UpOrangeList": [
+      "图莱杜拉的回忆",
+      "赤角石溃杵"
+    ],
+    "UpPurpleList": [
+      "祭礼剑",
+      "昭心",
+      "西风大剑",
+      "西风猎弓",
+      "断浪长鳍"
+    ]
+  },
+  {
+    "Name": "影寂天下人",
+    "Version": "3.3",
+    "Banner": "https://upload-bbs.miyoushe.com/upload/2022/12/21/75276539/fb67b909782e05ea827b119ff8f0c547_8117006675605513898.jpg",
+    "From": "2022-12-27T18:00:00+08:00",
+    "To": "2023-01-17T14:59:59+08:00",
+    "Type": 301,
+    "UpOrangeList": [
+      "雷电将军"
+    ],
+    "UpPurpleList": [
+      "罗莎莉亚",
+      "早柚",
+      "九条裟罗"
+    ]
+  },
+  {
+    "Name": "苍流踏花",
+    "Version": "3.3",
+    "Banner": "https://upload-bbs.miyoushe.com/upload/2022/12/21/75276539/0ab4ee8e14d4888805e1315d929b01c0_6841742765500457118.jpg",
+    "From": "2022-12-27T18:00:00+08:00",
+    "To": "2023-01-17T14:59:59+08:00",
+    "Type": 301,
+    "UpOrangeList": [
+      "神里绫人"
+    ],
+    "UpPurpleList": [
+      "罗莎莉亚",
+      "早柚",
+      "九条裟罗"
+    ]
+  },
+  {
+    "Name": "神铸赋形",
+    "Version": "3.3",
+    "Banner": "https://upload-bbs.miyoushe.com/upload/2022/12/21/75276539/7ff854d64488b96e5d84f3b08afe80c1_5803523662812557161.jpg",
+    "From": "2022-12-27T18:00:00+08:00",
+    "To": "2023-01-17T14:59:59+08:00",
+    "Type": 302,
+    "UpOrangeList": [
+      "波乱月白经津",
+      "薙草之稻光"
+    ],
+    "UpPurpleList": [
+      "匣里龙吟",
+      "祭礼残章",
+      "恶王丸",
+      "曚云之月",
       "西风长枪"
     ]
   }
