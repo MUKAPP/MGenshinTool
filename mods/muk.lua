@@ -119,10 +119,9 @@ ROM类型 = string.upper(Build.MANUFACTURER)
 xpcall(function()
     import "android.provider.Settings$Secure"
     安卓ID = Secure.getString(activity.getContentResolver(), Secure.ANDROID_ID)
-end,
-    function(e)
-        安卓ID = ""
-    end)
+end, function(e)
+    安卓ID = ""
+end)
 
 import "com.blankj.utilcode.util.*"
 ImageUtils = nil
@@ -879,6 +878,8 @@ function 转0x(hexValue)
     end
 end
 
+---Toast
+---@param text Text 要打印的文本
 function 提示(text)
     local tsbj = {
         LinearLayout,

@@ -1,5 +1,6 @@
 require "import"
 import "mods.muk"
+import "mods.hoyobbs"
 
 relogin = ...
 
@@ -116,13 +117,146 @@ function onCreate()
                             gravity = "center",
                             Text = "确认登录成功后点击这里",
                             onClick = function()
-                                if web.getCookie():find("token") then
-                                    提示("登录成功")
-                                    if relogin then
-                                        activity.result({ web.getCookie(), true })
-                                    else
-                                        activity.result({ web.getCookie() })
-                                    end
+                                if web.getCookie():find("login_ticket") then
+                                    提示("请等待")
+                                    --TODO: new login
+                                    --[[
+     mi18nLang=zh-cn;
+     _MHYUUID=65c09e00-9e03-4003-a8e2-4d4035e401ae; 
+     ltoken=Kd6eaYj1ss7pxnZVljnxp7nwwUvbU12yWunEqubV; 
+     ltuid=183512966;
+     UM_distinctid=18421ba2595b0e-0433d53be28b5a-7d5d5474-144000-18421ba2596e75; 
+     cookie_token=GDZP09JOEYKKUGPNqtN52AU7fU2Jt4MKhrM4JII0; 
+     account_id=183512966;
+     DEVICEFP=38d7ec378578c; 
+     login_uid=183512966; 
+     login_ticket=OuiM0rYbVYp77MvW0GvGivMxan6aEaIFNEJIqTRf]]
+                                    ---@type string
+                                    local multiToken      = web.getCookie()
+                                    local multiTokenTable = cookieSplit(multiToken)
+                                    printLog("getCookie multiToken", multiTokenTable)
+
+                                    Http.get(ApiTakumiAuthApi ..
+                                        "/getMultiTokenByLoginTicket?login_ticket=" ..
+                                        multiTokenTable.login_ticket ..
+                                        "&uid=" .. multiTokenTable.login_uid .. "&token_types=3",
+                                        function(code, content)
+                                            if code == 200 then
+                                                printLog("getMultiTokenByLoginTicket", code, content)
+                                                local content = JSON.decode(content)
+                                                if content.retcode == 0 then
+                                                    local stoken_ = ""
+                                                    for _, v in ipairs(content.data.list) do
+                                                        if v.name == "stoken" then
+                                                            stoken_ = v.token
+                                                        end
+                                                    end
+                                                    stokenV1 = mergeSplit({
+                                                        stuid = multiTokenTable.login_uid,
+                                                        stoken = stoken_,
+                                                    })
+                                                    printLog("stokenV1", stokenV1)
+
+                                                    local map = HashMap()
+                                                    map.put("User-Agent", hoyo_ua2)
+                                                    map.put("Content-Type", "application/json")
+                                                    map.put("x-rpc-aigis", "")
+                                                    map.put("x-rpc-app_id", "bll8iq97cem8")
+                                                    map.put("x-rpc-app_version", mihoyobbs_Version)
+                                                    map.put("x-rpc-client_type", mihoyobbs_Client_type)
+                                                    map.put("x-rpc-device_id", device_id)
+                                                    map.put("x-rpc-game_biz", "bbs_cn")
+                                                    map.put("x-rpc-sdk_version", "1.3.1.2")
+
+                                                    map.put("DS", getLoginDS())
+                                                    Http.post(PassportApi ..
+                                                        "/account/ma-cn-session/app/getTokenBySToken", "", stokenV1, nil
+                                                        , map, function(code, content)
+                                                        printLog("getTokenBySToken", content)
+                                                        if code == 200 then
+                                                            local content = JSON.decode(content)
+                                                            if content.retcode == 0 then
+                                                                stokenV2table = {
+                                                                    ["stuid"] = content.data.user_info.aid,
+                                                                    ["stoken"] = content.data.token.token,
+                                                                    ["mid"] = content.data.user_info.mid,
+                                                                }
+                                                                stokenV2 = mergeSplit(stokenV2table)
+                                                                printLog("stokenV2", stokenV2)
+
+                                                                --获取ltoken
+                                                                map.put("DS", getLoginDS())
+                                                                Http.get(PassportApiAuthApi .. "/getLTokenBySToken",
+                                                                    stokenV2, nil
+                                                                    , map, function(code, content)
+                                                                    printLog("getLTokenBySToken", code,
+                                                                        content)
+                                                                    if code == 200 then
+                                                                        local content = JSON.decode(content)
+                                                                        if content.retcode == 0 then
+                                                                            stokenV2table.ltuid = stokenV2table.stuid
+                                                                            stokenV2table.ltoken = content.data.ltoken
+                                                                            --获取cookie_token
+                                                                            map.put("DS", getLoginDS())
+                                                                            Http.get(PassportApiAuthApi ..
+                                                                                "/getCookieAccountInfoBySToken",
+                                                                                stokenV2, nil
+                                                                                , map, function(code, content)
+                                                                                printLog("getCookieAccountInfoBySToken",
+                                                                                    code,
+                                                                                    content)
+                                                                                if code == 200 then
+                                                                                    local content = JSON.decode(content)
+                                                                                    if content.retcode == 0 then
+                                                                                        stokenV2table.account_id = stokenV2table
+                                                                                            .stuid
+                                                                                        stokenV2table.cookie_token = content
+                                                                                            .data
+                                                                                            .cookie_token
+                                                                                        stokenV2 = mergeSplit(stokenV2table)
+                                                                                        printLog("stokenV2", stokenV2)
+                                                                                        提示("登录成功")
+                                                                                        if relogin then
+                                                                                            activity.result({ stokenV2, true })
+                                                                                        else
+                                                                                            activity.result({ stokenV2 })
+                                                                                        end
+                                                                                    else
+                                                                                        if content.message == nil then
+                                                                                            content.message = content.retcode
+                                                                                        end
+                                                                                        提示("登录失败：" ..
+                                                                                            content.message)
+                                                                                    end
+                                                                                end
+                                                                            end)
+                                                                        else
+                                                                            if content.message == nil then
+                                                                                content.message = content.retcode
+                                                                            end
+                                                                            提示("登录失败：" .. content.message)
+                                                                        end
+                                                                    end
+                                                                end)
+                                                            else
+                                                                if content.message == nil then
+                                                                    content.message = content.retcode
+                                                                end
+                                                                提示("登录失败：" .. content.message)
+                                                            end
+                                                        end
+                                                    end)
+                                                else
+                                                    if content.message == nil then
+                                                        content.message = content.retcode
+                                                    end
+                                                    提示("请求失败：" .. content.message)
+                                                end
+                                            else
+                                                提示("请求失败，错误码：" .. code)
+                                            end
+                                        end)
+
                                 else
                                     提示("登录失败，Cookie内未找到必要参数，请尝试重新登录")
                                     activity.result({})
@@ -362,7 +496,7 @@ function onCreate()
 
     import "org.jsoup.*"
 
-    url = [[https://user.mihoyo.com/login-platform/mobile.html?game_biz=bbs_cn&app_id=bll8iq97cem8&token_type=4&app_version=2.40.1&environment=production&redirect_url=https%253A%252F%252Fm.bbs.mihoyo.com%252Fys%252F%2523%252Fhome%252F0&sync_login_status=1&platform=5&st=https%253A%252F%252Fm.bbs.mihoyo.com%252Fys%252F%2523%252Fhome%252F0#/login/captcha]]
+    url = [[https://user.mihoyo.com/#/login/password]]
 
     CookieManager.getInstance().removeAllCookies(nil)
     CookieManager.getInstance().flush()

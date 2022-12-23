@@ -542,7 +542,7 @@ function 新圣遗物()
 
     aPos.text = mainPosName
 
-    imgUrl = "https://pan.mukapp.top/d/genshin_artifact-main/src/images/artifacts"
+    imgUrl = "https://pan.mukapp.top/genshin_artifact-main/src/images/artifacts"
 
     local relicm = relic_all[math.random(1, #relic_all)]
 

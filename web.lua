@@ -386,28 +386,6 @@ function onCreate()
 
         web.loadUrl(pageurl, map)
 
-        function cookieSplit(cookie)
-            cookie = cookie:gsub(" ", "")
-            local cookieTable = {}
-            local cookieTableBefore = mukutils.split(cookie, ";")
-            for i, v in ipairs(cookieTableBefore) do
-                cookieTable[v:match("^(.-)%=")] = v:match("%=(.+)")
-            end
-            return cookieTable
-        end
-
-        function mergeSplit(cookieTable)
-            local cookie = ""
-            for i, v in pairs(cookieTable) do
-                if cookie ~= "" then
-                    cookie = cookie .. ";" .. i .. "=" .. v
-                else
-                    cookie = i .. "=" .. v
-                end
-            end
-            return cookie
-        end
-
         cookieTable = cookieSplit(cookie)
         printLog("cookieTable", cookieSplit(cookie))
     else

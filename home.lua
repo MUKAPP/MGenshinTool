@@ -4206,14 +4206,14 @@ function onCreate()
                             local datas = {}
                             xpcall(
                                 function()
-                                    for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
-                                        datas[#datas + 1] = cookie
+                                    for name, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+                                        datas[#datas + 1] = { cookie, name }
                                     end
                                 end,
                                 function(e)
                                     mukactivity.setData("myscookies", JSON.encode({}))
-                                    for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
-                                        datas[#datas + 1] = cookie
+                                    for name, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+                                        datas[#datas + 1] = { cookie, name }
                                     end
                                 end
                             )
@@ -4233,7 +4233,7 @@ function onCreate()
                                 local function getPlayerInfo(correct_cookie)
                                     加载对话框内容("正在获取账号信息")
                                     if correct_cookie == "" then
-                                        correct_cookie = datas[1]
+                                        correct_cookie = datas[1][1]
                                     end
                                     local ds = getNewDS("role_id=" .. uid .. "&server=" .. serverid)
 
@@ -4279,7 +4279,7 @@ function onCreate()
                                     Http.get(
                                         "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn"
                                         ,
-                                        datas[i],
+                                        datas[i][1],
                                         nil,
                                         nil,
                                         function(code, content)
@@ -4295,7 +4295,8 @@ function onCreate()
                                             local content = JSON.decode(content)
 
                                             if content.data == nil then
-                                                提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
+                                                提示("账号 " .. datas[i][2] .. " 获取信息失败：\n" ..
+                                                    content.message)
                                                 if uid_already == #datas then
                                                     getPlayerInfo()
                                                 end
@@ -4304,9 +4305,9 @@ function onCreate()
                                             for i0, v0 in ipairs(content.data.list) do
                                                 local uidn = content.data.list[i0].game_uid
 
-                                                printLog(nil, content.data.list, datas[i], 1, uidn, 2, uid)
+                                                printLog(nil, content.data.list, datas[i][1], 1, uidn, 2, uid)
                                                 if tointeger(uidn) == tointeger(uid) then
-                                                    correct_cookie = datas[i]
+                                                    correct_cookie = datas[i][1]
                                                 end
 
                                             end
@@ -4499,7 +4500,7 @@ function onCreate()
                                 Http.get(
                                     "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn"
                                     ,
-                                    datas[i],
+                                    datas[i][1],
                                     nil,
                                     nil,
                                     function(code, content)
@@ -4513,17 +4514,17 @@ function onCreate()
                                         end
 
                                         local content = JSON.decode(content)
-                                        --BUG: 判断登陆状态 -100 登录失效
-                                        all_uid = all_uid + (#content.data.list - 1)
-
                                         if content.data == nil then
                                             uid_already = uid_already + 1
-                                            提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
+                                            提示("账号 " .. datas[i][2] .. " 获取信息失败：\n" ..
+                                                content.message)
                                             if uid_already == all_uid then
                                                 suiddialog(suiddata)
                                             end
                                             return true
                                         end
+                                        all_uid = all_uid + (#content.data.list - 1)
+
                                         for i0, v0 in ipairs(content.data.list) do
                                             uid_already = uid_already + 1
                                             local uidn = content.data.list[i0].game_uid
@@ -4681,14 +4682,14 @@ function onCreate()
                             local datas = {}
                             xpcall(
                                 function()
-                                    for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
-                                        datas[#datas + 1] = cookie
+                                    for name, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+                                        datas[#datas + 1] = { cookie, name }
                                     end
                                 end,
                                 function(e)
                                     mukactivity.setData("myscookies", JSON.encode({}))
-                                    for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
-                                        datas[#datas + 1] = cookie
+                                    for name, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+                                        datas[#datas + 1] = { cookie, name }
                                     end
                                 end
                             )
@@ -4709,7 +4710,7 @@ function onCreate()
                                 local function getPlayerInfo(correct_cookie)
                                     加载对话框内容("正在获取角色信息")
                                     if correct_cookie == "" then
-                                        correct_cookie = datas[1]
+                                        correct_cookie = datas[1][1]
                                     end
                                     local ds = getNewDS(nil, JSON.encode({
                                         ["role_id"] = uid,
@@ -4756,7 +4757,7 @@ function onCreate()
                                 function getAbyssInfo(correct_cookie)
                                     加载对话框内容("正在获取深渊信息")
                                     if correct_cookie == "" then
-                                        correct_cookie = datas[1]
+                                        correct_cookie = datas[1][1]
                                     end
                                     local ds = getNewDS("role_id=" .. uid .. "&schedule_type=1&server=" .. serverid)
                                     local url = "https://api-takumi-record.mihoyo.com/game_record/app/genshin/api/spiralAbyss?schedule_type=1&role_id="
@@ -4801,7 +4802,7 @@ function onCreate()
                                     Http.get(
                                         "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn"
                                         ,
-                                        datas[i],
+                                        datas[i][1],
                                         nil,
                                         nil,
                                         function(code, content)
@@ -4817,7 +4818,8 @@ function onCreate()
                                             local content = JSON.decode(content)
 
                                             if content.data == nil then
-                                                提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
+                                                提示("账号 " .. datas[i][2] .. " 获取信息失败：\n" ..
+                                                    content.message)
                                                 if uid_already == #datas then
                                                     getPlayerInfo()
                                                 end
@@ -4826,9 +4828,9 @@ function onCreate()
                                             for i0, v0 in ipairs(content.data.list) do
                                                 local uidn = content.data.list[i0].game_uid
 
-                                                printLog(nil, content.data.list, datas[i], 1, uidn, 2, uid)
+                                                printLog(nil, content.data.list, datas[i][1], 1, uidn, 2, uid)
                                                 if tointeger(uidn) == tointeger(uid) then
-                                                    correct_cookie = datas[i]
+                                                    correct_cookie = datas[i][1]
                                                 end
 
                                             end
@@ -4990,7 +4992,7 @@ function onCreate()
                                 Http.get(
                                     "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn"
                                     ,
-                                    datas[i],
+                                    datas[i][1],
                                     nil,
                                     nil,
                                     function(code, content)
@@ -5004,16 +5006,17 @@ function onCreate()
                                         end
 
                                         local content = JSON.decode(content)
-                                        all_uid = all_uid + (#content.data.list - 1)
-
                                         if content.data == nil then
                                             uid_already = uid_already + 1
-                                            提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
+                                            提示("账号 " .. datas[i][2] .. " 获取信息失败：\n" ..
+                                                content.message)
                                             if uid_already == all_uid then
                                                 suiddialog(suiddata)
                                             end
                                             return true
                                         end
+                                        all_uid = all_uid + (#content.data.list - 1)
+
                                         for i0, v0 in ipairs(content.data.list) do
                                             uid_already = uid_already + 1
                                             local uidn = content.data.list[i0].game_uid
@@ -5036,14 +5039,14 @@ function onCreate()
                             local datas = {}
                             xpcall(
                                 function()
-                                    for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
-                                        datas[#datas + 1] = cookie
+                                    for name, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+                                        datas[#datas + 1] = { cookie, name }
                                     end
                                 end,
                                 function(e)
                                     mukactivity.setData("myscookies", JSON.encode({}))
-                                    for _, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
-                                        datas[#datas + 1] = cookie
+                                    for name, cookie in pairs(JSON.decode(mukactivity.getData("myscookies"))) do
+                                        datas[#datas + 1] = { cookie, name }
                                     end
                                 end
                             )
@@ -5232,7 +5235,7 @@ function onCreate()
                                 Http.get(
                                     "https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn"
                                     ,
-                                    datas[i],
+                                    datas[i][1],
                                     nil,
                                     nil,
                                     function(code, content)
@@ -5246,16 +5249,17 @@ function onCreate()
                                         end
 
                                         local content = JSON.decode(content)
-                                        all_uid = all_uid + (#content.data.list - 1)
-
                                         if content.data == nil then
                                             uid_already = uid_already + 1
-                                            提示("账号 " .. nam .. " 获取信息失败：\n" .. content.message)
+                                            提示("账号 " .. datas[i][2] .. " 获取信息失败：\n" ..
+                                                content.message)
                                             if uid_already == all_uid then
                                                 suiddialog(suiddata)
                                             end
                                             return true
                                         end
+                                        all_uid = all_uid + (#content.data.list - 1)
+
                                         for i0, v0 in ipairs(content.data.list) do
                                             uid_already = uid_already + 1
                                             local uidn = content.data.list[i0].game_uid

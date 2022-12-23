@@ -99,32 +99,59 @@ function getLoginDS(q)
     return i .. "," .. r .. "," .. c
 end
 
-SOURCE = "webstatic.mihoyo.com"
-BBSAPI = "https://bbs-api.mihoyo.com"
-SDKAPI = "https://api-sdk.mihoyo.com"
-HK4API = "https://hk4e-api.mihoyo.com"
-WEBAPI = "https://webapi.account.mihoyo.com/Api"
-RECAPI = "https://api-takumi-record.mihoyo.com/game_record/app"
-TAKUMI_AUTH_API = "https://api-takumi.mihoyo.com/auth/api"
-TAKUMI_BINDING_API = "https://api-takumi.mihoyo.com/binding/api"
+ApiGeetest = "https://api.geetest.com";
+ApiV6Geetest = "https://apiv6.geetest.com";
 
-function checkMobileRegistered(phoneNumber, ret)
-    local currentTimeMills = os.time()
-    local url = WEBAPI .. "/is_mobile_registrable?mobile=" .. phoneNumber .. "&t=" .. currentTimeMills
-    Http.get(url, nil, nil, function(code, content)
-        if code == 200 then
-            local json = JSON.decode(content)
-            if json.code == 0 then
-                if json.data.is_registrable then
-                    ret(true)
-                else
-                    ret(false)
-                end
-            else
-                ret(nil, json.msg)
-            end
+ApiTakumi = "https://api-takumi.mihoyo.com";
+ApiTakumiAuthApi = ApiTakumi .. "/auth/api";
+ApiTaKumiBindingApi = ApiTakumi .. "/binding/api";
+
+ApiTakumiRecord = "https://api-takumi-record.mihoyo.com";
+ApiTakumiRecordApi = ApiTakumiRecord .. "/game_record/app/genshin/api";
+
+ApiTakumiCardApi = ApiTakumiRecord .. "/game_record/app/card/api";
+ApiTakumiCardWApi = ApiTakumiRecord .. "/game_record/app/card/wapi";
+
+App = "https://app.mihoyo.com";
+AppAuthApi = App .. "/account/auth/api";
+
+BbsApi = "https://bbs-api.mihoyo.com";
+BbsApiUserApi = BbsApi .. "/user/wapi";
+
+Hk4eApi = "https://hk4e-api.mihoyo.com";
+Hk4eApiAnnouncementApi = Hk4eApi .. "/common/hk4e_cn/announcement/api";
+Hk4eApiGachaInfoApi = Hk4eApi .. "/event/gacha_info/api";
+
+PassportApi = "https://passport-api.mihoyo.com";
+PassportApiAuthApi = PassportApi .. "/account/auth/api";
+PassportApiV4 = "https://passport-api-v4.mihoyo.com";
+
+SdkStatic = "https://sdk-static.mihoyo.com";
+SdkStaticLauncherApi = SdkStatic .. "/hk4e_cn/mdk/launcher/api";
+
+AnnouncementQuery = "game=hk4e&game_biz=hk4e_cn&lang=zh-cn&bundle_id=hk4e_cn&platform=pc&region=cn_gf01&level=55&uid=100000000";
+
+---分割Cookie
+---@type table
+---@param cookie string 要分割的Cookie
+function cookieSplit(cookie)
+    cookie = cookie:gsub(" ", "")
+    local cookieTable = {}
+    local cookieTableBefore = mukutils.split(cookie, ";")
+    for i, v in ipairs(cookieTableBefore) do
+        cookieTable[v:match("^(.-)%=")] = v:match("%=(.+)")
+    end
+    return cookieTable
+end
+
+function mergeSplit(cookieTable)
+    local cookie = ""
+    for i, v in pairs(cookieTable) do
+        if cookie ~= "" then
+            cookie = cookie .. ";" .. i .. "=" .. v
         else
-            ret(nil, "网络错误")
+            cookie = i .. "=" .. v
         end
-    end)
+    end
+    return cookie
 end
