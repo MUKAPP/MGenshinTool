@@ -134,6 +134,36 @@ tool_list_item = {
                     LinearLayout,
                     layout_width = "-1",
                     layout_height = "-1",
+                    gravity = "right|center",
+                    paddingBottom = "8dp",
+                    {
+                        CardView,
+                        layout_width = "-2",
+                        layout_height = "-1",
+                        radius = "4dp",
+                        background = cardbackc,
+                        --layout_marginTop = "8dp",
+                        layout_marginRight = "16dp",
+                        --layout_marginBottom = "8dp",
+                        Elevation = "0dp",
+                        {
+                            TextView,
+                            layout_width = "-1",
+                            layout_height = "-1",
+                            textSize = "14sp",
+                            paddingRight = "12dp",
+                            paddingLeft = "12dp",
+                            Typeface = AppFont.粗体,
+                            padding = "8dp",
+                            id = "button",
+                            textColor = textc,
+                        }
+                    }
+                },
+                {
+                    LinearLayout,
+                    layout_width = "-1",
+                    layout_height = "-1",
                     orientation = "vertical",
                     id = "memo_in",
                     {
@@ -523,8 +553,9 @@ function addt(name, cookie)
                                 return true
                             end
                             if content.retcode == 1034 then
-                                data_[#data_ + 1] = { "error", "获取失败：请到米游社内查看实时便笺过验证",
-                                    nickname .. "  UID: " .. uid .. " (" .. region_name .. ")" }
+                                data_[#data_ + 1] = { "error",
+                                    "获取失败：请点击按钮手动过验证（目前验证成功之后什么都加载不出，但是可以验证，验证完返回主页重新加载实时便笺就行了）",
+                                    nickname .. "  UID: " .. uid .. " (" .. region_name .. ")", cookie, serverid }
                                 更新adp()
                                 return true
                             end
@@ -575,12 +606,30 @@ adp = LuaRecyclerViewAdapter(LuaAdapterCreator({
     onCreateViewHolder = rholder,
     onBindViewHolder = function(holder, position)
         view = holder.view.getTag()
+        控件隐藏(view.button.getParent())
         local adata = data_[position + 1]
         if adata[1] == "error" then
             控件隐藏(view.memo_in)
             控件可见(view.memo)
             view.memo.Text = adata[2]
             view.uid.Text = adata[3]
+            if adata[4] then
+                控件可见(view.button.getParent())
+                view.button.text = "手动通过验证码"
+                波纹({ view.button }, "方自适应")
+                view.button.onClick = function()
+                    local url = "https://webstatic.mihoyo.com/app/community-game-records/index.html?bbs_presentation_style=fullscreen#/ys/daily/role_id="
+                        .. adata[3] .. "&server" .. adata[5]
+                    activity.newActivity("web", {
+                        url,
+                        nil,
+                        nil,
+                        nil,
+                        "hoyobbs",
+                        adata[4]
+                    })
+                end
+            end
         else
             控件可见(view.memo_in)
             控件隐藏(view.memo)

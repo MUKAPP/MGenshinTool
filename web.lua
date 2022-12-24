@@ -347,51 +347,6 @@ function onCreate()
     --pageurl = "file://" .. activity.getLuaDir("res/JSBridgeUnitTest.html")
     --print(pageurl)
 
-    if type_ == "hoyobbs" then
-        import "mods.hoyobbs"
-        web.clearCache(true)
-
-        web.getSettings().setUserAgentString(hoyo_ua1)
-
-        local map = HashMap()
-        map.put("x-requested-with", "com.mihoyo.hyperion")
-        map.put("upgrade-insecure-requests", "1")
-        map.put("cache-control", "max-age=0")
-        web.getSettings().setUserAgentString(hoyo_ua1)
-
-        CookieManager.getInstance().removeAllCookies(nil)
-        CookieManager.getInstance().flush()
-
-        CookieSyncManager.createInstance(this)
-        cookieManager = CookieManager.getInstance()
-        cookieManager.setAcceptCookie(true)
-        cookieManager.removeSessionCookie() --移除
-        cookieManager.setCookie(
-            pageurl,
-            cookie
-        )
-        cookieManager.setCookie(".mihoyo.com", cookie) --cookies是在HttpClient中获得的cookie
-        CookieSyncManager.getInstance().sync()
-
-        CookieManager.getInstance().setCookie(
-            pageurl,
-            cookie
-        )
-
-        web.setCookie(".mihoyo.com", cookie)
-        web.setCookie(
-            pageurl,
-            cookie
-        )
-
-        web.loadUrl(pageurl, map)
-
-        cookieTable = cookieSplit(cookie)
-        printLog("cookieTable", cookieSplit(cookie))
-    else
-        web.loadUrl(pageurl)
-    end
-
     --PopupWindow
     Popup_layout = {
         LinearLayout,
@@ -479,8 +434,6 @@ function onCreate()
     darkmode =
     'if(!document.getElementById(\'via_inject_css_night\')){var css=document.createElement(\'style\');css.id=\'via_inject_css_night\';css.type=\'text/css\';css.rel="stylesheet";var textNode=document.createTextNode(\'html{background-color:#202125!important}*{color:#999!important;box-shadow:none!important;background-color:transparent!important;border-color:#444!important;border-top-color:#444!important;border-bottom-color:#444!important;border-left-color:#444!important;border-right-color:#444!important}body{background-color:transparent!important}:after,:before{background-color:transparent!important;border-color:#444!important}a,a *{color:#88A8E8!important;text-decoration:none!important}.link:hover,.link:hover *,[role=button]:hover *,[role=link]:hover,[role=link]:hover *,[role=menuitem]:hover,[role=menuitem]:hover *,a:hover,a:hover *,a:visited:hover,a:visited:hover *,div[onclick]:hover,span[onclick]:hover{color:#F0F0F0!important}a:visited,a:visited *{color:#88a!important}.selected,.selected *,[href="#"],a.active,a.active *,a.highlight,a.highlight *{color:#DDD!important;font-weight:700!important}[class*=header],[class*=header] td,[class*=headline],[id*=header],[id*=headline],h1,h1 *,h2,h2 *,h3,h3 *,h4,h5,h6,strong{color:#DDD!important}[class*=alert],[class*=error],code,div[onclick],span[onclick]{color:#900!important}::-moz-selection{background-color:#88A8E8fa!important;color:#202125!important}::selection{background-color:#88A8E8fa!important;color:#202125!important}:focus{outline:0!important}div[role=navigation],div[style="display: block;"]{background-color:rgba(0,0,0,.5)!important}table{background-color:rgba(30,30,30,.4)!important;border-radius:6px!important}table>tbody>tr:nth-child(even),table>tbody>tr>td:nth-child(even){background-color:rgba(0,0,0,.2)!important}#ghostery-purple-bubble,#translator-popup,.hovercard,.menu,.tooltip,.vbmenu_popup,[class*=dropdown],[class*=nav] ul,[class*=popup],[class=title],[id*=Menu],[id*=menu],[id*=nav] ul,a[id*=ghosteryfirefox],a[onclick][style*=display],div[role=dialog],div[role=menu],div[style*="position:"][style*="left:"][style*=visible],div[style*="z-index:"][style*="left:"][style*=visible],div[style*="-moz-user-select"],embed,iframe,label [onclick],nav,nav ul,span[class*=script] div,ul[class*=menu],ul[style*="display:"],ul[style*="visibility:"] ul{background-color:rgba(5,5,5,.9)!important;border-radius:5px;box-shadow:1px 1px 5px #202125!important}#footer,#header,footer,header{background-color:rgba(19,19,19,.9)!important;box-shadow:0 0 5px #202125!important}body>#dialog,body>.xenOverlay{background-color:rgba(19,19,19,.96)!important;background-clip:padding-box!important;box-shadow:0 0 15px #202125,inset 0 0 0 1px rgba(200,200,200,.5),inset 0 0 5px #111!important}[id*=lightbox],[id*=overlay],blockquote{background-color:rgba(35,35,35,.9)!important;border-radius:5px}.Message code,dl,pre{background-color:rgba(5,5,5,.5)!important}.install[onclick],[role=button],a.BigButton,a.TabLink,a.button,a.submit,button,input,select{-moz-appearance:none!important;-webkit-appearance:none!important;transition:border-color .3s!important;background-color:#060606!important;color:#BBB!important;box-shadow:0 0 2px rgba(0,0,0,.9)!important}a[class*=button]:not(:empty),a[href="javascript:;"],a[id*=Button]:not(:empty),a[id*=button]:not(:empty),div[class*=button][onclick]{transition:border-color .3s!important;background-color:#060606!important;color:#BBB!important;border-color:#333!important;box-shadow:0 0 2px rgba(0,0,0,.9)!important}a[class*=button]:not(:empty):hover,a[href="javascript:;"]:hover,a[id*=Button]:not(:empty):hover,a[id*=button]:hover,div[class*=button][onclick]:hover{background-color:#151515!important;color:#FFF!important}a.button *,a.submit *,button *,input *,select *{color:#BBB!important}[role=button]:hover,a.BigButton:hover,a.TabLink:hover,a.button:hover,a.submit:hover,button:hover,input:hover,input[type=button]:hover,select:hover{border-top-color:#555!important;border-bottom-color:#555!important;border-left-color:#555!important;border-right-color:#555!important}input:focus,select:focus{box-shadow:0 0 5px #077!important}input :hover *{color:#F0F0F0!important}button[disabled],button[disabled]:focus,button[disabled]:hover,input[disabled],input[disabled]:focus,input[disabled]:hover,select[disabled],select[disabled]:focus,select[disabled]:hover{opacity:.5!important;border-color:#333!important}input[type=checkbox]{border-radius:1px!important}input[type=radio],input[type=radio]:focus{border-radius:100%!important}input[type=checkbox],input[type=radio]{min-width:12px;min-height:12px}input[type=checkbox]:checked,input[type=radio]:checked{border-color:#077!important;box-shadow:0 0 5px #077!important}select{padding-right:15px!important;background-color:#060606!important;transition:border-color .3s,background-position .3s!important}.Active .TabLink,a.BigButton:active,a.TabLink:active,a.button:active,a.submit:active,a[class*=button]:not(:empty):active,button:active,input[type=button]:active,input[type=submit]:active{background-color:#292929!important;color:#FFF!important}textarea{-moz-appearance:none!important;-webkit-appearance:none!important;background-color:rgba(0,0,0,.3)!important;border-radius:3px!important;box-shadow:inset 0 0 8px #202125!important;transition:border-color,background,.3s!important}textarea,textarea *{color:#C8C8C8!important}textarea:focus:hover,textarea:hover{border-color:#333!important}textarea:focus{background-color:rgba(0,0,0,.5)!important;border-color:#222!important}textarea:focus,textarea:focus>*{box-shadow:none!important}optgroup,option{-moz-appearance:none!important;-webkit-appearance:none!important;background-color:0 0!important;color:#666!important}optgroup{background-color:#222!important;color:#DDD!important}option:checked,option:focus,option:not([disabled]):hover{background-color:linear-gradient(#333,#292929)!important;color:#DDD!important}img{opacity:.7!important;transition:opacity .2s}#mpiv-popup,a:hover img,img:hover{opacity:1!important}.read-whole-mask .exp-mask,.se-head-tabcover,.wgt-exp-content .exp-img-mask{background-image:none!important}.s_card{background:0 0!important}\');css.appendChild(textNode);var o=document.getElementsByTagName("head");if(o.length>0&&o[0].appendChild(css)){}};'
 
-    js = ""
-
     -------MiHoYoJSInterface-------
     function jsResult(data_)
         return {
@@ -524,14 +477,51 @@ function onCreate()
                     elseif jscon_.method == "closePage" then
                         提示("关闭页面")
                     elseif jscon_.method == "getDS" then
+                        local b = ""
+                        local q = ""
+                        if jscon_.payload then
+                            if jscon_.payload.body and jscon_.payload.body ~= "" then
+                                b = jscon_.payload.body
+                            end
+                            if jscon_.payload.query and jscon_.payload.query ~= "" then
+                                for i, v in muktable.pairsByKeys(jscon_.payload.query) do
+                                    if q == "" then
+                                        q = i .. "=" .. tostring(v)
+                                    else
+                                        q = q .. "&" .. i .. "=" .. tostring(v)
+                                    end
+                                end
+                            end
+                        end
+                        local ds = getDS(q, b)
                         local resultData = jsResult({
-                            DS = getDS3(),
+                            DS = ds,
                         })
+                        printLog("getDS", ds, b, q)
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "getDS2" then
+                        local b = ""
+                        local q = ""
+                        if jscon_.payload then
+                            if jscon_.payload.body and jscon_.payload.body ~= "" then
+                                b = jscon_.payload.body
+                            end
+                            if jscon_.payload.query and jscon_.payload.query ~= "" then
+                                for i, v in muktable.pairsByKeys(jscon_.payload.query) do
+                                    if q == "" then
+                                        q = i .. "=" .. tostring(v)
+                                    else
+                                        q = q .. "&" .. i .. "=" .. tostring(v)
+                                    end
+                                end
+                            end
+                        end
+                        local ds = getNewDS(q, b)
                         local resultData = jsResult({
+                            DS = ds,
                         })
+                        printLog("getDS2", ds, b, q)
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "getStatusBarHeight" then
@@ -542,26 +532,55 @@ function onCreate()
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "getUserInfo" then
                         --TODO: getUserInfo
-                        local resultData = jsResult({
-                            id,
-                            gender,
-                            nickname,
-                            introduce,
-                            avatar_url,
-                        })
-                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
-                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                        local ds = getDS2("uid=" .. cookieTable.account_id)
+                        local map = HashMap()
+                        map.put("DS", ds)
+                        map.put("x-rpc-app_version", mihoyobbs_Version)
+                        map.put("x-rpc-channel", "miyousheluodi")
+                        map.put("User-Agent", hoyo_ua1)
+                        map.put("x-rpc-client_type", mihoyobbs_Client_type)
+                        map.put("Referer", "https://app.mihoyo.com")
+                        Http.get(BbsApi .. "/user/api/getUserFullInfo?uid=" .. cookieTable.account_id, cookie, nil, map,
+                            function(code, result)
+                                printLog("getUserFullInfo", result)
+                                if code == 200 then
+                                    local content = JSON.decode(result)
+                                    local resultData = jsResult({
+                                        cookieTable.account_id,
+                                        content.data.user_info.gender,
+                                        content.data.user_info.nickname,
+                                        content.data.user_info.introduce,
+                                        content.data.user_info.community_info.avatar_url,
+                                    })
+                                    web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                                        .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                                end
+                            end)
                     elseif jscon_.method == "getActionTicket" then
+                        printLog("getActionTicketBySToken", "start")
                         --TODO: getActionTicket
-                        --Http.get(TAKUMI_AUTH_API.."/getActionTicketBySToken?action_type=",
-                        local resultData = jsResult({
-                            action_type = "",
-                        })
-                        web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
-                            .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
+                        local ds = getDS3("uid=" .. cookieTable.account_id)
+                        local map = HashMap()
+                        map.put("DS", ds)
+                        map.put("x-rpc-app_version", mihoyobbs_Version)
+                        map.put("x-rpc-channel", "miyousheluodi")
+                        map.put(
+                            "User-Agent", hoyo_ua1
+                        )
+                        map.put("x-rpc-client_type", mihoyobbs_Client_type)
+                        map.put("Referer", "https://app.mihoyo.com")
+                        Http.get(ApiTakumiAuthApi ..
+                            "/getActionTicketBySToken?action_type=" ..
+                            jscon_.payload.action_type .. "&stoken=" ..
+                            cookieTable.stoken .. "&uid=" .. cookieTable.account_id,
+                            cookie, nil, map, function(code, result)
+                            printLog("getActionTicketBySToken", result)
+                            web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
+                                .. result .. ")", { onReceiveValue = function(result) end })
+                        end)
                     elseif jscon_.method == "getCookieToken" then
                         local resultData = jsResult({
-                            cookie_token = cookieTable.cookie_token_v2,
+                            cookie_token = cookieTable.cookie_token,
                         })
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
@@ -576,20 +595,32 @@ function onCreate()
                             ["x-rpc-device_model"] = Build.MODEL,
                             ["Referer"] = "https://app.mihoyo.com",
                         })
+                        --[[if not wurl:find("signin%-ys") then
+                            resultData = jsResult({
+                                ["x-rpc-client_type"] = mihoyobbs_Client_type_web,
+                                ["x-rpc-app_version"] = mihoyobbs_Version,
+                                ["x-rpc-sys_version"] = Build.VERSION.RELEASE,
+                                ["x-rpc-channel"] = "miyousheluodi",
+                                ["x-rpc-device_id"] = device_id,
+                                ["x-rpc-device_name"] = Build.VERSION.RELEASE,
+                                ["x-rpc-device_model"] = Build.MODEL,
+                                ["Referer"] = "https://app.mihoyo.com",
+                            })
+                        end]]
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "pushPage" then
                     elseif jscon_.method == "openSystemBrowser" then
                     elseif jscon_.method == "getCookieInfo" then
                         local resultData = jsResult({
-                            ["ltuid"] = "",
-                            ["ltoken"] = cookieTable.ltoken_v2,
-                            ["login_ticket"] = cookieTable.login_ticket,
+                            ["ltuid"] = cookieTable.ltuid,
+                            ["ltoken"] = cookieTable.ltoken,
+                            ["login_ticket"] = "",
                         })
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "saveLoginTicket" then
-                        print(var2)
+                        printLog("saveLoginTicket", var2)
                     elseif jscon_.method == "getNotificationSettings" then
                         local resultData = jsResult({
                             ["authorized"] = true,
@@ -607,7 +638,49 @@ function onCreate()
         execute = function(s)
         end
     }, "MiHoYoJSInterface")
+
     -------------------------------
+    if type_ == "hoyobbs" then
+        import "mods.hoyobbs"
+        web.clearCache(true)
+
+        web.getSettings().setUserAgentString(hoyo_ua1)
+
+        CookieManager.getInstance().removeAllCookies(nil)
+        CookieManager.getInstance().flush()
+
+        cookieIncomplete = cookieSplit(cookie)
+        cookieIncomplete.mid = nil
+        cookieIncomplete.stuid = nil
+        cookieIncomplete.stoken = nil
+        cookieIncomplete = mergeSplit(cookieIncomplete)
+
+        CookieSyncManager.createInstance(this)
+        cookieManager = CookieManager.getInstance()
+        cookieManager.setAcceptCookie(true)
+        cookieManager.removeSessionCookie() --移除
+        cookieManager.setCookie(".mihoyo.com", cookieIncomplete)
+        --cookieManager.setCookie(pageurl, cookie)
+        CookieSyncManager.getInstance().sync()
+
+        --CookieManager.getInstance().setCookie(pageurl, cookie)
+        CookieManager.getInstance().setCookie(".mihoyo.com", cookieIncomplete)
+
+        web.setCookie(".mihoyo.com", cookieIncomplete)
+        --web.setCookie(pageurl, cookie)
+
+        local map = HashMap()
+        map.put("x-requested-with", "com.mihoyo.hyperion")
+        map.put("upgrade-insecure-requests", "1")
+        map.put("cache-control", "max-age=0")
+        web.loadUrl(pageurl, map)
+
+        cookieTable = cookieSplit(cookie)
+        printLog("cookieTable", cookieSplit(cookie))
+        printLog(nil, "启用BBS相关")
+    else
+        web.loadUrl(pageurl)
+    end
 
     web.setWebChromeClient(
         LuaWebChrome(
@@ -616,18 +689,6 @@ function onCreate()
                     local lpm = webprogress.getLayoutParams()
                     lpm.width = newProgress * (activity.Width / 100)
                     webprogress.setLayoutParams(lpm)
-                    if 全局主题值 == "Night" or 全局主题值 == "Star" then
-                        local v =
-                        "var style = document.createElement('style');style.type='text/css';style.id='QQBrowserSDKNightMode';style.innerHTML='html,body{background:none !important;background-color: #1d1e2a !important;}html *{background-color: #1d1e2a !important; color:#888888 !important;border-color:#3e4f61 !important;text-shadow:none !important;box-shadow:none !important;}a,a *{border-color:#4c5b99 !important; color:#2d69b3 !important;text-decoration:none !important;}a:visited,a:visited *{color:#a600a6 !important;}a:active,a:active *{color:#5588AA !important;}input,select,textarea,option,button{background-image:none !important;color:#AAAAAA !important;border-color:#4c5b99 !important;}form,div,button,span{background-color:#1d1e2a !important; border-color:#4c5b99 !important;}img{opacity:0.5}';document.getElementsByTagName('HEAD').item(0).appendChild(style);"
-                        web.loadUrl([[
-      javascript:(function()
-        { ]]             .. darkmode .. [[ })()
-      ]]                 )
-                    end
-                    web.loadUrl([[
-      javascript:(function()
-        { ]]         .. js .. [[ })()
-      ]]             )
                 end,
                 onShowFileChooser = function(view, valueCallbackuri, fileChooserParams)
                     uploadMessageAboveL = valueCallbackuri
@@ -717,19 +778,25 @@ function onCreate()
     loaderror = false
     控件隐藏(loaderr)
 
-    function 设置Cookie(context, url, content)
-        CookieSyncManager.createInstance(context)
-        local cookieManager = CookieManager.getInstance()
-        cookieManager.setAcceptCookie(true)
-        cookieManager.removeSessionCookie()
-        cookieManager.removeAllCookie()
-        if content ~= nil then
-            cookieManager.setCookie(url, content)
-        end
-        CookieSyncManager.getInstance().sync()
+    function exMiHoYoJSInterface()
+        -------MiHoYoJSInterface 替换-------
+        web.evaluateJavascript([[let c = {};
+c.postMessage = (str) =>
+  chrome.webview.hostObjects.MiHoYoWebBridge.OnMessage(str);
+c.closePage = () => c.postMessage('{"method":"closePage"}');
+window.MiHoYoJSInterface = c;]], {
+            onReceiveValue = function(result)
+            end
+        })
+        web.evaluateJavascript([[window.MiHoYoJSInterface.postMessage_ = window.MiHoYoJSInterface.postMessage;
+window.MiHoYoJSInterface.postMessage = function(val){
+    return window.LuaBridge.execute("postMessage> "+val);
+};]]     , {
+            onReceiveValue = function(result)
+            end
+        })
+        -------------------------------
     end
-
-    --设置Cookie(this, "mihoyo.com", nil)
 
     web.setWebViewClient {
         shouldOverrideUrlLoading = function(view, url)
@@ -757,6 +824,8 @@ function onCreate()
             控件隐藏(loaderr)
             loaderror = false
 
+            exMiHoYoJSInterface()
+
             if beforeload then
                 loadstring(beforeload)()
             end
@@ -777,42 +846,23 @@ function onCreate()
             end
             title.setText(web.getTitle())
             if 全局主题值 == "Night" then
-                local v =
-                "var style = document.createElement('style');style.type='text/css';style.id='QQBrowserSDKNightMode';style.innerHTML='html,body{background:none !important;background-color: #1d1e2a !important;}html *{background-color: #1d1e2a !important; color:#888888 !important;border-color:#3e4f61 !important;text-shadow:none !important;box-shadow:none !important;}a,a *{border-color:#4c5b99 !important; color:#2d69b3 !important;text-decoration:none !important;}a:visited,a:visited *{color:#a600a6 !important;}a:active,a:active *{color:#5588AA !important;}input,select,textarea,option,button{background-image:none !important;color:#AAAAAA !important;border-color:#4c5b99 !important;}form,div,button,span{background-color:#1d1e2a !important; border-color:#4c5b99 !important;}img{opacity:0.5}';document.getElementsByTagName('HEAD').item(0).appendChild(style);"
                 web.loadUrl([[
       javascript:(function()
         { ]]     .. darkmode .. [[ })()
       ]]         )
             end
-            web.loadUrl([[
-      javascript:(function()
-        { ]] .. js .. [[ })()
-      ]]     )
+
+            if wurl:find("signin%-ys") then
+                提示("需要点击两次“绑定角色”才可手动签到/补签")
+            end
 
             activity.Title = web.getTitle()
 
             if type_ == "hoyobbs" then
-                web.getSettings().setAppCacheEnabled(false)
+                --web.getSettings().setAppCacheEnabled(false)
             end
 
-            -------MiHoYoJSInterface 替换-------
-            web.evaluateJavascript([[let c = {};
-c.postMessage = (str) =>
-  chrome.webview.hostObjects.MiHoYoWebBridge.OnMessage(str);
-c.closePage = () => c.postMessage('{"method":"closePage"}');
-window.MiHoYoJSInterface = c;]], {
-                onReceiveValue = function(result)
-                end
-            })
-            web.evaluateJavascript([[window.MiHoYoJSInterface.postMessage_ = window.MiHoYoJSInterface.postMessage;
-window.MiHoYoJSInterface.postMessage = function(val){
-    return window.LuaBridge.execute("postMessage> "+val);
-};
-]]           , {
-                onReceiveValue = function(result)
-                end
-            })
-            -------------------------------
+
 
             loaderror = false
             if afterload then
@@ -829,9 +879,6 @@ window.MiHoYoJSInterface.postMessage = function(val){
             title.setText("")
             activity.Title = furl
         end,
-        shouldInterceptRequest = function(view, url)
-            --print(url)
-        end
     }
 
     web.getSettings().setSupportZoom(true)
@@ -846,6 +893,7 @@ window.MiHoYoJSInterface.postMessage = function(val){
     web.getSettings().setDomStorageEnabled(true)
     web.getSettings().setDatabaseEnabled(true)
     web.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE)
+    web.setWebContentsDebuggingEnabled(true)
 
     function webinfo()
         头 = wurl:match("(.+)://")
@@ -870,7 +918,7 @@ window.MiHoYoJSInterface.postMessage = function(val){
         local gd2 = GradientDrawable()
         gd2.setColor(转0x(backgroundc))
         --填充
-        gd2.setCornerRadii({ dp2px(8), dp2px(8), dp2px(8), dp2px(8), dp2px(8), dp2px(8), dp2px(8), dp2px(8) })
+        gd2.setCornerRadii({ dp2px(0), dp2px(0), dp2px(16), dp2px(16), dp2px(0), dp2px(16), dp2px(0), dp2px(0) })
         --圆角
         gd2.setShape(0)
         --形状，0矩形，1圆形，2线，3环形

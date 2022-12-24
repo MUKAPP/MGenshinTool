@@ -38,6 +38,21 @@ muktable = {
         end
         return _t1
     end,
+    ---按照Key遍历table
+    ---@type function
+    ---@param t table table
+    pairsByKeys = function(t)
+        local a = {}
+        for n in pairs(t) do
+            a[#a + 1] = n
+        end
+        table.sort(a)
+        local i = 0
+        return function()
+            i = i + 1
+            return a[i], t[a[i]]
+        end
+    end
 }
 
 --[[tbl_ret={}

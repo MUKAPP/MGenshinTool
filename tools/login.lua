@@ -119,7 +119,6 @@ function onCreate()
                             onClick = function()
                                 if web.getCookie():find("login_ticket") then
                                     提示("请等待")
-                                    --TODO: new login
                                     --[[
      mi18nLang=zh-cn;
      _MHYUUID=65c09e00-9e03-4003-a8e2-4d4035e401ae; 
