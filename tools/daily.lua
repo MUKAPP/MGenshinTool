@@ -774,6 +774,8 @@ all_person={
   ["Candace"]={"坎蒂丝",4},
   ["Nahida"]={"纳西妲",5},
   ["Layla"]={"莱依拉",4},
+  ["Wanderer"]={"流浪者",5},
+  ["Faruzan"]={"珐露珊",4},
 }
 
 繁荣={"Qiqi","Keqing","Xiao","Shenhe","Yelan","Ningguang"}
@@ -788,9 +790,9 @@ all_person={
 风雅={"Ayaka","Itto","Ayato","Sara","Shinobu",}
 天光={"Shougun","Yae","Gorou","Sayu",}
 
-诤言={"Tighnari","Cyno","Candace"}
+诤言={"Tighnari","Cyno","Candace","Faruzan"}
 巧思={"Nahida","Dori","Layla",}
-笃行={"Nilou","Collei",}
+笃行={"Nilou","Wanderer","Collei",}
 
 talenttab={
   ["Mon"]={
@@ -988,6 +990,7 @@ all_weapon={
     {"赤角石溃杵","RedhornStonethresher","sword2",5,"Itadorimaru"},
     {"飞雷之弦振","ThunderingPulse","bow",5,"Narukami"},
 
+    {"东花坊时雨","ToukabouShigure","sword",4,"Kasabouzu"},
     {"桂木斩长正", "KatsuragikiriNagamasa", "sword2", 4,"Bakufu"},
     {"破魔之弓", "Hamayumi", "bow", 4,"Bakufu"},
     {"掠食者", "Predator", "bow", 4,"Predator"},
@@ -1019,6 +1022,7 @@ all_weapon={
     {"贯月矢","Moonpiercer","stick",4,"Arakalari"},
   },
   烈日权威={
+    {"图莱杜拉的回忆","TulaytullahsRemembrance","book",5,"Alaya"},
     {"猎人之径","HuntersPath","bow",5,"Ayus"},
 
     {"玛海菈的水色","MakhairaAquamarine","sword2",4,"Pleroma"},
