@@ -5613,6 +5613,7 @@ function onCreate()
                     layout_width = "-1",
                     layout_height = "-2",
                     layout_margin = "8dp",
+                    layout_marginBottom = "12dp",
                     {
                         GridView,
                         layout_height = "-1",

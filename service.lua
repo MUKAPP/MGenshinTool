@@ -1032,8 +1032,7 @@ xpcall(function()
         function getUids()
             gotuid = gotuid + 1
             sendNotification("正在签到…", "正在获取UID: " .. gotuid .. "/" .. #cookies_format, "4", "正在签到"
-                ,
-                "", false, false, false)
+                , "", false, false, false)
 
             local nam, cookie = cookies_format[gotuid][1], cookies_format[gotuid][2]
 

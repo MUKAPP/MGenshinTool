@@ -776,11 +776,13 @@ all_person = {
     ["Layla"] = { "莱依拉", 4 },
     ["Wanderer"] = { "流浪者", 5 },
     ["Faruzan"] = { "珐露珊", 4 },
+    ["Alhatham"] = { "艾尔海森", 5 },
+    ["Yaoyao"] = { "瑶瑶", 4 },
 }
 
 繁荣 = { "Qiqi", "Keqing", "Xiao", "Shenhe", "Yelan", "Ningguang" }
 黄金 = { "Zhongli", "Xinyan", "Beidou", "Xingqiu", "Feiyan" }
-勤劳 = { "Ganyu", "Hutao", "Kazuha", "Yunjin", "Chongyun", "Xiangling", }
+勤劳 = { "Ganyu", "Hutao", "Kazuha", "Yaoyao", "Yunjin", "Chongyun", "Xiangling", }
 
 自由 = { "Tartaglia", "Klee", "Aloy", "Ambor", "Sucrose", "Barbara", "Diona" }
 抗争 = { "Eula", "Qin", "Mona", "Diluc", "Bennett", "Noel", "Razor" }
@@ -791,7 +793,7 @@ all_person = {
 天光 = { "Shougun", "Yae", "Gorou", "Sayu", }
 
 诤言 = { "Tighnari", "Cyno", "Candace", "Faruzan" }
-巧思 = { "Nahida", "Dori", "Layla", }
+巧思 = { "Alhatham", "Nahida", "Dori", "Layla", }
 笃行 = { "Nilou", "Wanderer", "Collei", }
 
 talenttab = {
@@ -1008,13 +1010,14 @@ all_weapon = {
     },
     谧林涓露 = {
         { "圣显之钥", "KeyOfKhajNisut", "sword", 5, "Deshret" },
+        { "裁叶萃光", "LightOfFoliarIncision", "sword", 5, "Ayus" },
 
         { "西福斯的月光", "XiphosMoonlight", "sword", 4, "Pleroma" },
         { "原木刀", "SapwoodBlade", "sword", 4, "Arakalari" },
         { "森林王器", "ForestRegalia", "sword2", 4, "Arakalari" },
     },
     绿洲花园 = {
-        { "千夜浮梦", "", "book", 5, "Ayus" },
+        { "千夜浮梦", "AThousandFloatingDreams", "book", 5, "Ayus" },
         { "赤沙之杖", "StaffOfTheScarletSands", "stick", 5, "Deshret" },
 
         { "流浪的晚星", "WanderingEvenstar", "book", 4, "Pleroma" },
@@ -1996,6 +1999,7 @@ Popup_layout = {
         layout_width = "-1",
         layout_height = "-2",
         layout_margin = "8dp",
+        layout_marginBottom = "12dp",
         {
             GridView,
             layout_height = "-1",
