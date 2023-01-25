@@ -527,24 +527,26 @@ function onCreate()
 
     --PopupWindow
     Popup_layout = {
-        LinearLayout;
+        LinearLayout,
         {
-            CardView;
-            CardElevation = "6dp";
-            CardBackgroundColor = ctbackc;
-            Radius = "8dp";
-            layout_width = "-1";
-            layout_height = "-2";
-            layout_margin = "8dp";
+            CardView,
+            CardElevation = "8dp",
+            CardBackgroundColor = ctbackc,
+            Radius = "8dp",
+            layout_width = "-1",
+            layout_height = "-2",
+            layout_margin = "8dp",
             {
-                GridView;
-                layout_height = "-1";
-                layout_width = "-1";
-                NumColumns = 1;
-                id = "Popup_list";
-            };
-        };
-    };
+                GridView,
+                layout_height = "-1",
+                layout_width = "-1",
+                NumColumns = 1,
+                id = "Popup_list",
+                paddingTop = "8dp",
+                paddingBottom = "8dp",
+            }
+        }
+    }
 
     pop = PopupWindow(activity)
     pop.setContentView(loadlayout(Popup_layout))

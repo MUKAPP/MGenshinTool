@@ -679,7 +679,7 @@ Popup_layout = {
     LinearLayout,
     {
         CardView,
-        CardElevation = "6dp",
+        CardElevation = "8dp",
         CardBackgroundColor = ctbackc,
         Radius = "8dp",
         layout_width = "-1",
@@ -690,7 +690,9 @@ Popup_layout = {
             layout_height = "-1",
             layout_width = "-1",
             NumColumns = 1,
-            id = "Popup_list"
+            id = "Popup_list",
+            paddingTop = "8dp",
+            paddingBottom = "8dp",
         }
     }
 }

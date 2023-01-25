@@ -5607,7 +5607,7 @@ function onCreate()
                 LinearLayout,
                 {
                     CardView,
-                    CardElevation = "6dp",
+                    CardElevation = "8dp",
                     CardBackgroundColor = ctbackc,
                     Radius = "8dp",
                     layout_width = "-1",
@@ -5618,7 +5618,9 @@ function onCreate()
                         layout_height = "-1",
                         layout_width = "-1",
                         NumColumns = 1,
-                        id = "Popup_list"
+                        id = "Popup_list",
+                        paddingTop = "8dp",
+                        paddingBottom = "8dp",
                     }
                 }
             }
@@ -6910,7 +6912,7 @@ function onCreate()
                                         --("请求失败，错误码："..code)
                                         控件可见(memo)
                                         控件隐藏(memo_in)
-                                        memo.Text = "获取失败：请到米游社内查看实时便笺过验证"
+                                        memo.Text = "获取失败：请点击进入手动过验证"
                                         --[[local ds = getDS2("game_id=2")
 
               local map = HashMap()
