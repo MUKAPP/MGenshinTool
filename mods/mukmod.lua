@@ -41,6 +41,7 @@ muktable = {
     ---按照Key遍历table
     ---@type function
     ---@param t table table
+    ---@return function
     pairsByKeys = function(t)
         local a = {}
         for n in pairs(t) do

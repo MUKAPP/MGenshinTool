@@ -2530,6 +2530,7 @@ function onCreate()
 
             floatwindowenabled = false
 
+            ---开启悬浮浏览器
             function openFloatWeb()
                 if 判断悬浮窗权限() == false then
                     提示("请开启悬浮窗权限")
@@ -2581,6 +2582,7 @@ function onCreate()
                                         id = "floatweb",
                                         layout_height = "-1",
                                         layout_width = "-1",
+                                        background = "#ffffff",
                                         onTouch = function()
                                             关闭floaturl()
                                             关闭floatsearch()
@@ -3301,8 +3303,6 @@ function onCreate()
                 web.getSettings().setDatabaseEnabled(true)
 
                 import "com.lua.*"
-
-                darkmode = ""
 
                 js = [[document.getElementsByTagName('body')[0].style.zoom=0.6;]]
 
