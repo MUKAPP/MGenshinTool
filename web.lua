@@ -780,18 +780,23 @@ function onCreate()
 
     function exMiHoYoJSInterface()
         -------MiHoYoJSInterface 替换-------
-        web.evaluateJavascript([[let c = {};
+
+        ---@language javascript
+        local jsex = [[let c = {};
 c.postMessage = (str) =>
   chrome.webview.hostObjects.MiHoYoWebBridge.OnMessage(str);
 c.closePage = () => c.postMessage('{"method":"closePage"}');
-window.MiHoYoJSInterface = c;]], {
+window.MiHoYoJSInterface = c;]]
+
+        web.evaluateJavascript(jsex, {
             onReceiveValue = function(result)
             end
         })
-        web.evaluateJavascript([[window.MiHoYoJSInterface.postMessage_ = window.MiHoYoJSInterface.postMessage;
-window.MiHoYoJSInterface.postMessage = function(val){
-    return window.LuaBridge.execute("postMessage> "+val);
-};]]     , {
+        web.evaluateJavascript([[let originalPostMessage = window.MiHoYoJSInterface.postMessage;
+window.MiHoYoJSInterface.postMessage = function (message) {
+    window.LuaBridge.execute("postMessage> " + message);
+    originalPostMessage.apply(this, arguments);
+};]], {
             onReceiveValue = function(result)
             end
         })

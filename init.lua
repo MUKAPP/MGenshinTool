@@ -1,6 +1,6 @@
 appname = "应急食品"
-appver = "1.7.3"
-appcode = "17300"
+appver = "1.7.4"
+appcode = "17400"
 appsdk = "21"
 path_pattern = ""
 packagename = "com.mukapp.genshintool"

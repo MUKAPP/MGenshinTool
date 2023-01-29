@@ -554,7 +554,7 @@ function addt(name, cookie)
                             end
                             if content.retcode == 1034 then
                                 data_[#data_ + 1] = { "error",
-                                    "获取失败：请点击按钮手动过验证（目前验证成功之后什么都加载不出，但是可以验证，验证完返回主页重新加载实时便笺就行了）",
+                                    "获取失败：请点击按钮手动过验证\n（进去之后可能是白屏，点右上角菜单刷新：目前验证成功之后什么都加载不出，但是可以验证，验证完返回主页重新加载实时便笺就行了）",
                                     nickname .. "  UID: " .. uid .. " (" .. region_name .. ")", cookie, serverid }
                                 更新adp()
                                 return true
