@@ -474,6 +474,11 @@ function onCreate()
                                 关闭对话框()
                             end)
                     elseif jscon_.method == "closePage" then
+                        --webview后退页面
+                        if web.canGoBack() then
+                            web.goBack()
+                            return true
+                        end
                         关闭页面()
                     elseif jscon_.method == "getDS" then
                         local b = ""
@@ -1106,6 +1111,11 @@ function onKeyDown(code, event)
             pop.dismiss()
             return true
         end
+        if web.canGoBack() then
+            web.goBack()
+            return true
+        end
+        关闭页面()
     end
 end
 
