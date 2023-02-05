@@ -139,6 +139,81 @@ function onCreate()
                             paddingBottom = "8dp";
                             {
                                 TextView;
+                                text = "友情链接";
+                                textColor = primaryc;
+                                textSize = "16sp";
+                                gravity = "center|left";
+                                Typeface = AppFont.特粗;
+                                padding = "16dp";
+                                paddingBottom = "8dp";
+                            };
+                            {
+                                LinearLayout;
+                                layout_height = "-2";
+                                layout_width = "-1";
+                                paddingTop = "8dp",
+                                paddingBottom = "8dp",
+                                id = "friend1",
+                                {
+                                    CardView;
+                                    CardElevation = "0dp";
+                                    CardBackgroundColor = cardbackc;
+                                    Radius = "32dp";
+                                    layout_width = "48dp";
+                                    layout_height = "48dp";
+                                    layout_marginLeft = "16dp";
+                                    {
+                                        ImageView;
+                                        src = "https://yuanshen.site/docs/20210609/logo.jpg";
+                                        layout_height = "-1";
+                                        layout_width = "-1";
+                                    };
+                                },
+                                {
+                                    LinearLayout;
+                                    orientation = "vertical";
+                                    layout_height = "-1";
+                                    layout_width = "-1";
+                                    gravity = "left|center",
+                                    paddingLeft = "16dp";
+                                    {
+                                        TextView;
+                                        text = "原神地图";
+                                        textSize = "14sp";
+                                        textColor = textc;
+                                        Typeface = AppFont.特粗;
+                                        paddingBottom = "2dp";
+                                    };
+                                    {
+                                        TextView;
+                                        text = "空荧酒馆制作的原神全资源攻略地图。";
+                                        textSize = "12sp";
+                                        textColor = textc;
+                                        Typeface = AppFont.标准;
+                                    };
+                                },
+                            },
+                        };
+                    };
+
+                    {
+                        CardView;
+                        CardElevation = "0dp";
+                        CardBackgroundColor = cardbackc;
+                        Radius = "8dp";
+                        layout_width = "-1";
+                        layout_height = "-2";
+                        layout_margin = "16dp";
+                        layout_marginTop = "8dp";
+                        layout_marginBottom = "8dp";
+                        {
+                            LinearLayout;
+                            orientation = "vertical";
+                            layout_height = "-1";
+                            layout_width = "-1";
+                            paddingBottom = "8dp";
+                            {
+                                TextView;
                                 text = "关于我";
                                 textColor = primaryc;
                                 textSize = "16sp";
@@ -273,11 +348,11 @@ function onCreate()
                                 layout_width = "-1";
                                 gravity = "left|center";
                                 id = "item17";
-                                onClick = function() 复制文本("MUK#6023") 提示("已复制 MUK#6023") end;
+                                onClick = function() 浏览器打开("mailto:mukmiuikong@foxmail.com") end;
                                 {
                                     ImageView;
                                     ColorFilter = textc;
-                                    src = 图标("comment");
+                                    src = 图标("email");
                                     layout_height = "48dp";
                                     layout_width = "48dp";
                                     layout_marginLeft = "16dp";
@@ -285,7 +360,7 @@ function onCreate()
                                 };
                                 {
                                     TextView;
-                                    text = "Discord：MUK#6023";
+                                    text = "邮箱：mukmiuikong@foxmail.com";
                                     textSize = "14sp";
                                     textColor = textc;
                                     paddingLeft = "8dp";
@@ -826,7 +901,8 @@ function onCreate()
     波纹({ back }, "圆主题")
     波纹({ item1 }, "方主题")
     波纹({ item2, item3, item4, item4_1, item4_2, item5, item6, item7, item8, item9, item10, item11, item12, item13,
-        item14, item15, item16, item17, item18, item19, item20 }, "方自适应")
+        item14, item15, item16, item17, item18, item19, item20,
+        friend1 }, "方自适应")
 
     --控件隐藏(item7)
     --控件隐藏(item8)
@@ -878,7 +954,7 @@ function onCreate()
     end
 
     item6.onClick = function()
-        activity.newActivity("web", { "https://git.mukapp.top/mukmiuikong/MGenshinTool_Public" })
+        activity.newActivity("web", { "https://github.com/MUKAPP/MGenshinTool_Public" })
     end
 
     item7.onClick = function()
@@ -957,6 +1033,11 @@ function onCreate()
     item20.onClick = function()
         --爱发电捐赠名单
         activity.newActivity("web", { "https://afdian.net/a/mukapp?tab=sponsor" })
+    end
+
+    friend1.onClick = function()
+        --浏览器打开空荧酒馆地图
+        浏览器打开("https://yuanshen.site/")
     end
 
     分屏()

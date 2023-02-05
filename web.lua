@@ -445,11 +445,10 @@ function onCreate()
 
     jsinterface = {
         execute = function(s)
-            local etype, jscon = s:match("(.+)> (.+)")
-            printLog("JSBridge", etype, jscon)
-            jscon_ = JSON.decode(jscon)
-            activity.runOnUiThread(function()
-                if etype == "postMessage" then
+            local jscon_ = JSON.decode(s)
+            printLog("JSBridge", jscon_)
+            activity.runOnUiThread(Runnable {
+                run = function()
                     if jscon_.method == "showAlertDialog" then
                         双按钮对话框(jscon_.payload.title, jscon_.payload.message,
                             jscon_.payload.buttons[1].title, jscon_.payload.buttons[2].title,
@@ -475,7 +474,7 @@ function onCreate()
                                 关闭对话框()
                             end)
                     elseif jscon_.method == "closePage" then
-                        提示("关闭页面")
+                        关闭页面()
                     elseif jscon_.method == "getDS" then
                         local b = ""
                         local q = ""
@@ -526,12 +525,11 @@ function onCreate()
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "getStatusBarHeight" then
                         local resultData = jsResult({
-                            statusBarHeight = 0,
+                            statusBarHeight = 1,
                         })
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "getUserInfo" then
-                        --TODO: getUserInfo
                         local ds = getDS2("uid=" .. cookieTable.account_id)
                         local map = HashMap()
                         map.put("DS", ds)
@@ -558,7 +556,6 @@ function onCreate()
                             end)
                     elseif jscon_.method == "getActionTicket" then
                         printLog("getActionTicketBySToken", "start")
-                        --TODO: getActionTicket
                         local ds = getDS3("uid=" .. cookieTable.account_id)
                         local map = HashMap()
                         map.put("DS", ds)
@@ -610,6 +607,24 @@ function onCreate()
                         web.evaluateJavascript("javascript:mhyWebBridge(\"" .. jscon_.callback .. "\","
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     elseif jscon_.method == "pushPage" then
+                        --判断链接开头是否为mihoyobbs
+                        if jscon_.payload.page:sub(1, 9) == "mihoyobbs" then
+                            --如果是，判断动作类型，并打开对应页面
+                            local type = jscon_.payload.page:match("://(.-)/")
+                            if type == "article" then
+                                --https://m.miyoushe.com/ys?channel=huawei/#/article/35042723
+                                local id = jscon_.payload.page:match("/article/(.-)$")
+                                if id then
+                                    local url = "https://m.miyoushe.com/ys?channel=huawei/#/article/" .. id
+                                    printLog("pushPage", url)
+                                    web.loadUrl(url)
+                                end
+                            end
+                        else
+                            --如果不是，直接打开链接
+                            printLog("pushPage", jscon_.payload.page)
+                            web.loadUrl(jscon_.payload.page)
+                        end
                     elseif jscon_.method == "openSystemBrowser" then
                     elseif jscon_.method == "getCookieInfo" then
                         local resultData = jsResult({
@@ -629,14 +644,18 @@ function onCreate()
                             .. JSON.encode(resultData) .. ")", { onReceiveValue = function(result) end })
                     end
                 end
-            end)
+            })
             return con
         end,
     }
     web.addJSInterface(jsinterface, "LuaBridge")
     web.addJSInterface({
         execute = function(s)
-        end
+            print(s)
+        end,
+        postMessage = function(s)
+            print(s)
+        end,
     }, "MiHoYoJSInterface")
 
     -------------------------------
@@ -793,10 +812,10 @@ window.MiHoYoJSInterface = c;]]
             end
         })
         web.evaluateJavascript([[let originalPostMessage = window.MiHoYoJSInterface.postMessage;
-window.MiHoYoJSInterface.postMessage = function (message) {
-    window.LuaBridge.execute("postMessage> " + message);
-    originalPostMessage.apply(this, arguments);
-};]], {
+        window.MiHoYoJSInterface.postMessage = function (message) {
+            window.LuaBridge.execute(message);
+            originalPostMessage.apply(this, arguments);
+        };]], {
             onReceiveValue = function(result)
             end
         })
@@ -853,10 +872,6 @@ window.MiHoYoJSInterface.postMessage = function (message) {
 
             title.setText(web.getTitle())
             activity.Title = web.getTitle()
-
-            if wurl:find("signin%-ys") then
-                提示("需要点击两次“绑定角色”才可手动签到/补签")
-            end
 
             loaderror = false
             if afterload then
