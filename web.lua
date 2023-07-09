@@ -447,7 +447,7 @@ function onCreate()
         execute = function(s)
             local jscon_ = JSON.decode(s)
             printLog("JSBridge", jscon_)
-            activity.runOnUiThread(Runnable {
+            web.post(Runnable {
                 run = function()
                     if jscon_.method == "showAlertDialog" then
                         双按钮对话框(jscon_.payload.title, jscon_.payload.message,

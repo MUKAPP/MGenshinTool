@@ -633,7 +633,7 @@ elseif mainPos == "理之冠" then
 end
 
 relic_all = import "artifacts"
-relic_id = JSON.decode(读取文件(activity.getLuaDir("res/metadata/Simple/ReliquarySet.json")))
+relic_id = JSON.decode(读取文件(activity.getLuaDir("res/metadata/Output/ReliquarySet.json")))
 
 imgUrl = "https://upload-bbs.mihoyo.com/game_record/genshin/equip"
 newImgUrl = "https://dummyimage.com/256x256/ffffff/000000&text="
@@ -660,7 +660,7 @@ for i, v in pairs(relic_all) do
                     local id
                     for i, v3 in ipairs(relic_id) do
                         if v3.Name == v["chs"] then
-                            id = tointeger(v3.Id - 200000)
+                            id = tointeger(v3.SetId)
                         end
                     end
                     Glide.with(activity).load(imgUrl .. "/UI_RelicIcon_" .. id .. "_" .. pos_ .. ".png").transition(

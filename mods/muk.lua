@@ -2335,10 +2335,10 @@ function dpi恢复()
     res.updateConfiguration(config, res.getDisplayMetrics())
 end
 
+--设置字体大小倍数(1.0)
+--设置dpi(660)
 --字体大小恢复()
 --dpi恢复()
---设置字体大小倍数(1.0)
---设置dpi(320)
 
 function 加载对话框(bt, nr, gb)
     local bwz

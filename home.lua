@@ -3314,12 +3314,12 @@ function onCreate()
             for (var i = 0; i<x.length;i++) {
                    x[i].style.display="none";
                  };
-            
+
             var x=document.getElementsByClassName("menu-item menu-item--logout");
             for (var i = 0; i<x.length;i++) {
                    x[i].style.display="none";
                  };
-                 
+
             ]]
                         if mukactivity.getData("myscookie_map") ~= nil then
                             CookieSyncManager.createInstance(this)
@@ -3349,9 +3349,9 @@ function onCreate()
   for (var i = 0; i<x.length;i++) {
       x[i].style.display="none";
   };
-  
+
   var thisNode = document.getElementById( "mihoyo_landscape" );
-  
+
   if ( thisNode != null && thisNode.parentElement != null ) {
       thisNode.parentElement.removeChild( thisNode );
   };
@@ -3845,7 +3845,7 @@ function onCreate()
                                         "  UID: " .. uid .. " (" .. region_name .. ")",
                                         [[今日奖励: ]] ..
                                             all_sign_content.data.awards[total_sign_day].name .. [[ × ]] ..
-                                            all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+                                            all_sign_content.data.awards[total_sign_day].cnt .. [[
 本月累签: ]]                                     .. total_sign_day .. [[ 天
 本月漏签: ]]                                     .. sign_cnt_missed .. [[ 天
 签到结果: ]]                                     .. "今天已经签到过啦", cookie }
@@ -3898,7 +3898,7 @@ function onCreate()
                                                     [[今日奖励: ]] ..
                                                         all_sign_content.data.awards[total_sign_day].name ..
                                                         [[ × ]] ..
-                                                        all_sign_content.data.awards[total_sign_day].cnt .. [[ 
+                                                        all_sign_content.data.awards[total_sign_day].cnt .. [[
 本月累签: ]]                                                 .. total_sign_day .. [[ 天
 本月漏签: ]]                                                 .. sign_cnt_missed .. [[ 天
 签到结果: ]]                                                 .. message, cookie }
@@ -3994,7 +3994,7 @@ function onCreate()
                                                                                                 [[ × ]] ..
                                                                                                 all_sign_content.data.awards
                                                                                                 [total_sign_day].cnt ..
-                                                                                                [[ 
+                                                                                                [[
 本月累签: ]]                                                                                         ..
                                                                                                 total_sign_day .. [[ 天
 本月漏签: ]]                                                                                         ..
@@ -4027,7 +4027,7 @@ function onCreate()
                                                                                                     all_sign_content.data
                                                                                                     .awards[
                                                                                                     total_sign_day].cnt
-                                                                                                    .. [[ 
+                                                                                                    .. [[
 本月累签: ]]                                                                                             ..
                                                                                                     total_sign_day - 1 ..
                                                                                                     [[ 天
@@ -4050,7 +4050,7 @@ function onCreate()
                                                                                 all_sign_content.data.awards[
                                                                                 total_sign_day].name .. [[ × ]] ..
                                                                                 all_sign_content.data.awards[
-                                                                                total_sign_day].cnt .. [[ 
+                                                                                total_sign_day].cnt .. [[
 本月累签: ]]                                                                         .. total_sign_day - 1 .. [[ 天
 本月漏签: ]]                                                                         .. sign_cnt_missed .. [[ 天
 签到结果: ]]                                                                         .. message, cookie }
@@ -4063,7 +4063,7 @@ function onCreate()
                                                                             all_sign_content.data.awards[total_sign_day]
                                                                             .name .. [[ × ]] ..
                                                                             all_sign_content.data.awards[total_sign_day]
-                                                                            .cnt .. [[ 
+                                                                            .cnt .. [[
 本月累签: ]]                                                                     .. total_sign_day - 1 .. [[ 天
 本月漏签: ]]                                                                     .. sign_cnt_missed .. [[ 天
 签到结果: ]]                                                                     .. message, cookie }

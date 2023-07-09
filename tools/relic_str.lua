@@ -435,7 +435,7 @@ all = {
 }
 
 local relic_all = import "artifacts"
-local relic_id = JSON.decode(读取文件(activity.getLuaDir("res/metadata/Simple/ReliquarySet.json")))
+local relic_id = JSON.decode(读取文件(activity.getLuaDir("res/metadata/Output/ReliquarySet.json")))
 
 local deleteNo4Star = 0
 for i = 1, #relic_all do
@@ -566,7 +566,7 @@ function 新圣遗物()
                 local id
                 for i, v in ipairs(relic_id) do
                     if v.Name == relicm["chs"] then
-                        id = tointeger(v.Id - 200000)
+                        id = tointeger(v.SetId)
                     end
                 end
                 Glide.with(activity).load(imgUrl .. "/UI_RelicIcon_" .. id .. "_" .. pos_ .. ".png")
